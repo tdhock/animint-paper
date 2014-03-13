@@ -24,7 +24,7 @@
 %% These three lines bring in essential packages: ``mathptmx'' for Type 1
 %% typefaces, ``graphicx'' for inclusion of EPS figures. and ``times''
 %% for proper handling of the times font family.
-
+\usepackage{natbib}
 \usepackage{mathptmx}
 \usepackage{graphicx}
 \usepackage{times}
@@ -85,23 +85,22 @@
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
-\abstract{Duis autem vel eum iriure dolor in hendrerit in vulputate
-velit esse molestie consequat, vel illum dolore eu feugiat nulla
-facilisis at vero eros et accumsan et iusto odio dignissim qui blandit
-praesent luptatum zzril delenit augue duis dolore te feugait nulla
-facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
-suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem
-vel eum iriure dolor in hendrerit in vulputate velit esse molestie
-consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et
-accumsan et iusto odio dignissim qui blandit praesent luptatum zzril
-delenit augue duis dolore te feugait nulla facilisi.
-} % end of abstract
+\abstract{Animint is a novel high level domain-specific language (DSL)
+  for defining interactive animated visualizations. It is In other data
+  visualization systems, interactive animations are difficult to
+  accomplish, since they must be defined in terms of low-level
+  operations and sometimes 100s of lines of code. In contrast,
+  Animint's high-level DSL can be used to produce a wide variety of
+  visualizations with only 10s of lines of code. It works by adding 2
+  new aesthetics to the grammar of graphics: \texttt{clickSelects}
+  means that clicking this element changes the selection, and
+  \texttt{showSelected} means show only the elements that correspond
+  to the current selection.} % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
-\keywords{interactive, animation}
+\keywords{Information visualization, user interfaces, toolkits, 2D
+  graphics, interactive, animation}
 
 %% ACM Computing Classification System (CCS). 
 %% See <http://www.acm.org/class/1998/> for details.
@@ -117,7 +116,17 @@ delenit augue duis dolore te feugait nulla facilisi.
   \teaser{
   \centering
   \includegraphics[width=\textwidth]{figure-1}
-  \caption{An interactive animation defined using animint.}
+  \caption{\textbf{Top}: Animint was used to create this visualization
+    of World Bank data, which consists of 4 geometric elements across
+    2 plots linked using the clickSelects and showSelected aesthetics
+    (interactive animation at
+    \url{http://bit.ly/1fzfUdN}). \textbf{Left}: a multiple time
+    series from 1960 to 2012 of the life expectancy of 205 countries,
+    with a bold line indicating the selected country and a vertical
+    grey tallrect indicating the selected year.  \textbf{Right}: a
+    scatterplot of life expectancy versus fertility rate of all
+    countries. The text indicates the current selection: ``year =
+    1996'' and ``United States.''}
   }
 
 %% Uncomment below to disable the manuscript note
@@ -141,6 +150,25 @@ delenit augue duis dolore te feugait nulla facilisi.
 
 \maketitle
 
+TODO: definition of interactive, which \citet{cleveland} calls
+``direct manipulation.''
+
+TODO: definition of brushing \citep{cleveland}. Three modes: transient
+(data under brush = selection), lasting (data under brush are added to
+the selection), or erasing (data under brush are removed from the
+selection). Operations: labeling (show text near selection), enhanced
+linking (change the symbol used to plot the selection) deletion
+(e.g. outliers).
+
+TODO: definition of animation. Changes over time based on data.
+
+TODO: discussion of related JavaScript libraries.
+
+TODO: One of the main reasons for the success of D3 is that it allows
+visualizations to be specified using the terminology of the Document
+Object Model \citep{d3}, which makes learning D3 easy for web
+developers.
+
 %% \section{Introduction} %for journal use above \firstsection{..} instead
 
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -158,6 +186,76 @@ invidunt ut labore et dolore magna aliquyam erat, sed diam
 voluptua. At vero eos et accusam et justo duo dolores et ea
 rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
 ipsum dolor sit amet.
+
+<<opts, echo=FALSE, message=FALSE>>=
+library(animint)
+data(WorldBank)
+opts_chunk$set(tidy=FALSE, eval=FALSE)
+@ 
+
+<<yearRects-geom>>=
+yearRects <- geom_tallrect(
+  aes(xmin=year-1/2, xmax=year+1/2, 
+      clickSelects=year),
+  data=years, alpha=1/2)
+@ 
+<<yearRects-make>>=
+yearRects <- make_tallrect(WorldBank, "year")
+@ 
+
+<<timeSeries>>=
+timeSeries <- ggplot()+
+  yearRects+
+  geom_line(
+    aes(x=year, y=life.expectancy, 
+        group=country, colour=region,
+        clickSelects=country),
+    data=WorldBank, size=3, alpha=3/5)
+@ 
+
+<<yearText-geom>>=
+yearText <- geom_text(
+  aes(label=year, showSelected=year),
+  x=5, y=80, 
+  data=years)
+@ 
+
+<<yearText-make>>=
+yearText <- make_text(WorldBank, 5, 80, "year")
+@ 
+
+<<scatterPlot>>=
+scatterPlot <- ggplot()+
+  yearText+
+  geom_point(
+    aes(x=fertility.rate, y=life.expectancy, 
+        colour=region, size=population,
+        clickSelects=country, 
+        showSelected=year),
+    data=WorldBank)+
+  geom_text(
+    aes(x=fertility.rate, y=life.expectancy, 
+        label=country,
+        showSelected=country, 
+        showSelected2=year),
+    data=WorldBank)+
+  scale_size_animint(
+    pixel.range=c(2, 20), 
+    breaks=10^(4:9))
+@ 
+
+<<gg2animint>>=
+viz <- 
+  list(scatter=scatterPlot,
+       ts=timeSeries,
+       time=list(variable="year",ms=3000),
+       duration=list(year=1000))
+gg2animint(viz, out.dir="WorldBank")
+@ 
+
+<<>>=
+@ 
+
 
 Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse
 molestie consequat, vel illum dolore eu feugiat nulla facilisis at
@@ -306,27 +404,33 @@ ipsum dolor sit amet.
 
 \begin{table}
 %% Table captions on top in journal version
- \caption{SciVis Paper Acceptance Rate: 1994-2006}
- \label{vis_accept}
+  \caption{Comparison of graphics packages that can achieve 
+    interactive animations. We show the language and number of lines of code 
+    to implement the WorldBank visualization shown in Figure 1.}
+ \label{tab:packages}
  \scriptsize
  \begin{center}
-   \begin{tabular}{cccc}
-     Year & Submitted & Accepted & Accepted (\%)\\
-   \hline
-     1994 &  91 & 41 & 45.1\\
-     1995 & 102 & 41 & 40.2\\
-     1996 & 101 & 43 & 42.6\\
-     1997 & 117 & 44 & 37.6\\
-     1998 & 118 & 50 & 42.4\\
-     1999 & 129 & 47 & 36.4\\
-     2000 & 151 & 52 & 34.4\\
-     2001 & 152 & 51 & 33.6\\
-     2002 & 172 & 58 & 33.7\\
-     2003 & 192 & 63 & 32.8\\
-     2004 & 167 & 46 & 27.6\\
-     2005 & 268 & 88 & 32.8\\
-     2006 & 228 & 63 & 27.6
-   \end{tabular}
+  \begin{tabular}{cccccc}
+    Package & years & interaction vars & 
+    %programming &
+    language & lines \\
+    \hline
+    tcltk & 1991- & several & 
+    %object &
+    & 100s \\
+    animation & 2007- & 1 = time & 
+    %imperative &
+    R & 40 \\
+    D3 & 2011- & several & 
+    %declarative & 
+    JavaScript &TODO \\
+    shiny & 2012- & several & 
+    %reactive & 
+    R & 60 \\
+    animint & 2013- & several & 
+    %declarative & 
+    R& 20 
+  \end{tabular}
  \end{center}
 \end{table}
 
@@ -396,7 +500,11 @@ et justo duo dolores et ea rebum.
 The authors wish to thank A, B, C. This work was supported in part by
 a grant from XYZ.}
 
-\bibliographystyle{abbrv}
+% TDH 13 March 2014 This was in the template.tex file.
+%\bibliographystyle{abbrv}
+
+\bibliographystyle{abbrvnat}
+
 %%use following if all content of bibtex file should be shown
 %\nocite{*}
 \bibliography{refs}
