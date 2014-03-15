@@ -94,9 +94,9 @@
   100s of lines of code. In contrast, Animint's high-level DSL can be
   used to produce a wide variety of complex visualizations with only
   10s of lines of code. It works by adding 2 new aesthetics to the
-  grammar of graphics: \texttt{clickSelects} means that clicking this
-  element changes the selection, and \texttt{showSelected} means show
-  only the elements that correspond to the current selection. After
+  grammar of graphics: \texttt{clickSelects}, which allows users to 
+  select elements of the graph, and \texttt{showSelected}, which displays
+  only elements corresponding to the current selection. After
   using our novel declarative DSL to define an interactive animation
   in R code, it is rendered in a web browser using
   D3.} % end of abstract
