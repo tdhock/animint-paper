@@ -169,12 +169,12 @@ TODO: definition of animation. Changes over time based on data.
 TODO: examples of animated and interactive, WorldBank and Fig 9 of
 \citet{d3}.
 
-TODO: discussion of related JavaScript libraries.
+TODO: discussion of related JavaScript libraries, i.e. highcharts, d3, vega.
 
 TODO: One of the main reasons for the success of D3 is that it allows
 visualizations to be specified using the terminology of the Document
 Object Model \citep{d3}, which makes learning D3 easy for web
-developers.
+developers. Similarly, using the ggplot2 syntax makes d3 graphics easy for R developers. 
 
 %% \section{Introduction} %for journal use above \firstsection{..} instead
 
