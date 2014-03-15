@@ -85,17 +85,21 @@
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
-\abstract{Animint is a novel high level domain-specific language (DSL)
-  for defining interactive animated visualizations. It is In other data
-  visualization systems, interactive animations are difficult to
-  accomplish, since they must be defined in terms of low-level
-  operations and sometimes 100s of lines of code. In contrast,
-  Animint's high-level DSL can be used to produce a wide variety of
-  visualizations with only 10s of lines of code. It works by adding 2
-  new aesthetics to the grammar of graphics: \texttt{clickSelects}
-  means that clicking this element changes the selection, and
-  \texttt{showSelected} means show only the elements that correspond
-  to the current selection.} % end of abstract
+\abstract{Animint is a novel high-level domain-specific language (DSL)
+  for interactive animations. It builds on top of previous work on the
+  grammar of graphics (ggplot2 in R) and interactive visualization
+  using web standards (D3 in JavaScript). In other data visualization
+  systems, interactive animations are difficult to accomplish, since
+  they must be defined in terms of low-level operations and sometimes
+  100s of lines of code. In contrast, Animint's high-level DSL can be
+  used to produce a wide variety of complex visualizations with only
+  10s of lines of code. It works by adding 2 new aesthetics to the
+  grammar of graphics: \texttt{clickSelects} means that clicking this
+  element changes the selection, and \texttt{showSelected} means show
+  only the elements that correspond to the current selection. After
+  using our novel declarative DSL to define an interactive animation
+  in R code, it is rendered in a web browser using
+  D3.} % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
@@ -116,18 +120,18 @@
   \teaser{
   \centering
   \includegraphics[width=\textwidth]{figure-1}
-  \caption{\textbf{Top}: Animint was used to create this visualization
-    of World Bank data, which consists of 4 geometric elements across
+  \caption{Interactive animation of World Bank data
+    built with Animint (\url{http://bit.ly/1fzfUdN}). \textbf{Top}:  
+    There are 5 geometric elements across
     2 plots linked using the clickSelects and showSelected aesthetics
-    (interactive animation at
-    \url{http://bit.ly/1fzfUdN}). \textbf{Left}: a multiple time
+    . \textbf{Left}: a multiple time
     series from 1960 to 2012 of the life expectancy of 205 countries,
     with a bold line indicating the selected country and a vertical
     grey tallrect indicating the selected year.  \textbf{Right}: a
     scatterplot of life expectancy versus fertility rate of all
-    countries. The text indicates the current selection: ``year =
-    1996'' and ``United States.''}
-  }
+    countries. The two text elements indicate the current selection:
+    ``year = 1996'' and ``United States.''}
+}
 
 %% Uncomment below to disable the manuscript note
 %\renewcommand{\manuscriptnotetxt}{}
@@ -161,6 +165,9 @@ linking (change the symbol used to plot the selection) deletion
 (e.g. outliers).
 
 TODO: definition of animation. Changes over time based on data.
+
+TODO: examples of animated and interactive, WorldBank and Fig 9 of
+\citet{d3}.
 
 TODO: discussion of related JavaScript libraries.
 
