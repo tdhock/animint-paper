@@ -76,7 +76,7 @@
 \item
  Toby Dylan Hocking is with McGill Human Genetics. E-mail: toby.hocking@mail.mcgill.ca.
 \item
- Susan VanderPlas is with Iowa Statistics. E-mail: srvanderplas@gmail.com.
+ Susan VanderPlas is with Iowa State Statistics. E-mail: srvanderplas@gmail.com.
 }
 
 %other entries to be set up for journal
