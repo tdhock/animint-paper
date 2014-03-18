@@ -1,4 +1,4 @@
-HOCKING-animint.pdf: HOCKING-animint.tex refs.bib figure-1.pdf
+HOCKING-animint.pdf: HOCKING-animint.tex refs.bib figure-1.pdf figure-tornado.pdf
 	rm -f *.aux *.bbl
 	pdflatex HOCKING-animint
 	bibtex HOCKING-animint

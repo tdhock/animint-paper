@@ -270,13 +270,15 @@ gg2animint(viz, out.dir="WorldBank")
 \section{Comparison}
 
 In this section we offer a comparison between Animint and several
-related packages (Table~\ref{tab:packages}).
+related packages (Table~\ref{tab:packages}). The main difference is
+that Animint's declarative syntax allows interactive animations to be
+expressed in fewer lines of code than the other packages.
 
 \subsection{D3}
 
 The current implementation of Animint uses D3 to render interactive
-animations in a web browser. D3 is more expressive than animint, but
-is also more verbose (TODO: COMPARISON FIGURE).
+animations in a web browser \citep{d3}. D3 is more expressive than
+animint, but is also more verbose (TODO: COMPARISON FIGURE).
 
 \subsection{R package animation}
 
@@ -285,16 +287,38 @@ using a for statement to loop over the time variable. This is the main
 idea of the animation package \citep{animation}. TODO: comparison
 figure.
 
-\subsection{ggplot2, ggvis}
+\subsection{Vega, ggplot2, ggvis}
 
-The current implementation of Animint extends the declarative syntax
-of ggplot2. Strictly speaking, ggplot2 is for non-interactive and
-non-animated visualizations.
+In this section we describe the differences between Animint and
+several other high-level DSLs for data visualization: Vega, ggplot2,
+and ggvis.
+
+Like Animint, Vega is a declarative DSL that builds on top of D3
+\citep{vega}. Both sacrifice some of the power of D3, while still
+allowing a wide variety of plots to be defined in fewer lines of code
+than pure D3. The main idea of Vega is the declaratively define a
+visualization using a special type of JavaScript Object Notation
+(JSON) file. Animint also internally uses a JSON file to store
+meta-data about an interactive animation (see section~TODO).
+
+There are two main differences between Vega and Animint. First, the
+Animint user writes R code, but the Vega user writes a JSON
+file. Second and more importantly, Vega does not currently support
+interactive animations. However, it should be possible for Vega to
+support interactive animations in the future, by adding expanding
+their JSON file format definition to support clickSelects and
+showSelected mark proporties.
+
+The current implementation of Animint extends the declarative DSL of
+ggplot2 \citep{ggplot2}. Strictly speaking, ggplot2 is for
+non-interactive and non-animated visualizations.
 
 The authors of ggplot2 are currently working on ggvis, a package for
-interactive graphics. The main difference between Animint and ggvis is
-the central unit of a visualization. In ggvis the main unit is a
-single plot, but in Animint it is a list of several plots.
+interactive graphics \citep{ggvis}. The main difference between
+Animint and ggvis is the central unit of a visualization. In ggvis the
+main unit is a single plot, but in Animint it is a list of several
+plots which are linked using the clickSelects and showSelected
+aesthetics.
 
 \begin{table}
 %% Table captions on top in journal version
@@ -329,6 +353,26 @@ single plot, but in Animint it is a list of several plots.
 \end{table}
 
 \section{Example applications}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\textwidth]{figure-tornado}
+  \caption{Interactive animation of Tornado data built using
+    Animint. \textbf{Left}: map of the United States with tornado
+    paths in 1982. The state of Texas is selected and drawn darker
+    than the others. \textbf{Right}: time series of tornado counts in
+    Texas. The bar for 1982 is selected, and the text (119) shows the
+    number of tornadoes in Texas that year.}
+  \label{fig:tornado}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\textwidth]{screenshot-climate}
+  \caption{Interactive animation of Central American climate data
+    built using Animint. \textbf{Left}: TODO.}
+  \label{fig:climate}
+\end{figure*}
 
 \section{Conclusion}
 %% if specified like this the section will be committed in review mode
