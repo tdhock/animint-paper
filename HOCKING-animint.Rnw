@@ -86,20 +86,23 @@
 
 %% Abstract section.
 \abstract{Animint is a novel high-level domain-specific language (DSL)
-  for interactive animations. It builds on top of previous work on the
-  grammar of graphics (ggplot2 in R) and interactive visualization
-  using web standards (D3 in JavaScript). In other data visualization
-  systems, interactive animations are difficult to accomplish, since
-  they must be defined in terms of low-level operations and sometimes
-  100s of lines of code. In contrast, Animint's high-level DSL can be
-  used to produce a wide variety of complex visualizations with only
-  10s of lines of code. It works by adding 2 new aesthetics to the
-  grammar of graphics: \texttt{clickSelects}, which allows users to 
-  select elements of the graph, and \texttt{showSelected}, which displays
-  only elements corresponding to the current selection. After
-  using our novel declarative DSL to define an interactive animation
-  in R code, it is rendered in a web browser using
-  D3.} % end of abstract
+  for linked, interactive, animated plots. It builds on top of
+  previous work on the grammar of graphics (ggplot2 in R) and
+  interactive visualization using web standards (D3 in JavaScript). In
+  other data visualization systems, interactive animations are
+  difficult to accomplish, since they must be defined in terms of
+  low-level operations and sometimes 100s of lines of code. In
+  contrast, Animint's high-level DSL can be used to produce a wide
+  variety of complex visualizations with only 10s of lines of code. It
+  works by adding 2 new aesthetics to the grammar of graphics:
+  \texttt{clickSelects}, which allows users to select elements of the
+  plot, and \texttt{showSelected}, which displays only elements
+  corresponding to the current selection. After using our novel
+  declarative DSL to define an interactive animation in R code, it is
+  rendered in a web browser using D3. We discuss the design of
+  Animint, then compare to related libraries, and show several example
+  visualizations of high-dimensional time series
+  data.} % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
@@ -357,8 +360,8 @@ aesthetics.
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth]{figure-tornado}
-  \caption{Interactive animation of Tornado data built using
-    Animint. \textbf{Left}: map of the United States with tornado
+  \caption{Interactive animation of Tornado data built with Animint
+    (TODO:BITLY). \textbf{Left}: map of the United States with tornado
     paths in 1982. The state of Texas is selected and drawn darker
     than the others. \textbf{Right}: time series of tornado counts in
     Texas. The bar for 1982 is selected, and the text (119) shows the
@@ -369,8 +372,14 @@ aesthetics.
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth]{figure-climate}
-  \caption{Interactive animation of Central American climate data
-    built using Animint. \textbf{Left}: TODO.}
+  \caption{Visualization containing 6 linked, interactive, animated
+    plots of Central American climate data built with Animint
+    (TODO:BITLY). \textbf{Top}: for the selected time (December 1997),
+    maps displaying the spatial distribution of two temperature
+    variables, and a scatterplot of these two variables. The selected
+    region is displayed with a black outline. \textbf{Bottom}: time
+    series of the two temperature variables with the selected region
+    shown in violet, and a scatterplot of all times for that region.}
   \label{fig:climate}
 \end{figure*}
 

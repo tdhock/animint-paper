@@ -73,8 +73,10 @@ for(var.name in var.names){
     theme(axis.line=element_blank(), axis.text=element_blank(), 
           axis.ticks=element_blank(), axis.title=element_blank())
 }
+selected.color <- "violet"
 viz$scatterNow <- ggplot()+
-  geom_text(aes(10, 5, label=textdate, showSelected=time2),
+  geom_text(aes(20, -7, label=sprintf("all regions in %s", textdate),
+                showSelected=time2),
             data=dates)+
   geom_hline(yintercept=0)+
   geom_vline(xintercept=0)+
@@ -87,13 +89,12 @@ viz$scatterNow <- ggplot()+
              data=climate, alpha=dot.alpha)+
   geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
                         showSelected2="id", showSelected="time2"),
-             data=climate, colour="black", fill="white")
-selected.color <- "violet"
+             data=climate, colour="black", fill=selected.color)
 for(var.name in var.names){
   long.name <- long.names[[var.name]]
   viz[[sprintf("%sTimeSeries", var.name)]] <- ggplot()+
-    make_text(climate, 1998, max(climate[[var.name]]),
-              "id", "region col-row = %s")+
+    ## make_text(climate, 1998, max(climate[[var.name]]),
+    ##           "id", "region col-row = %s")+
     geom_hline(yintercept=0)+
     make_tallrect(climate, "time2") +
     xlab("Year of measurement")+
@@ -112,8 +113,8 @@ for(var.name in var.names){
 
 }
 viz$scatterHere <- ggplot()+
-  make_text(climate, 11, 5,
-            "id", "region col-row = %s")+
+  make_text(climate, 20, -7,
+            "id", "all times for region %s")+
   xlab(getlab(var.names[[1]]))+
   ylab(getlab(var.names[[2]]))+
   geom_hline(yintercept=0)+
@@ -125,11 +126,17 @@ viz$scatterHere <- ggplot()+
              data=climate, alpha=dot.alpha)+
   geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
                         showSelected2="time2", showSelected="id"),
-             data=climate, color=selected.color)
+             data=climate, color="black", fill="white")
 viz$width <-
   structure(as.list(rep(400, length(viz))),
             names=names(viz))
 viz$width[grep("TimeSeries", names(viz$width))] <- 463
+## Non-animated version for screenshot.
+viz$duration <- list(time2=3000)
 gg2animint(viz, "climate")
+## Animated version for the web.
+viz.anim <- viz
+viz.anim$time <- list(variable="time2", ms=5000)
+gg2animint(viz.anim, "climate-anim")
 
 
