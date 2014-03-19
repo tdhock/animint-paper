@@ -21,7 +21,7 @@
 #' Temperatures are given in degrees celsius (original data had Kelvin).
 
 works_with_R("3.0.2",
-             animint="2014.3.13",
+             animint="2014.3.19",
              ggplot2="0.9.3.1",
              maps="2.3.6",
              lubridate="1.3.3",
@@ -44,57 +44,88 @@ climate <- climate[order(climate$date, climate$id), ]
 dates <- ddply(climate, .(date), summarise, month=month[1], year = year[1], time2 = time2[1], textdate = paste(month.name[month], year))
 dates <- dates[order(dates$date),]
 
-one.time <- subset(climate, time2==time2[1])
-str(one.time)
-
-# we will re-use this set of elements, so let's define a function to add them to a plot p with tiles.
-# we can't define the base plot first because the path must be drawn on top of the tiles.
-plainmap <- function(p){
-  p +
-    geom_path(data=countries, aes(x=long, y=lat, group=group), col="grey") + 
-  geom_text(data=dates, aes(x=-86, y=39, label=textdate, showSelected=time2))+ 
-  theme(axis.line=element_blank(), axis.text=element_blank(), 
-        axis.ticks=element_blank(), axis.title=element_blank())
-}
-
-# tiles with temperature data to serve as the background for the plot.
-temptiles <- ggplot() + 
-  geom_tile(aes(long, lat, fill=tempdev,
-                clickSelects=id, showSelected=time2),
-            data=climate)+ 
-  geom_tile(aes(long, lat, fill=tempdev,
-                showSelected=id, showSelected2=time2),
-            data=climate, color="black")+
-  scale_fill_gradient2("deg. C", low="blue", mid="white", high="red", limits=c(-20, 20), midpoint=0) + 
-  ggtitle("Deviation from monthly norm")
-
 climate <- climate[order(climate$time2),]
 
-viz <-
-  list(timeSeries=ggplot()+
-       make_text(climate, 1998, 39, "id", "region col-row = %s")+
-       geom_hline(yintercept=0)+
-       make_tallrect(climate, "time2") +
-       xlab("Year of measurement")+
-       ylab("Surface temperature (degrees Celsius)")+
-       geom_line(aes(time2, temperature, group=id, clickSelects=id),
-                 data=climate, alpha=1/2 + 3/100),
-       ##geom_text(aes(x=1998, y=-5, label=textdate, showSelected=time2),
-       ##          data=dates),
-       surface=plainmap(ggplot() + 
-         geom_tile(aes(long, lat, fill=surftemp,
-                       clickSelects=id, showSelected=time2),
-                   data=climate)+ 
-         geom_tile(aes(long, lat, fill=surftemp,
-                       showSelected=id, showSelected2=time2),
-                   data=climate, color="black")+
-         scale_fill_gradient2("deg. C", low="blue", mid="white", high="red",
-                              limits=c(-10, 45), midpoint=0) + 
-         ggtitle("Surface Temperature")),
-       air=plainmap(temptiles)
-       ##time = list(variable="time2", ms=3000),
-       ##width = list(450),
-       ##height = list(450)
-       )
+long.names <- c(surftemp="Surface temperature",
+                temperature="Temperature",
+                surfdev="Deviation from monthly norm")
+lims <- list(surftemp=c(-10, 40),
+             surfdev=c(-8, 8))
+var.names <- c("surftemp", "surfdev")
+dot.alpha <- 6/10
+viz <- list()
+getlab <- function(var.name){
+  sprintf("%s (degrees Celsius)", long.names[[var.name]])
+}
+for(var.name in var.names){
+  long.name <- long.names[[var.name]]
+  viz[[sprintf("%sMap", var.name)]] <- ggplot() + 
+    geom_tile(aes_string(x="long", y="lat", fill=var.name,
+                  clickSelects="id", showSelected="time2"),
+              data=climate)+ 
+    scale_fill_gradient2("deg. C", low="blue", mid="white", high="red",
+                         midpoint=0, limits=lims[[var.name]]) + 
+    ggtitle(long.name)+
+    geom_path(aes(long, lat, group=group), col="grey",
+              data=countries) + 
+    geom_text(aes(-86, 39, label=textdate, showSelected=time2),
+              data=dates)+ 
+    theme(axis.line=element_blank(), axis.text=element_blank(), 
+          axis.ticks=element_blank(), axis.title=element_blank())
+}
+viz$scatterNow <- ggplot()+
+  geom_text(aes(10, 5, label=textdate, showSelected=time2),
+            data=dates)+
+  geom_hline(yintercept=0)+
+  geom_vline(xintercept=0)+
+  xlim(-10, 40)+
+  ylim(-8, 8)+
+  xlab(getlab(var.names[[1]]))+
+  ylab(getlab(var.names[[2]]))+
+  geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
+                        clickSelects="id", showSelected="time2"),
+             data=climate, alpha=dot.alpha)+
+  geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
+                        showSelected2="id", showSelected="time2"),
+             data=climate, colour="black", fill="white")
+selected.color <- "violet"
+for(var.name in var.names){
+  long.name <- long.names[[var.name]]
+  viz[[sprintf("%sTimeSeries", var.name)]] <- ggplot()+
+    make_text(climate, 1998, max(climate[[var.name]]),
+              "id", "region col-row = %s")+
+    geom_hline(yintercept=0)+
+    make_tallrect(climate, "time2") +
+    xlab("Year of measurement")+
+    ylab(getlab(var.name))+
+    geom_line(aes_string(x="time2", y=var.name,
+                         group="id", clickSelects="id"),
+              data=climate, alpha=1/2 + 3/100)+
+    geom_line(aes_string(x="time2", y=var.name,
+                         showSelected="id"),
+              data=climate, colour=selected.color)
+  ## WANT to be able to specify:
+    geom_line(aes_string(x="time2", y=var.name,
+                         group="id", clickSelects="id"),
+              data=climate, alpha=3/100,
+              selected.color=selected.color)
 
+}
+viz$scatterHere <- ggplot()+
+  make_text(climate, 11, 5,
+            "id", "region col-row = %s")+
+  xlab(getlab(var.names[[1]]))+
+  ylab(getlab(var.names[[2]]))+
+  geom_hline(yintercept=0)+
+  geom_vline(xintercept=0)+
+  xlim(-10, 40)+
+  ylim(-8, 8)+
+  geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
+                        clickSelects="time2", showSelected="id"),
+             data=climate, alpha=dot.alpha)+
+  geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
+                        showSelected2="time2", showSelected="id"),
+             data=climate, color=selected.color)
 gg2animint(viz, "climate")
+
+
