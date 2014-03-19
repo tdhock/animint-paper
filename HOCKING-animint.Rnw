@@ -368,7 +368,7 @@ aesthetics.
 
 \begin{figure*}
   \centering
-  \includegraphics[width=\textwidth]{screenshot-climate}
+  \includegraphics[width=\textwidth]{figure-climate}
   \caption{Interactive animation of Central American climate data
     built using Animint. \textbf{Left}: TODO.}
   \label{fig:climate}

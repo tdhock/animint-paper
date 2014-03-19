@@ -126,6 +126,10 @@ viz$scatterHere <- ggplot()+
   geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
                         showSelected2="time2", showSelected="id"),
              data=climate, color=selected.color)
+viz$width <-
+  structure(as.list(rep(400, length(viz))),
+            names=names(viz))
+viz$width[grep("TimeSeries", names(viz$width))] <- 463
 gg2animint(viz, "climate")
 
 
