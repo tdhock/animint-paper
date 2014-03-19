@@ -383,11 +383,56 @@ aesthetics.
   \label{fig:climate}
 \end{figure*}
 
-\section{Conclusion}
-%% if specified like this the section will be committed in review mode
-\acknowledgments{
-The authors wish to thank %A, B, C. This work was supported in part by a grant from XYZ.
-}
+\begin{table}
+  \centering
+  \input{table-examples}
+  \caption{animint examples. Abbreviations: vars=plotted variables,
+    int=interactive variables, anim=animated, LOC=lines of R code including data processing but not including comments, 80 characters max per
+    line.
+  }
+\label{tab:examples}
+\end{table}
+
+\begin{figure}
+  \centering
+TODO: code for D3, shiny...?
+  \caption{Comparison of code for the WorldBank visualization.}
+\label{fig:compare}
+\end{figure}
+
+\begin{figure}
+  \centering
+  TODO: flow chart explaining structure of Animint list of several
+ggplots, JSON file, CSV files, etc.
+  \caption{Design of animint.}
+  \label{fig:design}
+\end{figure}
+
+\section{Limitations and future work}
+
+There are several limitations to the current implementation of
+Animint.
+
+As discussed in Section~TODO, the compiler is written in R, and the
+renderer is written in JavaScript. This means that Animint developers
+must be proficient in both R and JavaScript. This represents a
+significant barrier for source code contributions from developers who
+are proficient with one language but not the other.
+
+Animint users define interactive animations using only R code, and no
+knowledge of JavaScript is necessary. This is convenient for useRs
+from a statistical background, but presents a barrier for web
+developers who are more familiar with JavaScript than R. For these web
+developers, it would be advantageous to have a pure-JavaScript
+implementation of the compiler and renderer, by possibly building
+clickSelects and showSelected extensions into Vega \citep{vega}.
+
+Types of interactivity: only showing and hiding data subsets.
+
+Performance.
+
+\acknowledgments{ The authors wish to thank Animint users who have
+  contributed constructive criticism and helped its development.  }
 
 % TDH 13 March 2014 This was in the template.tex file.
 %\bibliographystyle{abbrv}

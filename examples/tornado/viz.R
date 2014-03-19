@@ -1,30 +1,18 @@
-#' NOAA SVRGIS data (Severe Report Database + Geographic Information System)
-#' http://www.spc.noaa.gov/gis/svrgis/
-#' Data - http://www.spc.noaa.gov/wcm/#data
-#' Location Codes - http://www.spc.noaa.gov/wcm/loccodes.html
-#' State FIPS Codes - http://www.spc.noaa.gov/wcm/fips_usa.gif
-#' County FIPS Codes - http://www.spc.noaa.gov/wcm/stnindex_all.txt
-#' State/County Area and Population - http://quickfacts.census.gov/qfd/download/DataSet.txt
-#' 
-#' Image Inspiration -  http://www.kulfoto.com/pic/0001/0033/b/h4n5832833.jpg
 library(maps)
 library(plyr)
-library(ggplot2)
 library(animint)
 data(UStornadoes)
-stateOrder <- data.frame(state = unique(UStornadoes$state)[order(unique(UStornadoes$TornadoesSqMile), decreasing=T)], rank = 1:49) # order states by tornadoes per square mile
-UStornadoes$state <- factor(UStornadoes$state, levels=stateOrder$state, ordered=TRUE)
+ord <- order(unique(UStornadoes$TornadoesSqMile), decreasing=T)
+stateOrder <- data.frame(state = unique(UStornadoes$state)[ord], rank = 1:49)
+UStornadoes$state <-
+  factor(UStornadoes$state, levels=stateOrder$state, ordered=TRUE)
 UStornadoes$weight <- 1/UStornadoes$LandArea
-# useful for stat_bin, etc. 
-
 USpolygons <- map_data("state")
 USpolygons$state = state.abb[match(USpolygons$region, tolower(state.name))]
-seg.color <- "#55B1F7"
-
 UStornadoCounts <-
   ddply(UStornadoes, .(state, year), summarize, count=length(state))
-
-tornado.points.anim <-
+seg.color <- "#55B1F7"
+viz <-
   list(map=ggplot()+
        make_text(UStornadoes, -100, 50, "year",
                  "Tornado paths and endpoints in %d")+
@@ -50,5 +38,3 @@ tornado.points.anim <-
        geom_text(aes(year, count + 5, label=count,
                      showSelected2=year, showSelected=state),
                 data=UStornadoCounts, size=20))
-gg2animint(tornado.points.anim, "tornado-points-anim")
-
