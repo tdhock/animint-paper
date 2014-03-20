@@ -238,7 +238,7 @@ and ggvis.
 Like Animint, Vega is a declarative DSL that builds on top of D3
 \citep{vega}. Both sacrifice some of the power of D3, while still
 allowing a wide variety of plots to be defined in fewer lines of code
-than pure D3. The main idea of Vega is the declaratively define a
+than pure D3. The main idea of Vega is to declaratively define a
 visualization using a special type of JavaScript Object Notation
 (JSON) file. Animint also internally uses a JSON file to store
 meta-data about an interactive animation (see section~TODO).
