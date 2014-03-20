@@ -252,7 +252,7 @@ their JSON file format definition to support clickSelects and
 showSelected mark proporties.
 
 The current implementation of Animint extends the declarative DSL of
-ggplot2 \citep{ggplot2}. Strictly speaking, ggplot2 is for
+ggplot2 \citep{ggplot, ggplot2}. Strictly speaking, ggplot2 is for
 non-interactive and non-animated visualizations.
 
 The authors of ggplot2 are currently working on ggvis, a package for
