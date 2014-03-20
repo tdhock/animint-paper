@@ -193,7 +193,8 @@ TODO: comparison with library(animation)!
 TODO: One of the main reasons for the success of D3 is that it allows
 visualizations to be specified using the terminology of the Document
 Object Model \citep{d3}, which makes learning D3 easy for web
-developers. Similarly, using the ggplot2 syntax makes d3 graphics easy for R developers. 
+developers. Similarly, using the ggplot2 syntax makes D3 graphics easy
+for R developers.
 
 %% \section{Introduction} %for journal use above \firstsection{..} instead
 
@@ -221,7 +222,7 @@ FIGURE.
 
 \begin{figure}
   \centering
-TODO: code for D3, shiny...?
+TODO: code for D3, shiny, animation...?
   \caption{Comparison of code for the WorldBank visualization.}
 \label{fig:compare}
 \end{figure}
@@ -371,7 +372,7 @@ gg2animint(viz, out.dir="WorldBank")
 
 \section{Example applications}
 
-In this section we discuss the range of examples that can be
+In this section we discuss the range of examples that we have
 implemented with Animint (Table~\ref{tab:examples}).
 
 \begin{table*}
@@ -396,10 +397,11 @@ implemented with Animint (Table~\ref{tab:examples}).
 
 \subsection{Animated examples}
 
-Mostly useful when one of the variables is time, as in Figure~1.
+Mostly useful when one of the variables is time, as in Figure~1. TODO
+COMMENTARY.
 
 Figure~\ref{fig:tornado} shows an interactive animation of the tornado
-data.
+data. TODO COMMENTARY.
 
 
 \begin{figure*}
@@ -415,7 +417,7 @@ data.
 \end{figure*}
 
 Figure~\ref{fig:climate} shows an interactive animation of the climate
-data.
+data. TODO COMMENTARY.
 
 
 \begin{figure*}
