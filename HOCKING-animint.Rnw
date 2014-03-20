@@ -429,13 +429,17 @@ data. TODO COMMENTARY.
   \centering
   \includegraphics[width=\textwidth]{figure-climate}
   \caption{Visualization containing 6 linked, interactive, animated
-    plots of Central American climate data built with Animint
-    (TODO:BITLY). \textbf{Top}: for the selected time (December 1997),
-    maps displaying the spatial distribution of two temperature
-    variables, and a scatterplot of these two variables. The selected
-    region is displayed with a black outline. \textbf{Bottom}: time
-    series of the two temperature variables with the selected region
-    shown in violet, and a scatterplot of all times for that region.}
+    plots of Central American climate data (TODO:BITLY). \textbf{Top}:
+    for the selected time (December 1997), maps displaying the spatial
+    distribution of two temperature variables, and a scatterplot of
+    these two variables. The selected region is displayed with a black
+    outline, and can be changed by clicking a rect on the map or a
+    point on the scatterplot. \textbf{Bottom}: time series of the two
+    temperature variables with the selected region shown in violet,
+    and a scatterplot of all times for that region. The selected time
+    can be changed by clicking a background tallrect on a time series
+    or a point on the scatterplot. The selected region can be changed
+    by clicking a line on a time series.}
   \label{fig:climate}
 \end{figure*}
 
