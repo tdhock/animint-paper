@@ -100,10 +100,10 @@
   plot, and \texttt{showSelected}, which displays only elements
   corresponding to the current selection. After using our novel
   declarative DSL to define an interactive animation in R code, it is
-  rendered in a web browser using D3. We discuss the design of
-  Animint, then compare to related libraries, and show several example
-  visualizations of high-dimensional time series
-  data.} % end of abstract
+  first compiled and then rendered in a web browser using D3. We
+  discuss the design of Animint, then compare to related libraries,
+  and show several example visualizations of high-dimensional time
+  series data.} % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
@@ -124,17 +124,18 @@
   \teaser{
   \centering
   \includegraphics[width=\textwidth]{figure-1}
-  \caption{Interactive animation of World Bank data
-    built with Animint (\url{http://bit.ly/1fzfUdN}). \textbf{Top}:  
-    There are 5 geometric elements across
-    2 plots linked using the clickSelects and showSelected aesthetics
-    . \textbf{Left}: a multiple time
-    series from 1960 to 2012 of the life expectancy of 205 countries,
-    with a bold line indicating the selected country and a vertical
-    grey tallrect indicating the selected year.  \textbf{Right}: a
-    scatterplot of life expectancy versus fertility rate of all
-    countries. The two text elements indicate the current selection:
-    ``year = 1996'' and ``United States.''}
+  \caption{Interactive animation of World Bank data built with Animint
+    (\url{http://bit.ly/1fzfUdN}). \textbf{Top}: There are 5 geometric
+    elements across 2 linked plots: clicking a \texttt{clickSelects}
+    element changes the currently selected year or country, and
+    updates the corresponding \texttt{showSelected}
+    elements. \textbf{Left}: a multiple time series from 1960 to 2012
+    of the life expectancy of 205 countries, with a bold line
+    indicating the selected country and a vertical grey tallrect
+    indicating the selected year.  \textbf{Right}: a scatterplot of
+    life expectancy versus fertility rate of all countries. The two
+    text elements indicate the current selection: ``year = 1996'' and
+    ``United States.''}
 }
 
 %% Uncomment below to disable the manuscript note
