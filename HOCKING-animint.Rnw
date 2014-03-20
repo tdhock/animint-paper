@@ -421,15 +421,22 @@ in publications.''
   \label{fig:climate}
 \end{figure*}
 
-\begin{table}
+\begin{table*}
   \centering
   \input{table-examples}
-  \caption{animint examples. Abbreviations: vars=plotted variables,
-    int=interactive variables, anim=animated, LOC=lines of R code including data processing but not including comments, 80 characters max per
-    line.
+  \caption{Characteristics of nine interactive visualizations built with 
+    Animint. From left to right, we show the data set name, the 
+    lines of R code including data processing but not including comments
+    (LOC, 80 characters max per line), the total number of data points
+    (rows), the median number of data points shown at once (onscreen),
+    the number of data columns visualized (variables), 
+    the number of clickSelects/showSelected variables (interactive),
+    if the plot is animated, the amount of time it takes to compile
+    the visualization (seconds), and the corresponding Figure 
+    number in this paper (Fig).
   }
 \label{tab:examples}
-\end{table}
+\end{table*}
 
 \begin{figure}
   \centering
