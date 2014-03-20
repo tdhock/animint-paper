@@ -357,6 +357,44 @@ aesthetics.
 
 \section{Example applications}
 
+\subsection{Animated examples}
+
+Mostly useful when one of the variables is time.
+
+\subsection{Non-animated examples}
+
+TODO
+
+\section{User feedback and observations}
+
+We and our users have created interactive visualizations using Animint
+that would be too complex to implement in other systems. Examples
+discussed in previous sections include animated visualizations of
+multiple time series data and non-animated visualizations of other
+high-dimensional data sets. In this section we share comments and
+constructive criticism that we have obtained from our users.
+
+For the \texttt{prior} data visualization
+(\url{http://bit.ly/1peIT7t}), the Animint user is a machine learning
+researcher who developed an algorithm and applied it to 4 benchmark
+data sets. He wanted to explore how his algorithm performed, in
+comparison to a baseline learning algorithm. He appreciated the
+intuitive understanding of the data that he gained using the
+interactive plots: ``Interactive plotting allows us to explore all
+relationships of our high-dimensional dataset and gives us an
+intuitive understanding of the performance of our proposed
+algorithm. An intuitive understanding of the results is important
+since it shows under which conditions our proposed method works well
+and provides avenues for further research.''
+
+Users also appreciated the value of the web-based output format, and
+the detail that is possible to show in interactive plots, but
+impossible to show in publications: ``...  the web interface is simple
+and easy to use.  It also enables us to publish more detailed
+interactive results on our website to accompany the results presented
+in publications.''
+
+
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth]{figure-tornado}
@@ -431,8 +469,9 @@ Types of interactivity: only showing and hiding data subsets.
 
 Performance.
 
-\acknowledgments{ The authors wish to thank Animint users who have
-  contributed constructive criticism and helped its development.  }
+\acknowledgments{The authors wish to thank Animint users MC Du
+  Plessis, Song Liu, and Nikoleta Juretic who have contributed
+  constructive criticism and helped its development.  }
 
 % TDH 13 March 2014 This was in the template.tex file.
 %\bibliographystyle{abbrv}
