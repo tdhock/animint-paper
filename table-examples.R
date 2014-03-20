@@ -1,3 +1,22 @@
+works_with_R <- function(Rvers,...){
+  pkg_ok_have <- function(pkg,ok,have){
+    stopifnot(is.character(ok))
+    if(!as.character(have) %in% ok){
+      warning("works with ",pkg," version ",
+              paste(ok,collapse=" or "),
+              ", have ",have)
+    }
+  }
+  pkg_ok_have("R",Rvers,getRversion())
+  pkg.vers <- list(...)
+  for(pkg in names(pkg.vers)){
+    if(!suppressWarnings(require(pkg, character.only=TRUE))){
+      install.packages(pkg)
+    }
+    pkg_ok_have(pkg, pkg.vers[[pkg]], packageVersion(pkg))
+    library(pkg, character.only=TRUE)
+  }
+}
 works_with_R("3.0.2", animint="2014.3.19", xtable="1.7.3")
 viz.path <- Sys.glob(file.path("examples", "*", "viz.R"))
 sub.dirs <- dirname(viz.path)
