@@ -162,6 +162,8 @@
 TODO: definition of interactive, which \citet{cleveland} calls
 ``direct manipulation.''
 
+TODO: definition of animint user=designer and developer=programmer.
+
 TODO: definition of brushing \citep{cleveland}. Three modes: transient
 (data under brush = selection), lasting (data under brush are added to
 the selection), or erasing (data under brush are removed from the
@@ -198,7 +200,70 @@ developers. Similarly, using the ggplot2 syntax makes d3 graphics easy for R dev
 \section{Related Work}
 
 
-\section{Exposition}
+In this section we offer a comparison between Animint and several
+related libraries/packages in JavaScript/R
+(Table~\ref{tab:packages}). The main difference is that Animint's
+declarative syntax allows interactive animations to be expressed in
+fewer lines of code than the other packages.
+
+\subsection{D3}
+
+The current implementation of Animint uses D3 to render interactive
+animations in a web browser \citep{d3}. D3 is more expressive than
+animint, but is also more verbose (TODO: CODE COMPARISON FIGURE).
+
+\subsection{Animated graphics libraries}
+
+One way to achieve animation in an iterative programming syntax is by
+using a for statement to loop over the time variable. This is the main
+idea of the animation package \citep{animation}. TODO: CODE COMPARISON
+FIGURE.
+
+\begin{figure}
+  \centering
+TODO: code for D3, shiny...?
+  \caption{Comparison of code for the WorldBank visualization.}
+\label{fig:compare}
+\end{figure}
+
+\subsection{Libraries based on the grammar of graphics
+  %: Vega, ggplot2, ggvis
+}
+
+In this section we describe the differences between Animint and
+several other high-level DSLs for data visualization: Vega, ggplot2,
+and ggvis.
+
+Like Animint, Vega is a declarative DSL that builds on top of D3
+\citep{vega}. Both sacrifice some of the power of D3, while still
+allowing a wide variety of plots to be defined in fewer lines of code
+than pure D3. The main idea of Vega is the declaratively define a
+visualization using a special type of JavaScript Object Notation
+(JSON) file. Animint also internally uses a JSON file to store
+meta-data about an interactive animation (see section~TODO).
+
+There are two main differences between Vega and Animint. First, the
+Animint user writes R code, but the Vega user writes a JSON
+file. Second and more importantly, Vega does not currently support
+interactive animations. However, it should be possible for Vega to
+support interactive animations in the future, by adding expanding
+their JSON file format definition to support clickSelects and
+showSelected mark proporties.
+
+The current implementation of Animint extends the declarative DSL of
+ggplot2 \citep{ggplot2}. Strictly speaking, ggplot2 is for
+non-interactive and non-animated visualizations.
+
+The authors of ggplot2 are currently working on ggvis, a package for
+interactive graphics \citep{ggvis}. The main difference between
+Animint and ggvis is the central unit of a visualization. In ggvis the
+main unit is a single plot, but in Animint it is a list of several
+plots which are linked using the clickSelects and showSelected
+aesthetics.
+
+
+\section{Design}
+\label{sec:design}
 
 In this section we explain the main idea of the Animint grammar for
 interactive animations. We use the WorldBank example of Figure~1 as a
@@ -272,59 +337,6 @@ gg2animint(viz, out.dir="WorldBank")
 @ 
 
 
-\section{Comparison}
-
-In this section we offer a comparison between Animint and several
-related packages (Table~\ref{tab:packages}). The main difference is
-that Animint's declarative syntax allows interactive animations to be
-expressed in fewer lines of code than the other packages.
-
-\subsection{D3}
-
-The current implementation of Animint uses D3 to render interactive
-animations in a web browser \citep{d3}. D3 is more expressive than
-animint, but is also more verbose (TODO: COMPARISON FIGURE).
-
-\subsection{R package animation}
-
-One way to achieve animation in an iterative programming syntax is by
-using a for statement to loop over the time variable. This is the main
-idea of the animation package \citep{animation}. TODO: comparison
-figure.
-
-\subsection{Vega, ggplot2, ggvis}
-
-In this section we describe the differences between Animint and
-several other high-level DSLs for data visualization: Vega, ggplot2,
-and ggvis.
-
-Like Animint, Vega is a declarative DSL that builds on top of D3
-\citep{vega}. Both sacrifice some of the power of D3, while still
-allowing a wide variety of plots to be defined in fewer lines of code
-than pure D3. The main idea of Vega is the declaratively define a
-visualization using a special type of JavaScript Object Notation
-(JSON) file. Animint also internally uses a JSON file to store
-meta-data about an interactive animation (see section~TODO).
-
-There are two main differences between Vega and Animint. First, the
-Animint user writes R code, but the Vega user writes a JSON
-file. Second and more importantly, Vega does not currently support
-interactive animations. However, it should be possible for Vega to
-support interactive animations in the future, by adding expanding
-their JSON file format definition to support clickSelects and
-showSelected mark proporties.
-
-The current implementation of Animint extends the declarative DSL of
-ggplot2 \citep{ggplot2}. Strictly speaking, ggplot2 is for
-non-interactive and non-animated visualizations.
-
-The authors of ggplot2 are currently working on ggvis, a package for
-interactive graphics \citep{ggvis}. The main difference between
-Animint and ggvis is the central unit of a visualization. In ggvis the
-main unit is a single plot, but in Animint it is a list of several
-plots which are linked using the clickSelects and showSelected
-aesthetics.
-
 \begin{table}
 %% Table captions on top in journal version
   \caption{Comparison of graphics packages that can achieve 
@@ -359,13 +371,74 @@ aesthetics.
 
 \section{Example applications}
 
+In this section we discuss the range of examples that can be
+implemented with Animint (Table~\ref{tab:examples}).
+
+\begin{table*}
+  \centering
+  \input{table-examples}
+  \caption{Characteristics of nine interactive visualizations built with 
+    Animint. From left to right, we show the data set name, the 
+    lines of R code including data processing but not including comments
+    (LOC, 80 characters max per line), 
+    the amount of time it takes to compile the visualization (seconds), 
+    the total size of the uncompressed CSV files in megabytes (MB),
+    the total number of data points (rows), 
+    the median number of data points shown at once (onscreen),
+    the number of data columns visualized (variables), 
+    the number of clickSelects/showSelected variables (interactive),
+    the number of linked panels (plots),
+    if the plot is animated, 
+    and the corresponding Figure number in this paper (Fig).
+  }
+\label{tab:examples}
+\end{table*}
+
 \subsection{Animated examples}
 
-Mostly useful when one of the variables is time.
+Mostly useful when one of the variables is time, as in Figure~1.
+
+Figure~\ref{fig:tornado} shows an interactive animation of the tornado
+data.
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\textwidth]{figure-tornado}
+  \caption{Interactive animation of Tornado data built with Animint
+    (TODO:BITLY). \textbf{Left}: map of the United States with tornado
+    paths in 1982. The state of Texas is selected and drawn darker
+    than the others. \textbf{Right}: time series of tornado counts in
+    Texas. The bar for 1982 is selected, and the text (119) shows the
+    number of tornadoes in Texas that year.}
+  \label{fig:tornado}
+\end{figure*}
+
+Figure~\ref{fig:climate} shows an interactive animation of the climate
+data.
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\textwidth]{figure-climate}
+  \caption{Visualization containing 6 linked, interactive, animated
+    plots of Central American climate data built with Animint
+    (TODO:BITLY). \textbf{Top}: for the selected time (December 1997),
+    maps displaying the spatial distribution of two temperature
+    variables, and a scatterplot of these two variables. The selected
+    region is displayed with a black outline. \textbf{Bottom}: time
+    series of the two temperature variables with the selected region
+    shown in violet, and a scatterplot of all times for that region.}
+  \label{fig:climate}
+\end{figure*}
 
 \subsection{Non-animated examples}
 
-TODO
+When the data to visualize do not contain a time variable, we have
+found that Animint is still useful for creating interactive but
+non-animated plots.
+
+TODO more discussion.
 
 \section{User feedback and observations}
 
@@ -396,57 +469,6 @@ and easy to use.  It also enables us to publish more detailed
 interactive results on our website to accompany the results presented
 in publications.''
 
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=\textwidth]{figure-tornado}
-  \caption{Interactive animation of Tornado data built with Animint
-    (TODO:BITLY). \textbf{Left}: map of the United States with tornado
-    paths in 1982. The state of Texas is selected and drawn darker
-    than the others. \textbf{Right}: time series of tornado counts in
-    Texas. The bar for 1982 is selected, and the text (119) shows the
-    number of tornadoes in Texas that year.}
-  \label{fig:tornado}
-\end{figure*}
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=\textwidth]{figure-climate}
-  \caption{Visualization containing 6 linked, interactive, animated
-    plots of Central American climate data built with Animint
-    (TODO:BITLY). \textbf{Top}: for the selected time (December 1997),
-    maps displaying the spatial distribution of two temperature
-    variables, and a scatterplot of these two variables. The selected
-    region is displayed with a black outline. \textbf{Bottom}: time
-    series of the two temperature variables with the selected region
-    shown in violet, and a scatterplot of all times for that region.}
-  \label{fig:climate}
-\end{figure*}
-
-\begin{table*}
-  \centering
-  \input{table-examples}
-  \caption{Characteristics of nine interactive visualizations built with 
-    Animint. From left to right, we show the data set name, the 
-    lines of R code including data processing but not including comments
-    (LOC, 80 characters max per line), the total number of data points
-    (rows), the median number of data points shown at once (onscreen),
-    the number of data columns visualized (variables), 
-    the number of clickSelects/showSelected variables (interactive),
-    if the plot is animated, the amount of time it takes to compile
-    the visualization (seconds), and the corresponding Figure 
-    number in this paper (Fig).
-  }
-\label{tab:examples}
-\end{table*}
-
-\begin{figure}
-  \centering
-TODO: code for D3, shiny...?
-  \caption{Comparison of code for the WorldBank visualization.}
-\label{fig:compare}
-\end{figure}
-
 \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{figure-design}
@@ -459,8 +481,8 @@ TODO: code for D3, shiny...?
     meta-data including ggplot variable mappings, animation time
     options, and transition duration options to a JSON meta-data file
     ($\rightarrowtriangle$). \textbf{Bottom}: those data-dependent
-    compiled files are combined with data-independent files which
-    render the interactive animation in a web browser
+    compiled files are combined with data-independent JavaScript and
+    HTML files which render the interactive animation in a web browser
     (\textcolor{blue}{$\rightarrowtriangle$}).}
   \label{fig:design}
 \end{figure}
@@ -470,7 +492,8 @@ TODO: code for D3, shiny...?
 There are several limitations to the current implementation of
 Animint.
 
-As discussed in Section~TODO, the compiler is written in R, and the
+As discussed in Section~\ref{sec:design} and illustrated in
+Figure~\ref{fig:design}, the compiler is written in R, and the
 renderer is written in JavaScript. This means that Animint developers
 must be proficient in both R and JavaScript. This represents a
 significant barrier for source code contributions from developers who
@@ -480,13 +503,31 @@ Animint users define interactive animations using only R code, and no
 knowledge of JavaScript is necessary. This is convenient for useRs
 from a statistical background, but presents a barrier for web
 developers who are more familiar with JavaScript than R. For these web
-developers, it would be advantageous to have a pure-JavaScript
-implementation of the compiler and renderer, by possibly building
-clickSelects and showSelected extensions into Vega \citep{vega}.
+developers, it would be advantageous in the future to implement a
+compiler and renderer in pure JavaScript, by
+possibly building clickSelects and showSelected extensions into Vega
+\citep{vega}.
 
-Types of interactivity: only showing and hiding data subsets.
+Types of interactivity: only showing and hiding data subsets. TODO.
 
-Performance.
+Performance can be measured using speed, memory, and disk space
+requirements in the compilation and rendering steps. In general, the
+performance of the compilation step is related to the total amount of
+data (``rows'' column in Table~\ref{tab:examples}), and the
+performance of the rendering step is related to the amount of data
+displayed at once (``onscreen'' column in
+Table~\ref{tab:examples}). Future versions of Animint can definitely
+improve on both steps. For example, the compilation step currently
+saves geom-specific CSV files and could be improved by saving CSV
+files for each showSelected subset of data. This would also allow for
+faster rendering for large data sets, since then the plots could be
+displayed as soon as the first selection is downloaded. In contrast,
+the current code downloads all of the data before displaying the
+geom. This highlights one of the main motivations for using the
+Animint declarative DSL: none of the designer's R code needs to be
+changed to implement improvements like this. Instead, the Animint
+developers just need to work on a better compiler and rendering
+engine.
 
 \acknowledgments{The authors wish to thank Animint users MC Du
   Plessis, Song Liu, and Nikoleta Juretic who have contributed

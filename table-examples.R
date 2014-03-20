@@ -3,7 +3,7 @@ viz.path <- Sys.glob(file.path("examples", "*", "viz.R"))
 sub.dirs <- dirname(viz.path)
 base <- basename(sub.dirs)
 n.vars <- n.interactive <- name.vars <- name.interactive <- code.lines <-
-  comment.lines <- n.plots <- n.rows <- n.onscreen <- seconds <- 
+  comment.lines <- n.plots <- n.rows <- n.onscreen <- seconds <- total.size <- 
   rep(NA, length(base))
 animated <- rep("no", length(base))
 for(sub.dir.i in seq_along(sub.dirs)){
@@ -38,8 +38,12 @@ for(sub.dir.i in seq_along(sub.dirs)){
   n.rows[[sub.dir.i]] <- n.rows.i
   n.plots[[sub.dir.i]] <- n.plots.i
   seconds[[sub.dir.i]] <- system.time({
-    meta <- gg2animint(viz, open.browser=FALSE)
+    meta <- gg2animint(viz, sub.dir, open.browser=FALSE)
   })[["elapsed"]]
+  cmd <- sprintf("du -sc %s/*.csv", sub.dir)
+  du.lines <- system(cmd, intern=TRUE)
+  last.line <- du.lines[length(du.lines)]
+  total.size[[sub.dir.i]] <- as.integer(sub("\ttotal", "", last.line))
   vizLines <- readLines(viz.f)
   no.comments <- sub("#.*", "", vizLines)
   no.whitespace <- gsub(" ", "", no.comments)
@@ -68,14 +72,15 @@ for(sub.dir.i in seq_along(sub.dirs)){
   }
 }
 tab <- data.frame(LOC=code.lines,
-                  plots=as.integer(n.plots),
+                  seconds=round(seconds, 1),
+                  MB=round(total.size/1000, 1),
                   rows=as.integer(n.rows),
                   onscreen=as.integer(n.onscreen),
                   ##"rows/onscreen"=n.rows/n.onscreen,
                   variables=n.vars,
                   interactive=n.interactive,
+                  plots=as.integer(n.plots),
                   "animated?"=animated,
-                  seconds=round(seconds, 1),
                   ##comments=comment.lines,
                   check.names=FALSE,
                   row.names=base)
@@ -83,5 +88,5 @@ tab <- tab[order(tab$LOC, decreasing=FALSE),]
 tab$Fig <- NA
 tab[c("WorldBank", "tornado", "climate"), "Fig"] <- c(1L, 2L, 3L)
 print(tab)
-xt <- xtable(tab, digits=1)
+xt <- xtable(tab, digits=1, align=rep("r", ncol(tab)+1))
 print(xt, file="table-examples.tex", floating=FALSE)
