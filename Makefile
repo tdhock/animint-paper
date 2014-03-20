@@ -1,4 +1,4 @@
-HOCKING-animint.pdf: HOCKING-animint.tex refs.bib figure-1.pdf figure-tornado.pdf figure-climate.pdf table-examples.tex
+HOCKING-animint.pdf: HOCKING-animint.tex refs.bib figure-1.pdf figure-tornado.pdf figure-climate.pdf table-examples.tex figure-design.pdf
 # Interactive animation example figures were made by first executing
 # figure-*.R, then taking a screenshot saved as screenshot-*.png, then
 # adding text annotations in figure-*.sla using Scribus, then

@@ -3,7 +3,8 @@
 %\documentclass[widereview]{vgtc}             % wide-spaced review
 %\documentclass[preprint,journal]{vgtc}       % preprint (journal style)
 %\documentclass[electronic,journal]{vgtc}     % electronic version, journal
-
+\usepackage{color}
+\usepackage{stmaryrd}
 %% Uncomment one of the lines above depending on where your paper is
 %% in the conference process. ``review'' and ``widereview'' are for review
 %% submission, ``preprint'' is for pre-publication, and the final version
@@ -262,8 +263,8 @@ scatterPlot <- ggplot()+
 
 <<gg2animint>>=
 viz <- 
-  list(scatter=scatterPlot,
-       ts=timeSeries,
+  list(scatterPlot=scatterPlot,
+       timeSeries=timeSeries,
        time=list(variable="year",ms=3000),
        duration=list(year=1000))
 gg2animint(viz, out.dir="WorldBank")
@@ -447,9 +448,19 @@ TODO: code for D3, shiny...?
 
 \begin{figure}
   \centering
-  TODO: flow chart explaining structure of Animint list of several
-ggplots, JSON file, CSV files, etc.
-  \caption{Design of animint.}
+  \includegraphics[width=\columnwidth]{figure-design}
+  \caption{Schematic explanation of compilation and rendering the
+    WorldBank visualization shown in Figure~1. \textbf{Top}: the
+    interactive animation is a list of 4 R objects: 2 ggplots and 2
+    option lists. \textbf{Center}: Animint R code compiles data in
+    ggplot geoms to a database of comma-separated values (CSV) files
+    (\textcolor{red}{$\rightarrowtriangle$}). It also compiles plot
+    meta-data including ggplot variable mappings, animation time
+    options, and transition duration options to a JSON meta-data file
+    ($\rightarrowtriangle$). \textbf{Bottom}: those data-dependent
+    compiled files are combined with data-independent files which
+    render the interactive animation in a web browser
+    (\textcolor{blue}{$\rightarrowtriangle$}).}
   \label{fig:design}
 \end{figure}
 
