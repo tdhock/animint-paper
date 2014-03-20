@@ -173,7 +173,7 @@ linking (change the symbol used to plot the selection) deletion
 
 TODO: definition of animation. Changes over time based on data.
 
-TODO: examples of animated and interactive, WorldBank and Fig 9 of
+TODO: examples of animated and interactive, World Bank and Fig 9 of
 \citet{d3}.
 
 TODO: discussion of related JavaScript libraries, i.e. highcharts, d3, vega.
@@ -223,7 +223,7 @@ FIGURE.
 \begin{figure}
   \centering
 TODO: code for D3, shiny, animation...?
-  \caption{Comparison of code for the WorldBank visualization.}
+  \caption{Comparison of code for the World Bank visualization.}
 \label{fig:compare}
 \end{figure}
 
@@ -270,7 +270,7 @@ aesthetics.
 \label{sec:design}
 
 In this section we explain the main idea of the Animint grammar for
-interactive animations. We use the WorldBank example of Figure~1 as a
+interactive animations. We use the World Bank example of Figure~1 as a
 motivating example.
 
 <<opts, echo=FALSE, message=FALSE>>=
@@ -345,7 +345,7 @@ gg2animint(viz, out.dir="WorldBank")
 %% Table captions on top in journal version
   \caption{Comparison of graphics packages that can achieve 
     interactive animations. We show the language and number of lines of code 
-    to implement the WorldBank visualization shown in Figure 1.}
+    to implement the World Bank visualization shown in Figure 1.}
  \label{tab:packages}
  \scriptsize
  \begin{center}
@@ -410,12 +410,14 @@ data. TODO COMMENTARY.
 \begin{figure*}
   \centering
   \includegraphics[width=\textwidth]{figure-tornado}
-  \caption{Interactive animation of Tornado data built with Animint
-    (TODO:BITLY). \textbf{Left}: map of the United States with tornado
-    paths in 1982. The state of Texas is selected and drawn darker
-    than the others. \textbf{Right}: time series of tornado counts in
-    Texas. The bar for 1982 is selected, and the text (119) shows the
-    number of tornadoes in Texas that year.}
+  \caption{Interactive animation of tornadoes recorded from 1950 to
+    2012 in the United States (TODO:BITLY). \textbf{Left}: map of the
+    lower 48 United States with tornado paths in 1982. The text 
+    shows the selected year, and clicking the map changes the selected
+    state, currently Texas. \textbf{Right}: time series of tornado
+    counts in Texas. Clicking a bar changes the selected year, and the
+    text shows selected state and the number of tornadoes recorded
+    there in that year (119 tornadoes in Texas in 1982).}
   \label{fig:tornado}
 \end{figure*}
 
@@ -478,7 +480,7 @@ in publications.''
   \centering
   \includegraphics[width=\columnwidth]{figure-design}
   \caption{Schematic explanation of compilation and rendering the
-    WorldBank visualization shown in Figure~1. \textbf{Top}: the
+    World Bank visualization shown in Figure~1. \textbf{Top}: the
     interactive animation is a list of 4 R objects: 2 ggplots and 2
     option lists. \textbf{Center}: Animint R code compiles data in
     ggplot geoms to a database of comma-separated values (CSV) files
