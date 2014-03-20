@@ -238,7 +238,7 @@ and ggvis.
 Like Animint, Vega is a declarative DSL that builds on top of D3
 \citep{vega}. Both sacrifice some of the power of D3, while still
 allowing a wide variety of plots to be defined in fewer lines of code
-than pure D3. The main idea of Vega is the declaratively define a
+than pure D3. The main idea of Vega is to declaratively define a
 visualization using a special type of JavaScript Object Notation
 (JSON) file. Animint also internally uses a JSON file to store
 meta-data about an interactive animation (see section~TODO).
@@ -252,8 +252,11 @@ their JSON file format definition to support clickSelects and
 showSelected mark proporties.
 
 The current implementation of Animint extends the declarative DSL of
-ggplot2 \citep{ggplot2}. Strictly speaking, ggplot2 is for
-non-interactive and non-animated visualizations.
+ggplot2 \citep{ggplot, ggplot2}. Strictly speaking, ggplot2 is for
+non-interactive and non-animated visualizations. Extending ggplot2 syntax
+to accommodate interactive, animated graphics allows R users familiar with 
+ggplot2 to create web-ready graphics using the familiar grammar of graphics
+approach in an already familiar language. 
 
 The authors of ggplot2 are currently working on ggvis, a package for
 interactive graphics \citep{ggvis}. The main difference between
