@@ -253,7 +253,10 @@ showSelected mark proporties.
 
 The current implementation of Animint extends the declarative DSL of
 ggplot2 \citep{ggplot, ggplot2}. Strictly speaking, ggplot2 is for
-non-interactive and non-animated visualizations.
+non-interactive and non-animated visualizations. Extending ggplot2 syntax
+to accommodate interactive, animated graphics allows R users familiar with 
+ggplot2 to create web-ready graphics using the familiar grammar of graphics
+approach in an already familiar language. 
 
 The authors of ggplot2 are currently working on ggvis, a package for
 interactive graphics \citep{ggvis}. The main difference between
