@@ -207,18 +207,19 @@ related libraries/packages in JavaScript/R
 declarative syntax allows interactive animations to be expressed in
 fewer lines of code than the other packages.
 
-\subsection{D3}
-
-The current implementation of Animint uses D3 to render interactive
-animations in a web browser \citep{d3}. D3 is more expressive than
-animint, but is also more verbose (TODO: CODE COMPARISON FIGURE).
-
 \subsection{Animated graphics libraries}
 
 One way to achieve animation in an iterative programming syntax is by
 using a for statement to loop over the time variable. This is the main
-idea of the animation package \citep{animation}. TODO: CODE COMPARISON
+idea of the \href{http://yihui.name/animation/}{animation} package \citep{animation}. TODO: CODE COMPARISON
 FIGURE.
+
+
+\subsection{D3}
+
+The current implementation of Animint uses \href{http://d3js.org/}{D3} to render interactive
+animations in a web browser \citep{d3}. D3 is more expressive than
+animint, but is also more verbose. In addition, animint uses a grammar of graphics approach to produce higher-level plots, which is arguably simpler and more elegant than constructing a plot from simple elements using d3. (TODO: CODE COMPARISON FIGURE)
 
 \begin{figure}
   \centering
@@ -227,15 +228,22 @@ TODO: code for D3, shiny, animation...?
 \label{fig:compare}
 \end{figure}
 
-\subsection{Libraries based on the grammar of graphics
-  %: Vega, ggplot2, ggvis
-}
+\subsection{Libraries based on the grammar of graphics}  %: Vega, ggplot2, ggvis
 
 In this section we describe the differences between Animint and
-several other high-level DSLs for data visualization: Vega, ggplot2,
+several other high-level DSLs for data visualization: ggplot2, Vega, 
 and ggvis.
 
-Like Animint, Vega is a declarative DSL that builds on top of D3
+\paragraph{ggplot2}
+The current implementation of Animint extends the declarative DSL of
+\href{http://ggplot2.org/}{ggplot2} \citep{ggplot, ggplot2}. Strictly speaking, ggplot2 is for
+non-interactive and non-animated visualizations. Extending ggplot2 syntax
+to accommodate interactive, animated graphics allows R users familiar with 
+ggplot2 to create web-ready graphics using the familiar grammar of graphics
+approach in an already familiar language. 
+
+\paragraph{Vega}
+Like Animint, \href{http://trifacta.github.io/vega/}{Vega} is a declarative DSL that builds on top of D3
 \citep{vega}. Both sacrifice some of the power of D3, while still
 allowing a wide variety of plots to be defined in fewer lines of code
 than pure D3. The main idea of Vega is to declaratively define a
@@ -251,19 +259,16 @@ support interactive animations in the future, by adding expanding
 their JSON file format definition to support clickSelects and
 showSelected mark proporties.
 
-The current implementation of Animint extends the declarative DSL of
-ggplot2 \citep{ggplot, ggplot2}. Strictly speaking, ggplot2 is for
-non-interactive and non-animated visualizations. Extending ggplot2 syntax
-to accommodate interactive, animated graphics allows R users familiar with 
-ggplot2 to create web-ready graphics using the familiar grammar of graphics
-approach in an already familiar language. 
 
-The authors of ggplot2 are currently working on ggvis, a package for
+\paragraph{ggvis} The authors of ggplot2 are currently working on ggvis, a package for
 interactive graphics \citep{ggvis}. The main difference between
-Animint and ggvis is the central unit of a visualization. In ggvis the
-main unit is a single plot, but in Animint it is a list of several
-plots which are linked using the clickSelects and showSelected
-aesthetics.
+Animint and \href{http://ggvis.rstudio.com/}{ggvis} is the central unit of a visualization. 
+In ggvis the main unit is a single plot, but in Animint it is a list of several
+plots which are linked using the clickSelects and showSelected aesthetics. In addition,
+ggvis is only interactive when run locally or on a server with R and \citep{shiny}, so it 
+requires significant infrastructure to create web-based graphics. ggvis also has limited
+user-interactivity - users cannot interact with plots directly (at this point), but must use 
+sliders, checkboxes, and other HTML form elements to interact with the plots. 
 
 
 \section{Design}
