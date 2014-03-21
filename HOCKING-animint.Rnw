@@ -629,7 +629,7 @@ samples at an almost intuitive level. The interactive aspect of it was
 very helpful for browsing through the dataset --- especially when
 compared to scrolling through huge spreadsheets! Constructive
 criticism: finding ways to speed up data loading would help maximize
-the software’s utility for the visualization of large datasets.''
+the software's utility for the visualization of large datasets.''
 
 Users also appreciated the value of the web-based output format, and
 the detail that is possible to show in interactive plots, but
@@ -641,7 +641,7 @@ in publications.''
 \section{Limitations and future work}
 
 There are several limitations to the current implementation of
-Animint.
+Animint, which suggest avenues for future work.
 
 As discussed in Section~\ref{sec:design} and illustrated in
 Figure~\ref{fig:design}, the compiler is written in R, and the
@@ -674,9 +674,9 @@ files for each showSelected subset of data. This would also allow for
 faster rendering for large data sets, since then the plots could be
 displayed as soon as the first selection is downloaded. In contrast,
 the current code downloads all of the data before displaying the
-geom. This highlights one of the main motivations for using the
-Animint declarative DSL: none of the designer's R code needs to be
-changed to implement improvements like this. Instead, the Animint
+geom. This highlights one of the main motivations for using a
+declarative DSL like Animint: none of the designer's R code needs to
+be changed to implement improvements like this. Instead, the Animint
 developers just need to work on a better compiler and rendering
 engine.
 
