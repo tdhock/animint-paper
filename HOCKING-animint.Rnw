@@ -29,7 +29,6 @@
 \usepackage{mathptmx}
 \usepackage{graphicx}
 \usepackage{times}
-
 %% We encourage the use of mathptmx for consistent usage of times font
 %% throughout the proceedings. However, if you encounter conflicts
 %% with other math-related packages, you may want to disable it.
@@ -49,6 +48,8 @@
   plainpages = false,
   linktocpage
 }
+
+\newcommand{\bitly}[1]{\href{http://bit.ly/#1}{\texttt{#1}}}
 
 %% If you are submitting a paper to a conference for review with a double
 %% blind reviewing process, please replace the value ``0'' below with your
@@ -461,7 +462,10 @@ Bank visualization of Figure~1 using several different libraries
     Figure~1 using several libraries that can create interactive animations.
     For each library
     we show the number of lines of code (LOC), programming language, 
-    number of interaction variables, and programming style.}
+    number of interaction variables, and URL of the interactive version. 
+%  Note that different countries can not be interactively selected using
+% the visualization created with R package animation.
+}
  \label{tab:packages}
  \scriptsize
  \begin{center}
@@ -471,7 +475,8 @@ Bank visualization of Figure~1 using several different libraries
     language &
     %years & 
     interaction vars &
-    programming &
+    %programming &
+    http://bit.ly/
     \\
     \hline
     animint & 
@@ -479,28 +484,29 @@ Bank visualization of Figure~1 using several different libraries
     R &
     %2013- & 
     several & 
-    declarative & 
+    %declarative & 
+      \bitly{1fzfUdN}
     \\
     animation & 
     38 &
     R  &
     %2007- & 
     1 = time & 
-    imperative &
+    %imperative &
     \\
     D3 & 
     TODO &
     JavaScript & 
     %2011- & 
     several & 
-    declarative & 
+    %declarative & 
     \\
     ggvis/shiny & 
     84 &
     R  &
     %2012- & 
     several & 
-    reactive & 
+    %reactive & 
     \\
   \end{tabular}
  \end{center}
