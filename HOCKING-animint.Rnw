@@ -440,15 +440,7 @@ in 2 parts:
   \label{fig:design}
 \end{figure}
 
-\section{Example applications}
-
-In this section we discuss the range of examples that we have
-implemented with Animint (Table~\ref{tab:examples}). We begin with a
-discussion of our experience implementing the World Bank visualization
-of Figure~1 using several different libraries, then discuss several
-other interactive animations that we have built with Animint.
-
-\subsection{Comparison study: World Bank data}
+\section{Results and comparison study on World Bank data}
 \label{sec:compare}
 
 To show the advantages that the Animint grammar brings for creating
@@ -512,26 +504,76 @@ Bank visualization of Figure~1 using several different libraries
  \end{center}
 \end{table}
 
+\subsection{Client-server systems like ggvis/shiny}
 
+We implemented the World Bank data visualization using 84 lines of R
+code and the ggvis and shiny packages (TODO:BITLY). Because ggvis and
+shiny do not have any declarative DSL for interactive animations, this
+implementation was significantly more complex than the 20 lines of R
+code we used to build Figure~1 with the Animint package. Showing and
+hiding data subsets was accomplished by clicking on a slider for year
+and a menu for country, not by clicking on the plot elements. Although
+creating such visualizations in ggvis+shiny is possible, it requires
+significantly more work for limited interactivity.
 
-There are inherent tradeoffs to using a web server system like
-ggvis+shiny rather than an entirely web client/JavaScript-based
-system. It is better to use a web server system when there are many
-more subsets of the data than can ever be transferred over the
-network. Web server systems are also good when you want to perform
-arbitrary calculations in R/C code on the server and then send the
-result across the network. However, for interactive animations, the
-server only calculates data subsets, so waiting for the server to
-respond after every mouse click results in an interactive plot than is
-less responsive than can be achieved using Animint. Furthermore, in
-web server systems the client may not cache previously viewed subsets,
-which results in calculations inefficiently being performed several
-times rather than simply saved for quick viewing later. In general, if
-all the data subsets can be transferred across the network, it is
-better to use a JavaScript-based system like Animint rather than a web
-server system.
+There are also inherent speed tradeoffs to using a client-server
+plotting system like ggvis+shiny rather than an entirely web
+client/JavaScript-based system like Animint. There is one main
+difference between these two types of systems that affects
+responsiveness of a web-based interactive plotting system:
+client-server communication overhead. All the \mbox{Animint}
+JavaScript plot rendering code is executed in the web browser, whereas
+ggvis executes some plotting code on the server. This means that after
+a mouse click, ggvis can not update a plot immediately, but instead
+must wait for the server to respond with the plot data.
 
-TODO: Susan's shiny app BITLY.
+We quantified speed differences between the two systems by timing web
+page loading using DevTools in Google Chrome and timing interactive
+updates using \texttt{getTime()} in JavaScript. Using ggvis with a
+local web server and the World Bank data resulted in a web page that
+loaded quickly (about 1.4s), but updated the plot with a noticeable
+lag after each mouse click (500--1000ms). Note that since we used a
+local web server, these times represent the overhead of the web server
+system, and would be larger with a remote web server.
+
+When we used Animint to make the World Bank data visualization, the
+compilation from R objects to 2.3MB of uncompressed CSV data files
+took 2.5s. Using a local web server, the Animint JavaScript rendered
+the plot very quickly (100--200ms). We also observed very fast plot
+updates after mouse clicks in Animint: 20--30ms response times for
+selecting the year, and 60--70ms response times for selecting the
+country. 
+%Furthermore, in web server systems the client may not cache
+%previously viewed subsets, which results in calculations inefficiently
+%being performed several times rather than simply saved for quick
+%viewing later. 
+
+The conclusion of our speed comparison is that the overhead of
+communicating with a web server results in significant slowdowns for
+interactive animations. It is clear that for quick response times, it
+is preferable to use an entirely JavaScript-based system like
+Animint.
+
+In contrast, a web server system like ggvis+shiny would be more
+appropriate for interactive animations that have many more subsets of
+the data than can ever be transferred over the network. In that case,
+the web server will initially send only the first data subset, and
+then send only the subsets of data that the client requests. However,
+since the data sets we examined were sufficiently small
+(Table~\ref{tab:examples}), client-side rendering using Animint
+resulted in quick, responsive interactive animations.
+
+Another application for which a web server system like ggvis+shiny
+would be preferable is for performing arbitrary calculations in R/C
+code on the server and then sending the result across the
+network. However, this power is not really necessary for interactive
+animations, since the only operation needed is calculating data
+subsets.
+
+\section{Example applications}
+
+In this section we discuss the range of examples that we have
+implemented with Animint (Table~\ref{tab:examples}). 
 
 \begin{table*}
   \centering
