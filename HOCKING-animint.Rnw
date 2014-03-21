@@ -230,9 +230,8 @@ TODO: code for D3, shiny, animation...?
 
 \subsection{Libraries based on the grammar of graphics}  %: Vega, ggplot2, ggvis
 
-In this section we describe the differences between Animint and
-several other high-level DSLs for data visualization: ggplot2, Vega, 
-and ggvis.
+In this section we discuss the differences between Animint and
+several other high-level DSLs for data visualization based on the grammar of graphics philosophy \citep{wickham2010layered}: ggplot2, Vega, and ggvis.
 
 \paragraph{ggplot2}
 The current implementation of Animint extends the declarative DSL of
@@ -260,16 +259,18 @@ their JSON file format definition to support clickSelects and
 showSelected mark proporties.
 
 
-\paragraph{ggvis} The authors of ggplot2 are currently working on ggvis, a package for
+\paragraph{ggvis} The authors of ggplot2 are currently working on ggvis \citep{ggvisManual}, a package for
 interactive graphics \citep{ggvis}. The main difference between
 Animint and \href{http://ggvis.rstudio.com/}{ggvis} is the central unit of a visualization. 
 In ggvis the main unit is a single plot, but in Animint it is a list of several
 plots which are linked using the clickSelects and showSelected aesthetics. In addition,
-ggvis is only interactive when run locally or on a server with R and \citep{shiny}, so it 
+ggvis is only interactive when run locally or on a server with R and \citet{shiny}, so it 
 requires significant infrastructure to create web-based graphics. ggvis also has limited
 user-interactivity - users cannot interact with plots directly (at this point), but must use 
-sliders, checkboxes, and other HTML form elements to interact with the plots. 
+sliders, checkboxes, and other HTML form elements to interact with the plots. Animint 
+provides a more subtle and intuitive interactivity - plots change when users manipulate them directly, and a series of plots are easily linked to give users a more comprehensive view of multidimensional data. 
 
+In addition to the libraries discussed here, there are several other libraries which generate d3-style graphs: \citep{rcharts}, which uses the polycharts.js library, \href{http://www.highcharts.com/}{highcharts}, and numerous others. These libraries have varying degrees of high-level syntax for plot specification, but all seem to be less popular than d3-based libraries, and none are based on the popular grammar of graphics approach to plot creation. 
 
 \section{Design}
 \label{sec:design}
@@ -461,7 +462,7 @@ When the data to visualize do not contain a time variable, we have
 found that Animint is still useful for creating interactive but
 non-animated plots.
 
-TODO more discussion.
+TODO more discussion -- Discuss relationships between multivariate data. I may be able to provide an example in soybeans (but I'm not sure if I'm allowed to share that data, so it might be good to find some other linked variables - the ones I'm thinking about are protein, oil, and yield.)
 
 \section{User feedback and observations}
 
