@@ -176,7 +176,7 @@ TODO: definition of animation. Changes over time based on data.
 TODO: examples of animated and interactive, World Bank and Fig 9 of
 \citet{d3}.
 
-TODO: discussion of related JavaScript libraries, i.e. highcharts, d3, vega.
+TODO: discussion of related JavaScript libraries, i.e. highcharts, D3, vega.
 
 \citet{animated-transitions} studied what kinds of animated
 transitions are good at accurately communicating information.
@@ -219,7 +219,7 @@ FIGURE.
 
 The current implementation of Animint uses \href{http://d3js.org/}{D3} to render interactive
 animations in a web browser \citep{d3}. D3 is more expressive than
-animint, but is also more verbose. In addition, animint uses a grammar of graphics approach to produce higher-level plots, which is arguably simpler and more elegant than constructing a plot from simple elements using d3. (TODO: CODE COMPARISON FIGURE)
+animint, but is also more verbose. In addition, animint uses a grammar of graphics approach to produce higher-level plots, which is arguably simpler and more elegant than constructing a plot from simple elements using D3. (TODO: CODE COMPARISON FIGURE)
 
 \begin{figure}
   \centering
@@ -231,46 +231,69 @@ TODO: code for D3, shiny, animation...?
 \subsection{Libraries based on the grammar of graphics}  %: Vega, ggplot2, ggvis
 
 In this section we discuss the differences between Animint and
-several other high-level DSLs for data visualization based on the grammar of graphics philosophy \citep{wickham2010layered}: ggplot2, Vega, and ggvis.
+several other high-level DSLs for data visualization based on the grammar of graphics philosophy \citep{wilkinson}: ggplot2, Vega, and ggvis.
 
 \paragraph{ggplot2}
 The current implementation of Animint extends the declarative DSL of
-\href{http://ggplot2.org/}{ggplot2} \citep{ggplot, ggplot2}. Strictly speaking, ggplot2 is for
-non-interactive and non-animated visualizations. Extending ggplot2 syntax
-to accommodate interactive, animated graphics allows R users familiar with 
-ggplot2 to create web-ready graphics using the familiar grammar of graphics
-approach in an already familiar language. 
+\href{http://ggplot2.org/}{ggplot2} \citep{ggplot2-book,
+  ggplot2-paper}. Strictly speaking, ggplot2 is for non-interactive
+and non-animated visualizations. Extending ggplot2 syntax to
+accommodate interactive, animated graphics allows R users familiar
+with ggplot2 to create web-ready graphics using the familiar grammar
+of graphics approach in an already familiar language.
 
 \paragraph{Vega}
-Like Animint, \href{http://trifacta.github.io/vega/}{Vega} is a declarative DSL that builds on top of D3
-\citep{vega}. Both sacrifice some of the power of D3, while still
-allowing a wide variety of plots to be defined in fewer lines of code
-than pure D3. The main idea of Vega is to declaratively define a
-visualization using a special type of JavaScript Object Notation
-(JSON) file. Animint also internally uses a JSON file to store
-meta-data about an interactive animation (see section~TODO).
+Like Animint, \href{http://trifacta.github.io/vega/}{Vega} is a
+declarative DSL that builds on top of D3 \citep{vega}. Both sacrifice
+some of the power of D3, while still allowing a wide variety of plots
+to be defined in fewer lines of code than pure D3. The main idea of
+Vega is to declaratively define a visualization using a special type
+of JavaScript Object Notation (JSON) file. As discussed in
+Section~\ref{sec:design}, Animint also internally uses a JSON file to
+store meta-data about an interactive animation.
 
 There are two main differences between Vega and Animint. First, the
 Animint user writes R code, but the Vega user writes a JSON
 file. Second and more importantly, Vega does not currently support
 interactive animations. However, it should be possible for Vega to
 support interactive animations in the future, by adding expanding
-their JSON file format definition to support clickSelects and
-showSelected mark proporties.
+their JSON file format definition to support mark proporties based on
+the clickSelects and showSelected ideas introduced in this paper in
+Section~\ref{sec:design}.
 
 
-\paragraph{ggvis} The authors of ggplot2 are currently working on ggvis \citep{ggvisManual}, a package for
-interactive graphics \citep{ggvis}. The main difference between
-Animint and \href{http://ggvis.rstudio.com/}{ggvis} is the central unit of a visualization. 
-In ggvis the main unit is a single plot, but in Animint it is a list of several
-plots which are linked using the clickSelects and showSelected aesthetics. In addition,
-ggvis is only interactive when run locally or on a server with R and \citet{shiny}, so it 
-requires significant infrastructure to create web-based graphics. ggvis also has limited
-user-interactivity - users cannot interact with plots directly (at this point), but must use 
-sliders, checkboxes, and other HTML form elements to interact with the plots. Animint 
-provides a more subtle and intuitive interactivity - plots change when users manipulate them directly, and a series of plots are easily linked to give users a more comprehensive view of multidimensional data. 
+\paragraph{ggvis} The authors of ggplot2 are currently working on a
+package for interactive graphics called
+\href{http://ggvis.rstudio.com/}{ggvis} \citep{ggvis}. There are many
+differences between ggvis and Animint, but the main difference is that
+ggvis is more powerful and verbose, while Animint is more succinct for
+expressing interactive plots that show/hide data subsets
+(Table~\ref{tab:packages}). At the level of defining plots in R code,
+a ggvis object corresponds to a single plot, while an Animint object
+is a list of several plots which are linked using the clickSelects and
+showSelected aesthetics. Another difference is that sharing a ggvis
+visualization requires a web server that runs R and shiny
+\citep{shiny}, but Animint uses static files and client-side
+JavaScript so it does not require any special web server software. The
+two packages also have different interactive features: ggvis uses
+sliders, checkboxes, and other HTML form elements, and Animint
+provides clickable SVG elements. This usually results in a richer
+Animint data visualization using fewer lines of code. For example, in
+a ggvis of the WorldBank data (Figure~1), it is natural to use a
+slider to select the displayed year. In contrast, in Animint we used a
+clickable multiple time series plot for the same purpose, giving the
+viewer a more comprehensive view of these multidimensional data.
 
-In addition to the libraries discussed here, there are several other libraries which generate d3-style graphs: \citep{rcharts}, which uses the polycharts.js library, \href{http://www.highcharts.com/}{highcharts}, and numerous others. These libraries have varying degrees of high-level syntax for plot specification, but all seem to be less popular than d3-based libraries, and none are based on the popular grammar of graphics approach to plot creation. 
+In addition to the libraries discussed above, there are several other
+libraries which can generate interactive web plots: rCharts
+\citep{rcharts}, polycharts.js \citep{polycharts},
+\href{http://www.highcharts.com/}{highcharts} \citep{highcharts}, and
+numerous others. These libraries have varying degrees of high-level
+syntax for plot specification, but 
+%all seem to be less popular than D3-based libraries, and
+none are based on the grammar of graphics approach to plot
+creation. More importantly for this paper, none of these libraries
+allow creation of interactive animations.
 
 \section{Design}
 \label{sec:design}
@@ -287,18 +310,40 @@ opts_chunk$set(tidy=FALSE, eval=FALSE)
 opts_knit$set(out.format="latex")
 knit_theme$set("edit-matlab")
 @ 
-In contrast to the sliders of ggvis, animint is designed for interactivity via direct manipulation of the plot elements. To facilitate this goal, we created a new geom called ``tallrect",  which tiles the plot area with rectangles that span the y region of the plot and correspond to specific x values or intervals. Users can click on any one tallrect, and the \texttt{clickSelects} aesthetic passes the selected element to other linked plots, which display data corresponding to the selected variable. In the first plot shown in figure \ref{fig:compare}, year is used to create tallrects and \texttt{clickSelects=1996}, and in the second plot, life expectancy and fertility rate are shown for the selected year.
+
+In contrast to the sliders of ggvis, animint is designed for
+interactivity via direct manipulation of the plot elements. To
+facilitate this goal, we created a new geom called ``tallrect," which
+tiles the plot area with rectangles that span the y region of the plot
+and correspond to specific x values or intervals. Users can click on
+any one tallrect, and the \texttt{clickSelects} aesthetic passes the
+selected element to other linked plots, which display data
+corresponding to the selected variable. In the first plot shown in
+Figure~\ref{fig:compare}, year is used to create tallrects and
+\texttt{clickSelects=1996}, and in the second plot, life expectancy
+and fertility rate are shown for the selected year.
+
 <<yearRects-geom>>=
 yearRects <- geom_tallrect(
   aes(xmin=year-1/2, xmax=year+1/2, 
       clickSelects=year),
   data=years, alpha=1/2)
 @ 
-Animint also provides a shorthand syntax for tallrects, as they are a common geom/aesthetic pairing in linked plots. 
+
+Animint also provides a shorthand syntax for tallrects, as they are a
+common geom/aesthetic pairing in linked plots.
+
 <<yearRects-make>>=
 yearRects <- make_tallrect(WorldBank, "year")
 @ 
-This approach allows us to utilize both plots to display meaningful information: we can overlay the tallrects in the first plot with time series data while still using the tallrects to modify the second plot. Similar linked graphs could be produced with d3, however, the grammar of graphics approach allows for fewer lines of code and simpler debugging. 
+
+This approach allows us to utilize both plots to display meaningful
+information: we can overlay the tallrects in the first plot with time
+series data while still using the tallrects to modify the second
+plot. Similar linked graphs could be produced with D3, but the grammar
+of graphics approach allows for fewer lines of code and simpler
+debugging.
+
 <<timeSeries, tidy=FALSE>>=
 timeSeries <- ggplot()+
   yearRects+
@@ -308,7 +353,13 @@ timeSeries <- ggplot()+
         clickSelects=country),
     data=WorldBank, size=3, alpha=3/5)
 @ 
-In order to clarify which data is being shown on the second plot in figure \ref{fig:compare}, we add a text label that shows the selected year above the plot. This set of labels (one corresponding to each year) is created using ggplot2's \verb|geom_text|, and only one label is shown at a time due to the \texttt{showSelected} aesthetic. 
+
+In order to clarify which data is being shown on the second plot in
+Figure~\ref{fig:compare}, we add a text label that shows the selected
+year above the plot. This set of labels (one corresponding to each
+year) is created using ggplot2's \verb|geom_text|, and only one label
+is shown at a time due to the \texttt{showSelected} aesthetic.
+
 <<yearText-geom, tidy=FALSE>>=
 yearText <- geom_text(
   aes(label=year, showSelected=year),
@@ -343,7 +394,7 @@ scatterPlot <- ggplot()+
 @ 
 We can also add another selection element to link countries in plot 2 to the lines in plot 1. This will allow us to identify selected points in the second plot with a text label and display the corresponding time series in the first plot. Note that the animint extension of ggplot2 aesthetics allows for multiple showSelected elements (year and country) that can interact to jointly subset the full data. 
 
-Once we have created the static plots using the extended ggplot2 grammar of graphics syntax, we can use the workhorse function of the animint package, \texttt{gg2animint}, to output our linked plots to a webpage, where they can be rendered using d3. \texttt{gg2animint} allows us to specify that in absence of user interaction, we want the plots to animate over time, progressing at a rate of one year every 3 seconds. We also specify the duration of each frame in the animation, which allows for smooth transitions. Animint outputs the index.html file and the relevent javascript libraries to the specified output directory, where the user can upload it to the web or open the interactive graphic in a local browser. 
+Once we have created the static plots using the extended ggplot2 grammar of graphics syntax, we can use the workhorse function of the animint package, \texttt{gg2animint}, to output our linked plots to a webpage, where they can be rendered using D3. \texttt{gg2animint} allows us to specify that in absence of user interaction, we want the plots to animate over time, progressing at a rate of one year every 3 seconds. We also specify the duration of each frame in the animation, which allows for smooth transitions. Animint outputs the index.html file and the relevent javascript libraries to the specified output directory, where the user can upload it to the web or open the interactive graphic in a local browser. 
 <<gg2animint,fig.pos='htbp'>>=
 viz <- 
   list(scatterPlot=scatterPlot,
