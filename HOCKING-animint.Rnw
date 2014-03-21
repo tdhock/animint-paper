@@ -279,7 +279,7 @@ data(WorldBank)
 write.csv(WorldBank, "WorldBank.csv")
 opts_chunk$set(tidy=FALSE, eval=FALSE)
 @ 
-In contrast to the sliders of ggvis, animint is designed for interactivity via direct manipulation of the plot elements. To facilitate this goal, we created a new geom called ``tallrect",  which tiles the plot area with rectangles that span the y region of the plot and correspond to specific x values or intervals. The variable used to create the tallrect objects is then linked to other plots, which can display data corresponding to the selected variable. In the first plot shown in figure \ref{fig:compare}, year is the tallrect object, and in the second plot, life expectancy and fertility rate are shown for the selected year.
+In contrast to the sliders of ggvis, animint is designed for interactivity via direct manipulation of the plot elements. To facilitate this goal, we created a new geom called ``tallrect",  which tiles the plot area with rectangles that span the y region of the plot and correspond to specific x values or intervals. Users can click on any one tallrect, and the \texttt{clickSelects} aesthetic passes the selected element to other linked plots, which display data corresponding to the selected variable. In the first plot shown in figure \ref{fig:compare}, year is used to create tallrects and \texttt{clickSelects=1996}, and in the second plot, life expectancy and fertility rate are shown for the selected year.
 <<yearRects-geom>>=
 yearRects <- geom_tallrect(
   aes(xmin=year-1/2, xmax=year+1/2, 
