@@ -90,7 +90,7 @@ for(sub.dir.i in seq_along(sub.dirs)){
     animated[[sub.dir.i]] <- "yes"
   }
 }
-tab <- data.frame(LOC=code.lines,
+tab <- data.frame("lines of R code"=code.lines,
                   seconds=round(seconds, 1),
                   MB=round(total.size/1000, 1),
                   rows=as.integer(n.rows),
@@ -103,7 +103,7 @@ tab <- data.frame(LOC=code.lines,
                   ##comments=comment.lines,
                   check.names=FALSE,
                   row.names=base)
-tab <- tab[order(tab$LOC, decreasing=FALSE),]
+tab <- tab[order(tab$lines, decreasing=FALSE),]
 tab$Fig <- NA
 tab[c("WorldBank", "tornado", "climate"), "Fig"] <- c(1L, 2L, 3L)
 print(tab)

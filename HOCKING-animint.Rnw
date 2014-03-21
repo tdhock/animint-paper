@@ -203,10 +203,9 @@ for R developers.
 
 
 In this section we offer a comparison between Animint and several
-related libraries/packages in JavaScript/R
-(Table~\ref{tab:packages}). The main difference is that Animint's
-declarative syntax allows interactive animations to be expressed in
-fewer lines of code than the other packages.
+related libraries/packages in JavaScript/R. The main difference is
+that Animint's declarative syntax allows interactive animations to be
+expressed in fewer lines of code than the other packages.
 
 \subsection{Animated graphics libraries}
 
@@ -268,13 +267,14 @@ package for interactive graphics called
 \href{http://ggvis.rstudio.com/}{ggvis} \citep{ggvis}. There are many
 differences between ggvis and Animint, but the main difference is that
 ggvis is more powerful and verbose, while Animint is more succinct for
-expressing interactive plots that show/hide data subsets
-(Table~\ref{tab:packages}). At the level of defining plots in R code,
-a ggvis object corresponds to a single plot, while an Animint object
-is a list of several plots which are linked using the clickSelects and
-showSelected aesthetics. Another difference is that sharing a ggvis
-visualization requires a web server that runs R and shiny
-\citep{shiny}, but Animint uses static files and client-side
+expressing interactive plots that show/hide data subsets (for a
+concrete example, see the comparison of World Bank data visualizations
+in Section~\ref{sec:compare}). At the level of defining plots in R
+code, a ggvis object corresponds to a single plot, while an Animint
+object is a list of several plots which are linked using the
+clickSelects and showSelected aesthetics. Another difference is that
+sharing a ggvis visualization requires a web server that runs R and
+shiny \citep{shiny}, but Animint uses static files and client-side
 JavaScript so it does not require any special web server software. The
 two packages also have different interactive features: ggvis uses
 sliders, checkboxes, and other HTML form elements, and Animint
@@ -300,8 +300,11 @@ allow creation of interactive animations.
 \label{sec:design}
 
 In this section we explain the main idea of the Animint grammar for
-interactive animations. We use the World Bank example of Figure~1 as a
-motivating example.
+interactive animations. We first explain the grammar using the World
+Bank example of Figure~1, and then give implementation details of the
+compiler and renderer.
+
+\subsection{A grammar for interactive animations}
 
 <<opts, echo=FALSE, message=FALSE, cache=FALSE>>=
 library(animint)
@@ -406,37 +409,35 @@ gg2animint(viz, out.dir="WorldBank")
 @ 
 
 
-\begin{table}[htbp]
-%% Table captions on top in journal version
-  \caption{Comparison of graphics packages that can achieve 
-    interactive animations. We show the language and number of lines of code 
-    to implement the World Bank visualization shown in Figure 1.}
- \label{tab:packages}
- \scriptsize
- \begin{center}
-  \begin{tabular}{cccccc}
-    Package & years & interaction vars & 
-    %programming &
-    language & lines \\
-    \hline
-    tcltk & 1991- & several & 
-    %object &
-    & 100s \\
-    animation & 2007- & 1 = time & 
-    %imperative &
-    R & 40 \\
-    D3 & 2011- & several & 
-    %declarative & 
-    JavaScript &TODO \\
-    shiny & 2012- & several & 
-    %reactive & 
-    R & 60 \\
-    animint & 2013- & several & 
-    %declarative & 
-    R& 20 
-  \end{tabular}
- \end{center}
-\end{table}
+\subsection{Implementation details}
+
+As shown in Figure~\ref{fig:design}, the Animint system is implemented
+in 2 parts:
+\begin{description}
+\item[compiler] $\approx 1000$ lines of R code that converts a list of
+  ggplots and options to a comma-separated values (CSV) file database
+  and a JSON plot meta-data file.
+\item[renderer] $\approx 1000$ lines of JavaScript/D3 code that
+  renders the CSV and JSON plot files as SVG in a web browser.
+\end{description}
+
+\begin{figure}[b!]
+  \centering
+  \includegraphics[width=\columnwidth]{figure-design}
+  \caption{Schematic explanation of compilation and rendering the
+    World Bank visualization shown in Figure~1. \textbf{Top}: the
+    interactive animation is a list of 4 R objects: 2 ggplots and 2
+    option lists. \textbf{Center}: Animint R code compiles data in
+    ggplot geoms to a database of comma-separated values (CSV) files
+    (\textcolor{red}{$\rightarrowtriangle$}). It also compiles plot
+    meta-data including ggplot variable mappings, animation time
+    options, and transition duration options to a JSON meta-data file
+    ($\rightarrowtriangle$). \textbf{Bottom}: those data-dependent
+    compiled files are combined with data-independent JavaScript and
+    HTML files which render the interactive animation in a web browser
+    (\textcolor{blue}{$\rightarrowtriangle$}).}
+  \label{fig:design}
+\end{figure}
 
 \section{Example applications}
 
@@ -447,6 +448,65 @@ of Figure~1 using several different libraries, then discuss several
 other interactive animations that we have built with Animint.
 
 \subsection{Comparison study: World Bank data}
+\label{sec:compare}
+
+To show the advantages that the Animint grammar brings for creating
+interactive and animated data visualizations, we implemented the World
+Bank visualization of Figure~1 using several different libraries
+(Table~\ref{tab:packages}).
+
+\begin{table}[t!]
+%% Table captions on top in journal version
+  \caption{Implementation complexity of the World Bank data visualization of 
+    Figure~1 using several libraries that can create interactive animations.
+    For each library
+    we show the number of lines of code (LOC), programming language, 
+    number of interaction variables, and programming style.}
+ \label{tab:packages}
+ \scriptsize
+ \begin{center}
+  \begin{tabular}{cccccc}
+    library & 
+    LOC &
+    language &
+    %years & 
+    interaction vars &
+    programming &
+    \\
+    \hline
+    animint & 
+    20 &
+    R &
+    %2013- & 
+    several & 
+    declarative & 
+    \\
+    animation & 
+    38 &
+    R  &
+    %2007- & 
+    1 = time & 
+    imperative &
+    \\
+    D3 & 
+    TODO &
+    JavaScript & 
+    %2011- & 
+    several & 
+    declarative & 
+    \\
+    ggvis/shiny & 
+    84 &
+    R  &
+    %2012- & 
+    several & 
+    reactive & 
+    \\
+  \end{tabular}
+ \end{center}
+\end{table}
+
+
 
 There are inherent tradeoffs to using a web server system like
 ggvis+shiny rather than an entirely web client/JavaScript-based
@@ -473,7 +533,7 @@ TODO: Susan's shiny app BITLY.
   \caption{Characteristics of nine interactive visualizations built with 
     Animint. From left to right, we show the data set name, the 
     lines of R code including data processing but not including comments
-    (LOC, 80 characters max per line), 
+    (80 characters max per line), 
     the amount of time it takes to compile the visualization (seconds), 
     the total size of the uncompressed CSV files in megabytes (MB),
     the total number of data points (rows), 
@@ -577,24 +637,6 @@ impossible to show in publications: ``...  the web interface is simple
 and easy to use.  It also enables us to publish more detailed
 interactive results on our website to accompany the results presented
 in publications.''
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{figure-design}
-  \caption{Schematic explanation of compilation and rendering the
-    World Bank visualization shown in Figure~1. \textbf{Top}: the
-    interactive animation is a list of 4 R objects: 2 ggplots and 2
-    option lists. \textbf{Center}: Animint R code compiles data in
-    ggplot geoms to a database of comma-separated values (CSV) files
-    (\textcolor{red}{$\rightarrowtriangle$}). It also compiles plot
-    meta-data including ggplot variable mappings, animation time
-    options, and transition duration options to a JSON meta-data file
-    ($\rightarrowtriangle$). \textbf{Bottom}: those data-dependent
-    compiled files are combined with data-independent JavaScript and
-    HTML files which render the interactive animation in a web browser
-    (\textcolor{blue}{$\rightarrowtriangle$}).}
-  \label{fig:design}
-\end{figure}
 
 \section{Limitations and future work}
 
