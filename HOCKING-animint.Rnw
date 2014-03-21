@@ -279,17 +279,18 @@ data(WorldBank)
 write.csv(WorldBank, "WorldBank.csv")
 opts_chunk$set(tidy=FALSE, eval=FALSE)
 @ 
-
+In contrast to the sliders of ggvis, animint is designed for interactivity via direct manipulation of the plot elements. To facilitate this goal, we created a new geom called ``tallrect",  which tiles the plot area with rectangles that span the y region of the plot and correspond to specific x values or intervals. The variable used to create the tallrect objects is then linked to other plots, which can display data corresponding to the selected variable. In the first plot shown in figure \ref{fig:compare}, year is the tallrect object, and in the second plot, life expectancy and fertility rate are shown for the selected year.
 <<yearRects-geom>>=
 yearRects <- geom_tallrect(
   aes(xmin=year-1/2, xmax=year+1/2, 
       clickSelects=year),
   data=years, alpha=1/2)
 @ 
+Animint also provides a shorthand syntax for tallrects, as they are a common element of linked plots. 
 <<yearRects-make>>=
 yearRects <- make_tallrect(WorldBank, "year")
 @ 
-
+This approach allows us to utilize both plots to display meaningful information: we can overlay the tallrects in the first plot with time series data while still using the tallrects to modify the second plot. Similar linked graphs could be produced with d3, however, the grammar of graphics approach allows for fewer lines of code and simpler debugging. 
 <<timeSeries>>=
 timeSeries <- ggplot()+
   yearRects+
@@ -299,7 +300,7 @@ timeSeries <- ggplot()+
         clickSelects=country),
     data=WorldBank, size=3, alpha=3/5)
 @ 
-
+In order to clarify which data is being shown on the second plot in figure \ref{fig:compare}, we add a text label that shows the selected year above the plot. This set of labels (one corresponding to each year) is created using ggplot2's \verb|geom_text|, and only one label is shown at a time due to the \texttt{showSelected} aesthetic. 
 <<yearText-geom>>=
 yearText <- geom_text(
   aes(label=year, showSelected=year),
