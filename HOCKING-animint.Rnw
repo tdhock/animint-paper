@@ -256,9 +256,9 @@ The Animint library includes a compiler that converts a list of
 ggplots to an interactive web visualization rendered using D3
 \citep{d3}. One of the main reasons for the success and popularity of
 D3 is that it allows visualizations to be specified using the
-terminology of the Document Object Model, which makes learning D3 easy
-for web developers. Animint's DSL abandons the DOM standard and
-sacrifices some of the D3's flexibility to gain expressive
+terminology of the Document Object Model (DOM), which makes learning
+D3 easy for web developers. Animint's DSL abandons the DOM standard
+and sacrifices some of the D3's flexibility to gain expressive
 power. Thus, designers familiar with ggplot2 syntax are now able to
 declare complex interactive animations in only a few dozen lines of
 code using the Animint DSL. This enables R developers to design a
