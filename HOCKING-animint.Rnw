@@ -95,13 +95,13 @@
   difficult to accomplish, since they must be defined in terms of
   low-level operations and sometimes 100s of lines of code. In
   contrast, Animint's high-level DSL can be used to produce a wide
-  variety of complex visualizations with only 10s of lines of code. It
-  works by adding 2 new aesthetics to the grammar of graphics:
-  \texttt{clickSelects}, which allows users to select elements of the
-  plot, and \texttt{showSelected}, which displays only elements
-  corresponding to the current selection. After using our novel
-  declarative DSL to define an interactive animation in R code, it is
-  first compiled and then rendered in a web browser using D3. We
+  variety of complex interactive visualizations with only 10s of lines
+  of code. It works by adding 2 new aesthetics to the grammar of
+  graphics: \texttt{clickSelects}, which allows users to select
+  elements of the plot, and \texttt{showSelected}, which displays only
+  elements corresponding to the current selection. After using our
+  novel declarative DSL to define an interactive animation in R code,
+  it is first compiled and then rendered in a web browser using D3. We
   discuss the design of Animint, then compare to related libraries,
   and show several example visualizations of high-dimensional time
   series data.} % end of abstract
@@ -499,6 +499,7 @@ Bank visualization of Figure~1 using several different libraries
     %2012- & 
     several & 
     %reactive & 
+    \href{http://vanderplas.dyndns-remote.com/Shiny/ggvis-animint/}{\texttt{1gidhgS}}
     \\
   \end{tabular}
  \end{center}
@@ -507,13 +508,14 @@ Bank visualization of Figure~1 using several different libraries
 \subsection{Client-server systems like ggvis/shiny}
 
 We implemented the World Bank data visualization using 84 lines of R
-code and the ggvis and shiny packages (TODO:BITLY). Because ggvis and
-shiny do not have any declarative DSL for interactive animations, this
-implementation was significantly more complex than the 20 lines of R
-code we used to build Figure~1 with the Animint package. Showing and
-hiding data subsets was accomplished by clicking on a slider for year
-and a menu for country, not by clicking on the plot elements. Although
-creating such visualizations in ggvis+shiny is possible, it requires
+code and the ggvis and shiny packages
+(\href{http://vanderplas.dyndns-remote.com/Shiny/ggvis-animint/}{\texttt{http://bit.ly/1gidhgS}}). Because ggvis and shiny do not have any
+declarative DSL for interactive animations, this implementation was
+significantly more complex than the 20 lines of R code we used to
+build Figure~1 with the Animint package. Showing and hiding data
+subsets was accomplished by clicking on a slider for year and a menu
+for country, not by clicking on the plot elements. Although creating
+such visualizations in ggvis+shiny is possible, it requires
 significantly more work for limited interactivity.
 
 There are also inherent speed tradeoffs to using a client-server
@@ -651,11 +653,20 @@ TODO more discussion -- Discuss relationships between multivariate data. I may b
 \section{User feedback and observations}
 
 We and our users have created interactive visualizations using Animint
-that would be too complex to implement in other systems. Examples
-discussed in previous sections include animated visualizations of
-multiple time series data and non-animated visualizations of other
-high-dimensional data sets. In this section we share comments and
+that would be too complex to implement in other systems. 
+%% Examples
+%% discussed in previous sections include animated visualizations of
+%% multiple time series data and non-animated visualizations of other
+%% high-dimensional data sets. 
+In this section we share comments and
 constructive criticism that we have obtained from our users.
+
+R users have found that Animint is easy to learn. One statistics
+Ph.D. student writes, ``animint is a fantastic framework for creating
+interactive graphics for someone familiar with R and ggplot2's grammar
+of graphics implementation. The API is very intuitive and allows one
+to quickly bring their static graphics to life in a way that
+facilitates exploratory data analysis.''
 
 For the \texttt{prior} data visualization
 (\url{http://bit.ly/1peIT7t}), the Animint user is a machine learning
