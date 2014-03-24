@@ -243,14 +243,14 @@ advantageous to have smooth transitions in data-driven animations
 transitions.
 
 The Animint DSL is implemented as an extension of ggplot2
-\citep{ggplot2}, which is an R implementation of the grammar of
-graphics \citep{wilkinson}. The ggplot2 language was created as a
-high-level abstraction for non-interactive visualizations. One of the
-key strengths of ggplot2 is that it allows a designer to declare a
-visualization in terms of distinct geometric elements, each with a
-clear aesthetic mapping from data variables to geometric properties.
-The Animint DSL extends ggplot2 by adding two new aesthetics:
-\texttt{clickSelects} and \texttt{showSelected}.
+\citep{ggplot2-book, ggplot2-paper}, which is an R implementation of
+the grammar of graphics \citep{wilkinson}. The ggplot2 language was
+created as a high-level abstraction for non-interactive
+visualizations. One of the key strengths of ggplot2 is that it allows
+a designer to declare a visualization in terms of distinct geometric
+elements, each with a clear aesthetic mapping from data variables to
+geometric properties.  The Animint DSL extends ggplot2 by adding two
+new aesthetics: \texttt{clickSelects} and \texttt{showSelected}.
 
 The Animint library includes a compiler that converts a list of
 ggplots to an interactive web visualization rendered using D3
