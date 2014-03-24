@@ -160,18 +160,46 @@
 
 \maketitle
 
-TODO: definition of interactive, which \citet{cleveland} calls
-``direct manipulation.''
+Interactive, animated data visualization is a useful tool for
+obtaining an intuitive understanding of patterns in multivariate data
+sets.  For example, consider the World Bank data, which consist of
+several economic variables measured for 205 countries from 1960 to
+2012. The visualization in Figure~1 shows six variables from this data
+set: year, country, life expectancy, fertility rate, region, and
+population. As the designers of this visualization and authors of this
+paper, we have chosen to emphasize the country United States and the
+year 1996. If the reader or user of this interactive data
+visualization is interested in another country or time period, he/she
+can use interactivity to change the emphasis. Finally, since one of
+the variables in this visualization is the year of measurement, it is
+natural to animate the visualization to see how the data changes over
+time. We introduce Animint, a new domain-specific language (DSL) for
+designing such linked, interactive, animated data visualizations. To
+explain exactly what kinds of visualizations are possible using
+Animint, we begin with several definitions.
 
-TODO: definition of animint user=designer and developer=programmer and
-viewer=reader.
+For the purposes of this paper, there are 3 important roles that
+contribute to the creation of an Animint visualization: the developer,
+who implements the Animint library; the designer, who uses the Animint
+library to define a visualization; and the user, who views the
+visualization in a web browser. We as authors of this paper are the
+developers of the Animint library, and we discuss details of its
+implementation in Section~\ref{sec:implementation}. The designer
+specifies data sets and maps variables to interactive visual elements
+using our novel DSL, then uses the Animint library to compile and save
+an interactive animation. The user writes no code, but can view and
+interact with an Animint visualization by clicking SVG elements in a
+web browser.
 
-TODO: definition of brushing \citep{cleveland}. Three modes: transient
-(data under brush = selection), lasting (data under brush are added to
-the selection), or erasing (data under brush are removed from the
-selection). Operations: labeling (show text near selection), enhanced
-linking (change the symbol used to plot the selection) deletion
-(e.g. outliers).
+Our definition of ``interactive'' is synonymous to what
+\citet{cleveland} calls ``direct manipulation'' --- the user directly
+specifies data of interest by clicking the mouse on their
+corresponding plotted elements. in the of brushing
+\citep{cleveland}. Three modes: transient (data under brush =
+selection), lasting (data under brush are added to the selection), or
+erasing (data under brush are removed from the selection). Operations:
+labeling (show text near selection), enhanced linking (change the
+symbol used to plot the selection) deletion (e.g. outliers).
 
 TODO: definition of animation. Changes over time based on data.
 
@@ -411,6 +439,7 @@ gg2animint(viz, out.dir="WorldBank")
 
 
 \subsection{Implementation details}
+\label{sec:implementation}
 
 As shown in Figure~\ref{fig:design}, the Animint system is implemented
 in 2 parts:
@@ -499,7 +528,7 @@ Bank visualization of Figure~1 using several different libraries
     %2012- & 
     several & 
     %reactive & 
-    \href{http://vanderplas.dyndns-remote.com/Shiny/ggvis-animint/}{\texttt{1gidhgS}}
+    \bitly{1diUYsg}
     \\
   \end{tabular}
  \end{center}
@@ -509,7 +538,8 @@ Bank visualization of Figure~1 using several different libraries
 
 We implemented the World Bank data visualization using 84 lines of R
 code and the ggvis and shiny packages
-(\href{http://vanderplas.dyndns-remote.com/Shiny/ggvis-animint/}{\texttt{http://bit.ly/1gidhgS}}). Because ggvis and shiny do not have any
+(\url{http://bit.ly/1diUYsg}). 
+Because ggvis and shiny do not have any
 declarative DSL for interactive animations, this implementation was
 significantly more complex than the 20 lines of R code we used to
 build Figure~1 with the Animint package. Showing and hiding data
