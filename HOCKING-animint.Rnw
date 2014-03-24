@@ -605,11 +605,9 @@ TODO: discuss animation.
 
 \subsection{Client-server systems like ggvis/shiny}
 
-We implemented the World Bank data visualization using 84 lines of R
-code and the ggvis and shiny packages
-(\url{http://bit.ly/1diUYsg}). 
-Because ggvis and shiny do not have any
-declarative DSL for interactive animations, this implementation was
+We implemented the World Bank data visualization using the ggvis \citep{ggvis} graphical library combined with the recommended shiny package \citep{shiny} in 84 lines of R
+code (\url{http://bit.ly/1diUYsg}). 
+While ggvis and shiny combined can produce interactive animations, the DSL ggvis provides is much more complex and more limited than Animint. Our implementation using this combination of packages was
 significantly more complex than the 20 lines of R code we used to
 build Figure~1 with the Animint package. Showing and hiding data
 subsets was accomplished by clicking on a slider for year and a menu
@@ -626,7 +624,8 @@ client-server communication overhead. All the \mbox{Animint}
 JavaScript plot rendering code is executed in the web browser, whereas
 ggvis executes some plotting code on the server. This means that after
 a mouse click, ggvis can not update a plot immediately, but instead
-must wait for the server to respond with the plot data.
+must wait for the server to respond with the plot data. In addition, shiny requires 
+a server with R loaded, complicating deployment to the web significantly. 
 
 We quantified speed differences between the two systems by timing web
 page loading using DevTools in Google Chrome and timing interactive
