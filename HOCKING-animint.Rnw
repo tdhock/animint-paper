@@ -88,8 +88,8 @@
 
 %% Abstract section.
 \abstract{Animint is a novel high-level domain-specific language (DSL)
-  for linked, interactive, animated plots. It builds on top of
-  previous work on the grammar of graphics (ggplot2 in R) and
+  for linked, interactive, animated plots. It builds on top
+  of previous work on the grammar of graphics (ggplot2 in R) and
   interactive visualization using web standards (D3 in JavaScript). In
   other data visualization systems, interactive animations are
   difficult to accomplish, since they must be defined in terms of
@@ -318,7 +318,7 @@ idea of the \href{http://yihui.name/animation/}{animation} package
 \citep{animation}. TODO: CODE COMPARISON FIGURE.
 
 
-\subsection{D3}
+\subsection{D3 and other JavaScript libraries}
 
 TODO: discussion of related JavaScript libraries, i.e. highcharts, D3, vega.
 
@@ -338,10 +338,12 @@ several other high-level DSLs for data visualization based on the grammar of gra
 The current implementation of Animint extends the declarative DSL of
 \href{http://ggplot2.org/}{ggplot2} \citep{ggplot2-book,
   ggplot2-paper}. Strictly speaking, ggplot2 is for non-interactive
-and non-animated visualizations. Extending ggplot2 syntax to
-accommodate interactive, animated graphics allows R users familiar
-with ggplot2 to create web-ready graphics using the familiar grammar
-of graphics approach in an already familiar language.
+and non-animated visualizations. In this paper, we propose the
+\texttt{clickSelects} and \texttt{showSelected} aesthetics for
+ggplot2, which extend it to accommodate interactive, animated
+graphics. This allows R users to create web-ready graphics using the
+grammar of graphics, which is familiar to many statisticians and R
+programmers.
 
 \paragraph{Vega}
 Like Animint, \href{http://trifacta.github.io/vega/}{Vega} is a
@@ -355,12 +357,13 @@ store meta-data about an interactive animation.
 
 There are two main differences between Vega and Animint. First, the
 Animint user writes R code, but the Vega user writes a JSON
-file. Second and more importantly, Vega does not currently support
-interactive animations. However, it should be possible for Vega to
-support interactive animations in the future, by adding expanding
-their JSON file format definition to support mark proporties based on
-the clickSelects and showSelected ideas introduced in this paper in
-Section~\ref{sec:design}.
+file. Second and more importantly, Vega does not currently support the
+complex data-driven interactive animations that Animint currently
+supports. However, it should be possible for Vega to support
+interactive animations in the future, by expanding their JSON
+file format definition to support mark proporties based on the
+clickSelects and showSelected ideas introduced in this paper.
+%in Section~\ref{sec:design}.
 
 
 \paragraph{ggvis} The authors of ggplot2 are currently working on a
@@ -737,13 +740,13 @@ data. TODO COMMENTARY.
   \centering
   \includegraphics[width=\textwidth]{figure-tornado}
   \caption{Interactive animation of tornadoes recorded from 1950 to
-    2012 in the United States (TODO:BITLY). \textbf{Left}: map of the
-    lower 48 United States with tornado paths in 1982. The text 
-    shows the selected year, and clicking the map changes the selected
-    state, currently Texas. \textbf{Right}: time series of tornado
-    counts in Texas. Clicking a bar changes the selected year, and the
-    text shows selected state and the number of tornadoes recorded
-    there in that year (119 tornadoes in Texas in 1982).}
+    2012 in the United States (\url{http://bit.ly/1hWvYo0}). \textbf{Left}:
+    map of the lower 48 United States with tornado paths in 1982. The
+    text shows the selected year, and clicking the map changes the
+    selected state, currently Texas. \textbf{Right}: time series of
+    tornado counts in Texas. Clicking a bar changes the selected year,
+    and the text shows selected state and the number of tornadoes
+    recorded there in that year (119 tornadoes in Texas in 1982).}
   \label{fig:tornado}
 \end{figure*}
 
@@ -755,17 +758,18 @@ data. TODO COMMENTARY.
   \centering
   \includegraphics[width=\textwidth]{figure-climate}
   \caption{Visualization containing 6 linked, interactive, animated
-    plots of Central American climate data (TODO:BITLY). \textbf{Top}:
-    for the selected time (December 1997), maps displaying the spatial
-    distribution of two temperature variables, and a scatterplot of
-    these two variables. The selected region is displayed with a black
-    outline, and can be changed by clicking a rect on the map or a
-    point on the scatterplot. \textbf{Bottom}: time series of the two
-    temperature variables with the selected region shown in violet,
-    and a scatterplot of all times for that region. The selected time
-    can be changed by clicking a background tallrect on a time series
-    or a point on the scatterplot. The selected region can be changed
-    by clicking a line on a time series.}
+    plots of Central American climate data
+    (\url{http://bit.ly/QcUrhn}). \textbf{Top}: for the selected time
+    (December 1997), maps displaying the spatial distribution of two
+    temperature variables, and a scatterplot of these two
+    variables. The selected region is displayed with a black outline,
+    and can be changed by clicking a rect on the map or a point on the
+    scatterplot. \textbf{Bottom}: time series of the two temperature
+    variables with the selected region shown in violet, and a
+    scatterplot of all times for that region. The selected time can be
+    changed by clicking a background tallrect on a time series or a
+    point on the scatterplot. The selected region can be changed by
+    clicking a line on a time series.}
   \label{fig:climate}
 \end{figure*}
 
@@ -809,8 +813,14 @@ since it shows under which conditions our proposed method works well
 and provides avenues for further research.''
 
 
-Another Animint user from a machine learning background. For the \texttt{change} visualization
-(\texttt{http://bit.ly/1gVb8To}), 
+Another user from a machine learning background found the interactive
+plots useful for presenting his work: ``the `regularization path' is a
+difficult concept to demonstrate in my research. The [Animint
+\url{http://bit.ly/1gVb8To}] helped greatly by rendering an
+interactive plot of regularization path, likelihood, and graph at the
+same time and illustrating their connections. It also reveals an
+interesting phenomenon that maximizing the testing likelihood actually
+gives many false positives.''
 
 In another application, the Animint user was a genomics researcher:
 ``viewing and exploring my complex intestinal microbiome dataset in
@@ -821,12 +831,12 @@ compared to scrolling through huge spreadsheets! Constructive
 criticism: finding ways to speed up data loading would help maximize
 the software's utility for the visualization of large datasets.''
 
-Users also appreciated the value of the web-based output format, and
-the detail that is possible to show in interactive plots, but
-impossible to show in publications: ``...  the web interface is simple
-and easy to use.  It also enables us to publish more detailed
-interactive results on our website to accompany the results presented
-in publications.''
+Finally, users also appreciated the web-based output format, and the
+detail that is possible to show in interactive plots, but impossible
+to show in publications: ``...  the web interface is simple and easy
+to use.  It also enables us to publish more detailed interactive
+results on our website to accompany the results presented in
+publications.''
 
 \section{Limitations and future work}
 
@@ -881,9 +891,9 @@ optimizations remain to be implemented, the current Animint library
 already provides an efficient syntax for the design of interactive,
 animated data visualizations.
 
-\acknowledgments{The authors wish to thank Animint users MC Du
-  Plessis, Song Liu, and Nikoleta Juretic who have contributed
-  constructive criticism and helped its development.  }
+\acknowledgments{The authors wish to thank Animint users Carson
+  Sievert, MC Du Plessis, Song Liu, and Nikoleta Juretic who have
+  contributed constructive criticism and helped its development.  }
 
 % TDH 13 March 2014 This was in the template.tex file.
 %\bibliographystyle{abbrv}

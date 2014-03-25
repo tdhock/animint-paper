@@ -40,7 +40,7 @@ tornado.points.anim <-
              axis.ticks=element_blank(), axis.title=element_blank()),
        width=list(map=750, ts=300),
        height=list(map=500, ts=400),
-       ##time=list(variable="year", ms=2000),
+       time=list(variable="year", ms=2000),
        ts=ggplot()+
        xlab("year")+
        ylab("Number of tornadoes")+
