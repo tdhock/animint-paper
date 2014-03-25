@@ -162,34 +162,52 @@
 
 Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
-sets.  For example, consider the World Bank data, which consist of
-several economic variables measured for 205 countries from 1960 to
-2012. The visualization in Figure~1 shows six variables from this data
-set: year, country, life expectancy, fertility rate, region, and
-population. As the designers of this visualization and authors of this
-paper, we have chosen to emphasize the country United States and the
-year 1996. If the reader or user of this interactive data
-visualization is interested in another country or time period, he/she
-can use interactivity to change the emphasis. Finally, since one of
-the variables in this visualization is the year of measurement, it is
-natural to animate the visualization to see how the data changes over
-time. We introduce Animint, a new domain-specific language (DSL) for
-designing such linked, interactive, animated data visualizations. To
-explain exactly what kinds of visualizations are possible using
-Animint, we begin with several definitions.
+sets. In this paper, we introduce Animint, a new domain-specific
+language (DSL) for designing linked, interactive, animated data
+visualizations. To explain exactly what kinds of visualizations we are
+interested in creating, we begin with an example.
 
-For the purposes of this paper, there are 3 important roles that
-contribute to the creation of an Animint visualization: the developer,
-who implements the Animint library; the designer, who uses the Animint
-library to define a visualization; and the user, who views the
-visualization in a web browser. We as authors of this paper are the
-developers of the Animint library, and we discuss details of its
-implementation in Section~\ref{sec:implementation}. The designer
-specifies data sets and maps variables to interactive visual elements
-using our novel DSL, then uses the Animint library to compile and save
-an interactive animation. The user writes no code, but can view and
-interact with an Animint visualization by clicking SVG elements in a
-web browser.
+In this paper, we are concerned with data sets that can be described
+as a data table, with columns for each variable and rows for each
+observation or data point. Consider the World Bank data set, which
+consist of several economic variables measured for 205 countries from
+1960 to 2012. The visualization in Figure~1 shows six variables from
+this data set: year, country, life expectancy, fertility rate, region,
+and population. We have chosen to emphasize the country United States
+and the year 1996. The benefit of the interactive visualization is
+that the reader or user may interact with the plot to view data about
+another country or time period.
+%(\url{http://bit.ly/1fzfUdN}). 
+Finally, since one of the variables in this visualization is the year
+of measurement, it is natural to animate the visualization to see how
+the data changes over time. The purpose of Animint is to make it easy
+to design such interactive animations.
+
+% I wanted to just emphasize the difference between an Animint
+% interactive graphic and a static graphic. In static graphics the
+% designer chooses both the aes mappings and the subset of data to
+% show. However in Animint the designer only chooses the aes mappings
+% and then the user is free to choose the selection. Do you have some
+% idea how to get that message across?
+
+In this paper we will discuss 3 important roles that contribute to the
+creation of an Animint visualization: the developer, who implements
+the Animint library; the designer, who uses the Animint library to
+define a visualization; and the user, who views the visualization in a
+web browser. The main goal of Animint is to provide an expressive
+language for designers, while allowing users the freedom to interact
+with the plot to selectively view data subsets of interest. The
+designer specifies data sets and maps variables to interactive visual
+elements using the Animint DSL, then uses the Animint library to
+compile and save an interactive animation. The user writes no code,
+but can view and interact with an Animint visualization by clicking
+SVG elements in a web browser. A final goal is that the Animint
+library developer should be the only role concerned with low-level
+plotting details such as drawing axes and legends, freeing the
+designer and user to focus on interpreting the data.
+%interested in re-implementing the Animint
+%system, we discuss details of its implementation in
+%Section~\ref{sec:implementation}.
 
 Our definition of an ``interactive'' visualization is synonymous to
 what \citet{cleveland} called ``direct manipulation'' --- the user
@@ -257,11 +275,11 @@ ggplots to an interactive web visualization rendered using D3
 \citep{d3}. One of the main reasons for the success and popularity of
 D3 is that it allows visualizations to be specified using the
 terminology of the Document Object Model (DOM), which makes learning
-D3 easy for web developers. Animint's DSL abandons the DOM standard
+D3 easy for web designers. Animint's DSL abandons the DOM standard
 and sacrifices some of the D3's flexibility to gain expressive
 power. Thus, designers familiar with ggplot2 syntax are now able to
 declare complex interactive animations in only a few dozen lines of
-code using the Animint DSL. This enables R developers to design a
+code using the Animint DSL. This enables R programmers to design a
 large class of visualizations that were previously intractable to
 implement.
 
@@ -273,9 +291,9 @@ is another declarative DSL, but defined at a higher level. It enables
 designers to focus on data visualization, while the Animint library
 developers can work on improving the lower-level rendering details.
 
-The structure of this paper is as follows: we discuss related work in
+The rest of this paper is organized as follows: we discuss related work in
 Section~2, and the design of the Animint system in Section~3. Then we
-discuss a detailed comparison with related libraries in Section~4, and
+perform a detailed comparison with related libraries in Section~4, and
 show some example applications of Animint in Section~5. Finally, we
 share some user feedback in Section~6 and then discuss future work in
 Section~7.
@@ -605,15 +623,25 @@ TODO: discuss animation.
 
 \subsection{Client-server systems like ggvis/shiny}
 
-We implemented the World Bank data visualization using the ggvis \citep{ggvis} graphical library combined with the recommended shiny package \citep{shiny} in 84 lines of R
-code (\url{http://bit.ly/1diUYsg}). 
-While ggvis and shiny combined can produce interactive animations, the DSL ggvis provides is much more complex and more limited than Animint. Our implementation using this combination of packages was
-significantly more complex than the 20 lines of R code we used to
-build Figure~1 with the Animint package. Showing and hiding data
-subsets was accomplished by clicking on a slider for year and a menu
-for country, not by clicking on the plot elements. Although creating
-such visualizations in ggvis+shiny is possible, it requires
-significantly more work for limited interactivity.
+We implemented the World Bank data visualization in 84 lines of R
+code, using the ggvis graphics library combined with the recommended
+shiny web server package \citep{shiny, ggvis}
+(\url{http://bit.ly/1diUYsg}). Showing and hiding data subsets was
+accomplished by clicking on a slider for year and a menu for country,
+not by clicking on the plot elements. In contrast, we built Figure~1
+using only 20 lines of R code with the Animint package. The reason why
+the implementation is significantly simpler using Animint is because
+its DSL is designed specifically for this type of interactive
+animation. 
+%Although creating such visualizations in ggvis+shiny is
+%possible, it requires significantly more work for limited
+%interactivity.
+
+Another difference is the amount of work required to deploy or share a
+visualization. A compiled Animint visualization consists of static
+CSV, JSON, HTML, and JavaScript files which can be easily served with
+any web server. In contrast, ggvis+shiny requires a web server with R
+installed, significantly complicating deployment to the web.
 
 There are also inherent speed tradeoffs to using a client-server
 plotting system like ggvis+shiny rather than an entirely web
@@ -624,12 +652,13 @@ client-server communication overhead. All the \mbox{Animint}
 JavaScript plot rendering code is executed in the web browser, whereas
 ggvis executes some plotting code on the server. This means that after
 a mouse click, ggvis can not update a plot immediately, but instead
-must wait for the server to respond with the plot data. In addition, shiny requires 
-a server with R loaded, complicating deployment to the web significantly. 
+must wait for the server to respond with the plot data.
 
 We quantified speed differences between the two systems by timing web
-page loading using DevTools in Google Chrome and timing interactive
-updates using \texttt{getTime()} in JavaScript. Using ggvis with a
+page loading using DevTools in the Chromium web browser Version
+33.0.1750.152 Ubuntu 12.04 (256984). We also used \texttt{getTime()}
+in JavaScript to record timings for interactive plot updates (on a
+desktop computer with a 2.8GHz Intel Core i7 CPU). Using ggvis with a
 local web server and the World Bank data resulted in a web page that
 loaded quickly (about 1.4s), but updated the plot with a noticeable
 lag after each mouse click (500--1000ms). Note that since we used a
@@ -659,7 +688,7 @@ appropriate for interactive animations that have many more subsets of
 the data than can ever be transferred over the network. In that case,
 the web server will initially send only the first data subset, and
 then send only the subsets of data that the client requests. However,
-since the data sets we examined were sufficiently small
+since the data sets we examined were not too large
 (Table~\ref{tab:examples}), client-side rendering using Animint
 resulted in quick, responsive interactive animations.
 
@@ -771,13 +800,17 @@ For the \texttt{prior} data visualization
 researcher who developed an algorithm and applied it to 4 benchmark
 data sets. He wanted to explore how his algorithm performed, in
 comparison to a baseline learning algorithm. He appreciated the
-intuitive understanding of the data that he gained using the
+intuition about his algorithm's performance that he learned from the
 interactive plots: ``Interactive plotting allows us to explore all
 relationships of our high-dimensional dataset and gives us an
 intuitive understanding of the performance of our proposed
 algorithm. An intuitive understanding of the results is important
 since it shows under which conditions our proposed method works well
 and provides avenues for further research.''
+
+
+Another Animint user from a machine learning background. For the \texttt{change} visualization
+(\texttt{http://bit.ly/1gVb8To}), 
 
 In another application, the Animint user was a genomics researcher:
 ``viewing and exploring my complex intestinal microbiome dataset in
