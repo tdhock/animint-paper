@@ -604,6 +604,7 @@ TODO: discuss animation.
     %2007- & 
     1 = time & 
     %imperative &
+    \bitly{1hnUnkE}
     \\
     D3 & 
     TODO &
