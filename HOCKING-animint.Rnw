@@ -304,32 +304,68 @@ Section~7.
 
 
 In this section we offer a comparison between Animint and several
-related libraries/packages in JavaScript/R. The main difference is
-that Animint's declarative syntax allows interactive animations to be
+related systems, focusing on libraries/packages with free/open-source
+software implementations in JavaScript/R. The main difference is that
+Animint's declarative syntax allows interactive animations to be
 expressed in fewer lines of code than the other packages.
 
-\subsection{Animated graphics libraries}
+\subsection{Systems which are not publicly available}
 
-TODO: comparison with library(animation)!
+The system described by \citet{cleveland} involves interaction via a
+rectangular brush that can select several data points. Its enhanced
+linking feature highlights the selected data points across several
+plots, which is similar to the selection functionality implemented in
+Animint. There are four important differences between Animint and this
+system. First, Animint is based on a high-level DSL, but Cleveland's
+system proposes no such language. Second, Animint supports a brush for
+every selection variable, but Cleveland's system only supports a
+single brush. Third, the current implementation of Animint only
+supports selecting single values, but Cleveland's system supports
+selecting several values. Importantly, this is a limitation of the
+current implementation, not the proposed Animint DSL. Finally,
+Animint is publicly available on GitHub
+(\url{http://github.com/tdhock/animint}), but Cleveland's system is
+not publicly available.
+
+Another system with interactive facilities similar to Animint is
+Tableau \citep{tableau}. Like Animint, it is based on a declarative
+DSL. The Tableau DSL is called VizQL, which is based on another DSL
+called Polaris \citep{polaris}. Unlike Animint, there is no
+free/open-source software implementation of Tableau, so we will not
+discuss it further.
+
+\subsection{Animated graphics libraries}
 
 One way to achieve animation in an iterative programming syntax is by
 using a for statement to loop over the time variable. This is the main
 idea of the \href{http://yihui.name/animation/}{animation} package
-\citep{animation}. TODO: CODE COMPARISON FIGURE.
-
+\citep{animation}. There are two main differences between this system
+and Animint. First, the only interaction possible with
+\texttt{animation} is rewinding and fast-forwarding through the
+animation frames. Second, Animint uses an declarative DSL, which
+enables more complex interactive animations to be defined in fewer
+lines of code.
 
 \subsection{D3 and other JavaScript libraries}
 
-TODO: discussion of related JavaScript libraries, i.e. highcharts, D3, vega.
-
 The current implementation of Animint uses \href{http://d3js.org/}{D3}
 to render interactive animations in a web browser \citep{d3}. D3 is
-more expressive than animint, but is also more verbose. In addition,
-animint uses a grammar of graphics approach to produce higher-level
-plots, which is arguably simpler and more elegant than constructing a
-plot from simple elements using D3. (TODO: CODE COMPARISON FIGURE)
+more powerful than animint, but is also more verbose. In other words,
+Animint's high-level DSL is able to express more complex interactive
+animations in fewer lines of code than pure D3, but there are some
+specialized D3 plots which can not be created using Animint.
 
-\subsection{Libraries based on the grammar of graphics}  %: Vega, ggplot2, ggvis
+There are several other libraries which can generate interactive web
+plots. For example, the \texttt{rCharts} R package is a wrapper around
+several JavaScript libraries \citep{rcharts}. The major difference is
+that \texttt{rCharts} sacrifices some of the flexibility of Animint
+for expressive power. Thus, \texttt{rCharts} can produce several
+simple visualizations with only 1 line of R code, but it can not
+produce interactive animations. In contrast, Animint's high-level DSL
+can be used to specify more complex visualizations using only tens of
+lines of R code. 
+
+\subsection{Libraries based on the grammar of graphics}  
 
 In this section we discuss the differences between Animint and
 several other high-level DSLs for data visualization based on the grammar of graphics philosophy \citep{wilkinson}: ggplot2, Vega, and ggvis.
@@ -389,17 +425,6 @@ slider to select the displayed year. In contrast, in Animint we used a
 clickable multiple time series plot for the same purpose, giving the
 viewer a more comprehensive view of these multidimensional data.
 
-In addition to the libraries discussed above, there are several other
-libraries which can generate interactive web plots: rCharts
-\citep{rcharts}, polycharts.js \citep{polycharts},
-\href{http://www.highcharts.com/}{highcharts} \citep{highcharts}, and
-numerous others. These libraries have varying degrees of high-level
-syntax for plot specification, but 
-%all seem to be less popular than D3-based libraries, and
-none are based on the grammar of graphics approach to plot
-creation. More importantly for this paper, none of these libraries
-allow creation of interactive animations.
-
 \section{Design}
 \label{sec:design}
 
@@ -418,6 +443,8 @@ opts_chunk$set(tidy=FALSE, eval=FALSE)
 opts_knit$set(out.format="latex")
 knit_theme$set("edit-matlab")
 @ 
+
+TODO: intro to ggplot2 aesthetics.
 
 In contrast to the sliders of ggvis, animint is designed for
 interactivity via direct manipulation of the plot elements. To
@@ -517,14 +544,14 @@ gg2animint(viz, out.dir="WorldBank")
 \label{sec:implementation}
 
 As shown in Figure~\ref{fig:design}, the Animint system is implemented
-in 2 parts:
-\begin{description}
-\item[compiler] $\approx 1000$ lines of R code that converts a list of
-  ggplots and options to a comma-separated values (CSV) file database
-  and a JSON plot meta-data file.
-\item[renderer] $\approx 1000$ lines of JavaScript/D3 code that
+in 2 parts: the compiler and the renderer.
+
+The compiler is implemented in about 1000 lines of R code that
+converts a list of ggplots and options to a comma-separated values
+(CSV) file database and a JSON plot meta-data file.
+
+The renderer is implemented in  1000 lines of JavaScript/D3 code that
   renders the CSV and JSON plot files as SVG in a web browser.
-\end{description}
 
 \begin{figure}[b!]
   \centering
@@ -550,7 +577,9 @@ in 2 parts:
 To show the advantages that the Animint grammar brings for creating
 interactive and animated data visualizations, we implemented the World
 Bank visualization of Figure~1 using several different libraries
-(Table~\ref{tab:packages}).
+(Table~\ref{tab:packages}). The main result of our comparison is that
+it requires significantly fewer lines of code to declare the
+visualization using Animint.
 
 \subsection{D3}
 
@@ -563,20 +592,32 @@ TODO: code for D3, shiny, animation...?
 \label{fig:compare}
 \end{figure}
 
-\subsection{Animation packages}
+\subsection{R package animation}
+\label{sec:compare-animation}
 
-TODO: discuss animation.
+We implemented a version of the WorldBank visualization with limited
+interactivity, using 38 lines of R code and the \texttt{animation}
+package (\url{http://bit.ly/1hnUnkE}). The main idea behind this approach
+is to use a for loop to create a static PNG image for each year of the
+data, and then show these images in sequence. The main drawback to
+this approach is that the resulting plot is only interactive with
+respect to the year variable. In other words, the designer must select
+a country to emphasize, and the user does not have that choice. In
+contrast, using only 20 lines of the Animint DSL, the Animint package
+achieves interaction with respect to both year and country variables.
 
 \begin{table}[t!]
 %% Table captions on top in journal version
-  \caption{Implementation complexity and featureof the World Bank data visualization of 
-    Figure~1 using several libraries that can create interactive animations.
+  \caption{Implementation complexity and features 
+    of the World Bank data visualization
+    %of Figure~1 
+    using several libraries that can create interactive animations.
     For each library
     we show the number of lines of code (LOC), programming language, 
     number of interaction variables, and URL of the interactive version. 
 %  Note that different countries can not be interactively selected using
 % the visualization created with R package animation.
-}
+  }
  \label{tab:packages}
  \scriptsize
  \begin{center}
