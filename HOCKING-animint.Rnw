@@ -444,19 +444,107 @@ opts_knit$set(out.format="latex")
 knit_theme$set("edit-matlab")
 @ 
 
-TODO: intro to ggplot2 aesthetics.
+The main idea of Animint is that a large class of interactive plots
+can be specified using just two interactive keywords:
+\texttt{clickSelects} and \texttt{showSelected}. For example, after
+clicking a \texttt{clickSelects=year} element, the plot
+\texttt{showSelected=year} is updated to show only the elements
+corresponding to the selected year.
 
-In contrast to the sliders of ggvis, animint is designed for
-interactivity via direct manipulation of the plot elements. To
-facilitate this goal, we created a new geom called ``tallrect," which
-tiles the plot area with rectangles that span the y region of the plot
-and correspond to specific x values or intervals. Users can click on
-any one tallrect, and the \texttt{clickSelects} aesthetic passes the
-selected element to other linked plots, which display data
-corresponding to the selected variable. In the first plot shown in
-Figure~1, year is used to create tallrects and
-\texttt{clickSelects=1996}, and in the second plot, life expectancy
-and fertility rate are shown for the selected year.
+Animint implements these two interactive keywords as aesthetics in
+ggplot2. An aesthetic is a declarative mapping from data variables to
+geometric plot elements. Some standard ggplot2 aesthetics are
+\begin{description}
+\item[x] horizontal position,
+\item[y] vertical position,
+\item[color] color outside (stroke in SVG),
+\item[size] point or line thickness.
+\end{description}
+For example, consider the following definition of the points in the
+scatterplot on the right of Figure~1:
+
+<<countryPoints>>=
+countryPoints <- geom_point(
+    aes(x=fertility.rate, y=life.expectancy, 
+        color=region, size=population,
+        clickSelects=country, 
+        showSelected=year),
+    data=WorldBank)
+@
+
+The code defines a \verb+geom_point+, which means to create a point
+for every row in the \texttt{WorldBank} data table. The visual
+characteristics of each point are defined by the values of the
+corresponding data: the (x,y) position encodes fertility rate and life
+expectancy, point color encodes the region, and point size encodes the
+population. The interactivity is also defined as a simple variable
+mapping: \texttt{clickSelects=country} means that clicking a point
+changes the selected country, and \texttt{showSelected=year} means to
+only plot the points for the selected year.
+
+In order to remind the plot user which subset of data are selected, we
+will draw a text label with the selected year and country. First, we
+create the year labels using
+
+<<yearText-geom, tidy=FALSE>>=
+yearText <- geom_text(
+  aes(label=sprintf("year = ", year), 
+      showSelected=year),
+  x=5, y=80, 
+  data=years)
+@ 
+
+Note that \texttt{data=years} specifies another data table, with 1 row
+for each year. Animint does not require that linked plots originate
+from the same data table; the \texttt{clickSelects} and
+\texttt{showSelected} aesthetics will work as long as the different
+data tables have common variable names (e.g. the \texttt{year}
+variable is present in both \texttt{WorldBank} and \texttt{years}).
+The \texttt{label} aesthetic is used to define the text from the year
+variable, and only the selected year is shown due to the
+\texttt{showSelected=year} aesthetic. Finally, note that since the
+label \texttt{x} and \texttt{y} positions are constant, they are not
+defined as aesthetics.
+
+%% As the pairing of text geom with a corresponding \texttt{showSelected}
+%% aesthetic is frequently useful in linked plots, animint also includes
+%% a shorthand function to make defining this combination more efficient.
+
+%% <<yearText-make>>=
+%% yearText <- make_text(data=years, 
+%%   x=5, y=80, showSelected="year")
+%% @ 
+
+We can also add another label to show the selected country:
+
+<<countryText>>=
+countryText <- geom_text(
+    aes(x=fertility.rate, y=life.expectancy, 
+        label=country,
+        showSelected=country, 
+        showSelected2=year),
+    data=WorldBank)
+@ 
+
+Note that Animint allows any number of
+\texttt{showSelected} aesthetics. In this example,
+\texttt{showSelected=country} combined with
+\texttt{showSelected2=year} means to only show the subset of labels
+corresponding to both the selected year and country.
+
+Having defined these 3 geometric elements, we combine them in a single
+ggplot:
+
+<<scatterPlot>>=
+scatterPlot <- ggplot()+
+  countryPoints+
+  yearText+
+  countryText
+@ 
+
+This completes the definition of the scatterplot. Now, we discuss the
+time series on the left of Figure~1. First, the tallrects in the
+background are used to select the year:
 
 <<yearRects-geom>>=
 yearRects <- geom_tallrect(
@@ -465,80 +553,78 @@ yearRects <- geom_tallrect(
   data=years, alpha=1/2)
 @ 
 
-Animint also provides a shorthand syntax for tallrects, as they are a
-common geom/aesthetic pairing in linked plots.
+%Animint is designed for
+%interactivity via direct manipulation of the plot elements. 
+%To facilitate this goal, 
+The tallrect is an Animint extension useful for selecting the variable
+which is plotted on the x axis, such as \texttt{year} in this
+example. The tallrect plots a rectangle for every row of the
+\texttt{years} data table. The rectangle spans the entire y region,
+and the \texttt{xmin} and \texttt{xmax} aesthetics define the left and
+right limits. Since the designer specified \texttt{clickSelects=year},
+users can click on a tallrect to select a year. Finally,
+\texttt{alpha=1/2} specifies that the selected tallrect should have an
+opacity of 50\%. Since color is black by default, this results in a
+selected semi-transparent tallrect which appears grey. Since
+non-selected \texttt{clickSelects} plot elements have 1/2 less
+transparency by default, this results in non-selected rectangles which
+are completely transparent, blending in with the white
+background.
 
-<<yearRects-make>>=
-yearRects <- make_tallrect(WorldBank, "year")
-@ 
 
-This approach allows us to utilize both plots to display meaningful
-information: we can overlay the tallrects in the first plot with time
-series data while still using the tallrects to modify the second
-plot. Similar linked graphs could be produced with D3, but the grammar
-of graphics approach allows for fewer lines of code and simpler
-debugging.
+%% Animint also provides a shorthand syntax for tallrects, as they are a
+%% common geom/aesthetic pairing in linked plots.
+
+%% <<yearRects-make>>=
+%% yearRects <- make_tallrect(WorldBank, "year")
+%% @ 
+
+%% This approach allows us to utilize both plots to display meaningful
+%% information: we can overlay the tallrects in the first plot with time
+%% series data while still using the tallrects to modify the second
+%% plot. Similar linked graphs could be produced with D3, but the grammar
+%% of graphics approach allows for fewer lines of code and simpler
+%% debugging.
+
+To create the time series plot, we combine the tallrects above with
+lines. To declare that clicking a line should change the selected
+country, we use the \texttt{clickSelects=country} aesthetic:
 
 <<timeSeries, tidy=FALSE>>=
 timeSeries <- ggplot()+
   yearRects+
   geom_line(
     aes(x=year, y=life.expectancy, 
-        group=country, colour=region,
+        group=country, color=region,
         clickSelects=country),
     data=WorldBank, size=3, alpha=3/5)
 @ 
 
-In order to clarify which data is being shown on the second plot in
-Figure~1, we add a text label that shows the selected
-year above the plot. This set of labels (one corresponding to each
-year) is created using ggplot2's \verb|geom_text|, and only one label
-is shown at a time due to the \texttt{showSelected} aesthetic.
+Note that both the \texttt{timeSeries} and \texttt{scatterPlot}
+objects are valid ggplots. However, plotting them using the standard
+ggplot2 library will show a non-interactive plot will all
+geometric elements, including data for all years and countries. To
+plot them with Animint, we define a list of ggplots and options, then
+call the \texttt{gg2animint} compiler:
 
-<<yearText-geom, tidy=FALSE>>=
-yearText <- geom_text(
-  aes(label=year, showSelected=year),
-  x=5, y=80, 
-  data=years)
-@ 
-As the pairing of text geom with a corresponding \texttt{showSelected} aesthetic is frequently useful in linked plots, animint also includes a shorthand function to make defining this combination more efficient. 
-<<yearText-make>>=
-yearText <- make_text(data=years, 
-  x=5, y=80, showSelected="year")
-@ 
-
-Animint does not require that linked plots originate from the same dataset; the selection aesthetics will work with separate datasets provided that the \texttt{clickSelects} and \texttt{showSelected} variables are of the same type and have the same values present in each dataset. This allows plots to utilize summary statistics and reduce the size of the data passed to the web browser. 
-
-<<scatterPlot>>=
-scatterPlot <- ggplot()+
-  yearText+
-  geom_point(
-    aes(x=fertility.rate, y=life.expectancy, 
-        colour=region, size=population,
-        clickSelects=country, 
-        showSelected=year),
-    data=WorldBank)+
-  geom_text(
-    aes(x=fertility.rate, y=life.expectancy, 
-        label=country,
-        showSelected=country, 
-        showSelected2=year),
-    data=WorldBank)+
-  scale_size_animint(pixel.range=c(2, 20), 
-    breaks=10^(4:9))
-@ 
-We can also add another selection element to link countries in plot 2 to the lines in plot 1. This will allow us to identify selected points in the second plot with a text label and display the corresponding time series in the first plot. Note that the animint extension of ggplot2 aesthetics allows for multiple showSelected elements (year and country) that can interact to jointly subset the full data. 
-
-Once we have created the static plots using the extended ggplot2 grammar of graphics syntax, we can use the workhorse function of the animint package, \texttt{gg2animint}, to output our linked plots to a webpage, where they can be rendered using D3. \texttt{gg2animint} allows us to specify that in absence of user interaction, we want the plots to animate over time, progressing at a rate of one year every 3 seconds. We also specify the duration of each frame in the animation, which allows for smooth transitions. Animint outputs the index.html file and the relevent javascript libraries to the specified output directory, where the user can upload it to the web or open the interactive graphic in a local browser. 
 <<gg2animint,fig.pos='htbp'>>=
 viz <- 
   list(scatterPlot=scatterPlot,
        timeSeries=timeSeries,
-       time=list(variable="year",ms=3000),
+       time=list(variable="year", ms=3000),
        duration=list(year=1000))
 gg2animint(viz, out.dir="WorldBank")
 @ 
 
+The \texttt{time} option specifies that in absence of user
+interaction, we want the plots to animate over time, progressing at a
+rate of one year every 3 seconds. We also use the \texttt{duration}
+option to specify a smooth transition over 1 second for the year
+variable. The \texttt{gg2animint} compiler saves some data files and a
+web page with the interactive plot, and opens it in a web
+browser. Since the compiled plot is just a directory of files, the
+designer can easily upload interactive plots to the web for sharing
+visualizations with users.
 
 \subsection{Implementation details}
 \label{sec:implementation}
