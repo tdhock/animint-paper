@@ -409,7 +409,7 @@ differences between ggvis and Animint, but the main difference is that
 ggvis is more powerful and verbose, while Animint is more succinct for
 expressing interactive plots that show/hide data subsets (for a
 concrete example, see the comparison of World Bank data visualizations
-in Section~\ref{sec:compare}). At the level of defining plots in R
+in Table~\ref{tab:packages}). At the level of defining plots in R
 code, a ggvis object corresponds to a single plot, while an Animint
 object is a list of several plots which are linked using the
 clickSelects and showSelected aesthetics. Another difference is that
@@ -433,7 +433,7 @@ interactive animations. We first explain the grammar using the World
 Bank example of Figure~1, and then give implementation details of the
 compiler and renderer.
 
-\subsection{A grammar for interactive animations}
+\subsection{The Animint grammar for interactive animations}
 
 <<opts, echo=FALSE, message=FALSE, cache=FALSE>>=
 library(animint)
@@ -567,7 +567,7 @@ users can click on a tallrect to select a year. Finally,
 opacity of 50\%. Since color is black by default, this results in a
 selected semi-transparent tallrect which appears grey. Since
 non-selected \texttt{clickSelects} plot elements have 1/2 less
-transparency by default, this results in non-selected rectangles which
+opacity by default, this results in non-selected rectangles which
 are completely transparent, blending in with the white
 background.
 
@@ -638,6 +638,8 @@ converts a list of ggplots and options to a comma-separated values
 
 The renderer is implemented in  1000 lines of JavaScript/D3 code that
   renders the CSV and JSON plot files as SVG in a web browser.
+  
+TODO: what more to explain?
 
 \begin{figure}[b!]
   \centering
@@ -667,30 +669,86 @@ Bank visualization of Figure~1 using several different libraries
 it requires significantly fewer lines of code to declare the
 visualization using Animint.
 
-\subsection{D3}
+%\subsection{D3} TODO: discuss D3.
 
-TODO: discuss D3.
-
-\begin{figure}
+\begin{figure*}
   \centering
-TODO: code for D3, shiny, animation...?
-  \caption{Comparison of code for the World Bank visualization.}
+  \begin{tabular}{ccc}
+  \begin{minipage}{2.5in}
+    \centering
+    \textbf{D3 (Javascript code)}
+    \small
+\begin{verbatim}
+svg.selectAll("circle")
+  .data(one_year)
+  .enter().append("circle")
+.attr("cx", function(d){
+  return x_scale(d.fertility_rate);
+}).attr("cy", function(d){
+  return y_scale(d.life_expectancy);
+}).attr("r", function(d){
+  return size_scale(d.population);
+}.style("fill", function(d){
+  return color_scale(d.region);
+})
+\end{verbatim}
+  \end{minipage}
+  &
+  \begin{minipage}{2.5in}
+    \centering
+    \textbf{Vega (JSON file)}
+    \small
+\begin{verbatim}
+{ "marks": [{
+  "type":"symbol",
+  "from": {"data":"this_year"},
+  "properties":{ "enter":{
+    "x": {"field": "fertility_rate"},
+    "y": {"field": "life_expectancy"},
+    "size": {"field": "population"},
+    "fill": {"field": "region"}
+}}}]}
+\end{verbatim}
+  \end{minipage}
+  &
+  \begin{minipage}{2in}
+    \centering
+    \textbf{Animint (R code)}
+    \small
+\begin{verbatim}
+geom_point(aes(
+  x=fertility.rate,
+  y=life.expectancy,
+  color=region,
+  size=population,
+  clickSelects=country,
+  showSelected=year),
+  data=WorldBank)
+\end{verbatim}
+  \end{minipage}
+  \end{tabular}
+  \caption{Comparison of code used to define points on a scatterplot.
+    Note that Animint is not as flexible as D3, but it results in
+    shorter, more expressive code. Animint implements the
+    \texttt{clickSelects} and \texttt{showSelected} aesthetics, 
+    but D3 and Vega do not.}
 \label{fig:compare}
-\end{figure}
+\end{figure*}
 
 \subsection{R package animation}
 \label{sec:compare-animation}
 
 We implemented a version of the WorldBank visualization with limited
 interactivity, using 38 lines of R code and the \texttt{animation}
-package (\url{http://bit.ly/1hnUnkE}). The main idea behind this approach
-is to use a for loop to create a static PNG image for each year of the
-data, and then show these images in sequence. The main drawback to
-this approach is that the resulting plot is only interactive with
-respect to the year variable. In other words, the designer must select
-a country to emphasize, and the user does not have that choice. In
-contrast, using only 20 lines of the Animint DSL, the Animint package
-achieves interaction with respect to both year and country variables.
+package (\url{http://bit.ly/1hnUnkE}). The main idea behind this
+approach is to use an imperative programming style with for loops to
+create a static PNG image for each year of the data, and then show
+these images in sequence. The main drawback to this approach is that
+the resulting plot is only interactive with respect to the year
+variable. In other words, the designer must select a country to
+emphasize, and the user does not have that choice. In contrast, using
+only 20 lines of the Animint DSL, the Animint package achieves
+interaction with respect to both year and country variables.
 
 \begin{table}[t!]
 %% Table captions on top in journal version
@@ -710,42 +768,42 @@ achieves interaction with respect to both year and country variables.
   \begin{tabular}{cccccc}
     library & 
     LOC &
-    language &
+    style &
+    %language &
     %years & 
     interaction vars &
-    %programming &
     http://bit.ly/
     \\
     \hline
     animint & 
     20 &
-    R &
+    declarative & 
+    %R &
     %2013- & 
     several & 
-    %declarative & 
       \bitly{1fzfUdN}
     \\
     animation & 
     38 &
-    R  &
+    imperative &
+    %R  &
     %2007- & 
     1 = time & 
-    %imperative &
     \bitly{1hnUnkE}
     \\
-    D3 & 
-    TODO &
-    JavaScript & 
-    %2011- & 
-    several & 
-    %declarative & 
-    \\
+    %% D3 & 
+    %% TODO &
+    %% JavaScript & 
+    %% %2011- & 
+    %% several & 
+    %% %declarative & 
+    %% \\
     ggvis/shiny & 
     84 &
-    R  &
+    reactive & 
+    %R  &
     %2012- & 
     several & 
-    %reactive & 
     \bitly{1diUYsg}
     \\
   \end{tabular}
