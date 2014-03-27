@@ -98,8 +98,8 @@
   contrast, Animint's high-level DSL can be used to produce a wide
   variety of complex interactive visualizations with only 10s of lines
   of code. It works by adding 2 new aesthetics to the grammar of
-  graphics: \texttt{clickSelects}, which allows users to select
-  elements of the plot, and \texttt{showSelected}, which displays only
+  graphics: clickSelects, which allows users to select
+  elements of the plot, and \mbox{showSelected}, which displays only
   elements corresponding to the current selection. After using our
   novel declarative DSL to define an interactive animation in R code,
   it is first compiled and then rendered in a web browser using D3. We
@@ -126,18 +126,18 @@
   \teaser{
   \centering
   \includegraphics[width=\textwidth]{figure-1}
-  \caption{Interactive animation of World Bank data designed with Animint
-    (\url{http://bit.ly/1fzfUdN}). \textbf{Top}: There are 5 geometric
-    elements across 2 linked plots: clicking a \texttt{clickSelects}
+  \caption{This interactive animation of World Bank data was designed
+    with only 20 lines of Animint code
+    (\url{http://bit.ly/1fzfUdN}). \textbf{Top}: Five geometric
+    elements span two linked plots: clicking a clickSelects
     element changes the currently selected year or country, and
-    updates the corresponding \texttt{showSelected}
+    updates the corresponding \mbox{showSelected}
     elements. \textbf{Left}: a multiple time series from 1960 to 2012
-    of the life expectancy of 205 countries, with a bold line
-    indicating the selected country and a vertical grey tallrect
-    indicating the selected year.  \textbf{Right}: a scatterplot of
-    life expectancy versus fertility rate of all countries. The two
-    text elements indicate the current selection: ``year = 1996'' and
-    ``United States.''}
+    of the life expectancy of 205 countries, with a bold line showing
+    the selected country and a vertical grey tallrect showing the
+    selected year.  \textbf{Right}: a scatterplot of life expectancy
+    versus fertility rate of all countries. The two text elements show
+    the current selection: ``year = 1996'' and ``United States.''}
 }
 
 %% Uncomment below to disable the manuscript note
@@ -220,7 +220,7 @@ geom_point(aes(
   \caption{Comparison of code used to define points on a scatterplot.
     Note that Animint is not as flexible as D3, but it results in
     shorter, more expressive code. Animint implements the
-    \texttt{clickSelects} and \texttt{showSelected} aesthetics, 
+    clickSelects and \mbox{showSelected} aesthetics, 
     but D3 and Vega do not.}
   \label{fig:code}
 \end{figure*}
@@ -334,7 +334,7 @@ visualizations. One of the key strengths of ggplot2 is that it allows
 a designer to declare a visualization in terms of distinct geometric
 elements, each with a clear aesthetic mapping from data variables to
 geometric properties.  The Animint DSL extends ggplot2 by adding two
-new aesthetics: \texttt{clickSelects} and \texttt{showSelected}.
+new aesthetics: clickSelects and \mbox{showSelected}.
 
 The Animint library includes a compiler that converts a list of
 ggplots to an interactive web visualization rendered using D3
@@ -454,7 +454,7 @@ Animint extends the declarative DSL of
 \href{http://ggplot2.org/}{ggplot2} \citep{ggplot2-book,
   ggplot2-paper}. Strictly speaking, ggplot2 is for non-interactive
 and non-animated visualizations. In this paper, we propose the
-\texttt{clickSelects} and \texttt{showSelected} aesthetics for
+clickSelects and \mbox{showSelected} aesthetics for
 ggplot2, which extend it to accommodate interactive, animated
 graphics. This allows R users to create web-ready graphics using the
 grammar of graphics, which is familiar to many statisticians and R
@@ -526,7 +526,7 @@ Animint is publicly available on GitHub
 not publicly available.
 
 Another system with interactive facilities similar to Animint is
-Tableau \citep{tableau}. Like Animint, it is based on a declarative
+ \citet{tableau}. Like Animint, it is based on a declarative
 DSL. The Tableau DSL is called VizQL, which is based on another DSL
 called Polaris \citep{polaris}. Unlike Animint, there is no
 free/open-source software implementation of Tableau, so we will not
@@ -553,20 +553,30 @@ knit_theme$set("edit-matlab")
 
 The main idea of Animint is that a large class of interactive plots
 can be specified using just two interactive keywords:
-\texttt{clickSelects} and \texttt{showSelected}. For example, after
+clickSelects and \mbox{showSelected}. For example, after
 clicking a \texttt{clickSelects=year} element, the plot
 is updated to show only the \texttt{showSelected=year} elements
 corresponding to the selected year.
 
-Animint implements these two interactive keywords as aesthetics in
-ggplot2. An aesthetic is a declarative mapping from data variables to
-geometric plot elements. Some standard ggplot2 aesthetics are
+The first step in the design of an Animint is usually to make a sketch
+of the desired interactive plot on paper or a whiteboard. First sketch
+the axes, legends, a few geometric elements, and note which variables
+will be shown in the linked plots. Also, note the clickSelects and
+\mbox{showSelected} variables for each geometric element, as shown in
+Figures~1, 3, and 4. These notes can be directly translated to
+ggplot2 aesthetics in R code, as explained below.
+
+Animint implements the clickSelects and showSelected interactive
+keywords as aesthetics in ggplot2. An aesthetic is a declarative
+mapping from a data variable to a characteristic of a geometric plot
+element. Some standard ggplot2 aesthetics are
 \begin{description}
 \item[x] horizontal position,
 \item[y] vertical position,
-\item[color] color outside (stroke in SVG),
+\item[color] color or fill,
 \item[size] point or line thickness.
 \end{description}
+
 For example, consider the following R code which defines the points in the
 World Bank data scatterplot on the right of Figure~1:
 
@@ -605,8 +615,8 @@ yearText <- geom_text(
 
 Note that \texttt{data=years} specifies another data table, with 1 row
 for each year. Animint does not require that linked plots originate
-from the same data table; the \texttt{clickSelects} and
-\texttt{showSelected} aesthetics will work as long as the different
+from the same data table; the clickSelects and
+\mbox{showSelected} aesthetics will work as long as the different
 data tables have common variable names (e.g. the \texttt{year}
 variable is present in both \texttt{WorldBank} and \texttt{years}).
 The \texttt{label} aesthetic is used to define the text from the year
@@ -615,7 +625,7 @@ variable, and only the selected year is shown due to the
 label \texttt{x} and \texttt{y} positions are constant, they are not
 defined as aesthetics.
 
-%% As the pairing of text geom with a corresponding \texttt{showSelected}
+%% As the pairing of text geom with a corresponding \mbox{showSelected}
 %% aesthetic is frequently useful in linked plots, animint also includes
 %% a shorthand function to make defining this combination more efficient.
 
@@ -635,7 +645,7 @@ countryText <- geom_text(
     data=WorldBank)
 @ 
 
-Note that Animint allows any number of \texttt{showSelected}
+Note that Animint allows any number of \mbox{showSelected}
 aesthetics. In this example, \texttt{showSelected=country} combined
 with \texttt{showSelected2=year} means to only show the subset of
 labels corresponding to both the selected year and country.  Since
@@ -677,7 +687,7 @@ users can click on a tallrect to select a year. Finally,
 \texttt{alpha=1/2} specifies that the selected tallrect should have an
 opacity of 50\%. Since color is black by default, this results in a
 selected semi-transparent tallrect which appears grey. Since
-non-selected \texttt{clickSelects} plot elements have 1/2 less
+non-selected clickSelects plot elements have 1/2 less
 opacity by default, this results in non-selected rectangles which
 are completely transparent, blending in with the white
 background.
@@ -732,8 +742,8 @@ interaction, we want the plots to animate over time, progressing at a
 rate of one year every 3 seconds. We also use the \texttt{duration}
 option to specify a smooth transition over 1 second for the year
 variable. The \texttt{gg2animint} compiler saves some data files and a
-web page with the interactive plot, and opens it in a web
-browser. 
+web page in the \texttt{WorldBank} directory, then it opens the
+interactive plot in a web browser.
 
 \subsection{Implementation details}
 \label{sec:implementation}
@@ -1081,8 +1091,8 @@ possibly building clickSelects and showSelected extensions into Vega
 \citep{vega}.
 
 The current Animint implementation is limited to two specific types of
-interactivity: highlighting the selected \texttt{clickSelects}
-element, and showing/hiding \texttt{showSelected} elements. In the
+interactivity: highlighting the selected clickSelects
+element, and showing/hiding \mbox{showSelected} elements. In the
 future, we could implement several types of interactivity without
 changing the Animint DSL. Examples include zooming, multiple
 selection, increase/decrease animation speed, and plot
