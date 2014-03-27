@@ -909,6 +909,7 @@ implemented with Animint (Table~\ref{tab:examples}).
     the number of linked panels (plots),
     if the plot is animated, 
     and the corresponding Figure number in this paper (Fig).
+    TODO: FIX!!!
   }
 \label{tab:examples}
 \end{table*}
