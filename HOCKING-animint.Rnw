@@ -267,10 +267,11 @@ designer specifies data sets and maps variables to interactive visual
 elements using the Animint DSL, then uses the Animint library to
 compile and save an interactive animation. The user writes no code,
 but can view and interact with an Animint visualization by clicking
-SVG elements in a web browser. A final goal is that the Animint
-library developer should be the only role concerned with low-level
-plotting details such as drawing axes and legends, freeing the
-designer and user to focus on interpreting the data.
+Scalable Vector Graphics (SVG) elements in a web browser. A final goal
+is that the Animint library developer should be the only role
+concerned with low-level plotting details such as drawing axes and
+legends, freeing the designer and user to focus on interpreting the
+data.
 %interested in re-implementing the Animint
 %system, we discuss details of its implementation in
 %Section~\ref{sec:implementation}.
@@ -337,17 +338,17 @@ geometric properties.  The Animint DSL extends ggplot2 by adding two
 new aesthetics: clickSelects and \mbox{showSelected}.
 
 The Animint library includes a compiler that converts a list of
-ggplots to an interactive web visualization rendered using D3
-\citep{d3}. One of the main reasons for the success and popularity of
-D3 is that it allows visualizations to be specified using the
-terminology of the Document Object Model (DOM), which makes learning
-D3 easy for web designers. Animint's DSL abandons the DOM standard
-and sacrifices some of the D3's flexibility to gain expressive
-power. Thus, designers familiar with ggplot2 syntax are now able to
-declare complex interactive animations in only a few dozen lines of
-code using the Animint DSL. This enables R programmers to design a
-large class of visualizations that were previously intractable to
-implement.
+ggplots to an interactive web visualization rendered using the
+Data-Driven Documents (D3) library for JavaScript \citep{d3}. One of
+the main reasons for the success and popularity of D3 is that it
+allows visualizations to be specified using the terminology of the
+Document Object Model (DOM), which makes learning D3 easy for web
+designers. Animint's DSL abandons the DOM standard and sacrifices some
+of the D3's flexibility to gain expressive power. Thus, designers
+familiar with ggplot2 syntax are now able to declare complex
+interactive animations in only a few dozen lines of code using the
+Animint DSL. This enables R programmers to design a large class of
+visualizations that were previously intractable to implement.
 
 Finally, another key strength of ggplot2 and D3 for visualization
 design are the libraries' declarative syntax. \citet{declarative}
@@ -427,8 +428,9 @@ lines of code.
 
 \subsection{Libraries based on the grammar of graphics}  
 
-In this section we discuss the differences between Animint and
-several other high-level DSLs for data visualization based on the grammar of graphics philosophy \citep{wilkinson}: ggplot2,  ggvis, and Vega.
+In this section we discuss the differences between Animint and several
+other high-level DSLs for data visualization based on the grammar of
+graphics philosophy \citep{wilkinson}: ggplot2, ggvis, and Vega.
 
 \begin{figure*}[b!]
   \centering
@@ -520,10 +522,9 @@ every selection variable, but Cleveland's system only supports a
 single brush. Third, the current implementation of Animint only
 supports selecting single values, but Cleveland's system supports
 selecting several values. Importantly, this is a limitation of the
-current implementation, not the proposed Animint DSL. Finally,
-Animint is publicly available on GitHub
-\citep{animint}, but Cleveland's system is
-not publicly available.
+current implementation, not the proposed Animint DSL. Finally, Animint
+is publicly available on GitHub \citep{animint}, but Cleveland's
+system is not publicly available.
 
 Another system with interactive facilities similar to Animint is
  \citet{tableau}. Like Animint, it is based on a declarative
@@ -531,6 +532,11 @@ DSL. The Tableau DSL is called VizQL, which is based on another DSL
 called Polaris \citep{polaris}. Unlike Animint, there is no
 free/open-source software implementation of Tableau, so we will not
 discuss it further.
+
+Finally, implementations of the grammar of graphics system of
+\citet{wilkinson} exist as the Visualization Markup Language (ViZml)
+and the Graphics Production Language (GPL) in IBM SPSS, but do not
+support interactive animations.
 
 \section{Design of the Animint system}
 \label{sec:design}
@@ -758,9 +764,9 @@ in 2 parts: the compiler and the renderer.
     World Bank visualization shown in Figure~1. \textbf{Top}: the
     interactive animation is a list of 4 R objects: 2 ggplots and 2
     option lists. \textbf{Center}: Animint R code compiles data in
-    ggplot geoms to a database of comma-separated values (CSV) files
+    ggplot geoms to a database of CSV files
     (\textcolor{red}{$\rightarrowtriangle$}). It also compiles plot
-    meta-data including ggplot variable mappings, animation time
+    meta-data including ggplot aesthetics, animation time
     options, and transition duration options to a JSON meta-data file
     ($\rightarrowtriangle$). \textbf{Bottom}: those data-dependent
     compiled files are combined with data-independent JavaScript and
@@ -964,13 +970,6 @@ network. However, this power is not really necessary for interactive
 animations, since the only operation needed is calculating data
 subsets.
 
-\section{Example applications}
-
-In this section we discuss the range of examples that we have designed
-with Animint. Table~\ref{tab:examples} shows several characteristics
-of nine different interactive visualizations that we have designed
-using Animint.
-
 \begin{table*}[b!]
   \centering
   \input{table-examples}
@@ -991,26 +990,76 @@ using Animint.
 \label{tab:examples}
 \end{table*}
 
+\section{Example applications}
+
+In this section we discuss the range of examples that we have designed
+with Animint. Table~\ref{tab:examples} shows several characteristics
+of nine different interactive visualizations that we have designed
+using Animint.
+
+We quantified the implementation difficulty of the Animint examples
+using lines of R code, including data processing but not including
+comments (80 characters max per line). We counted the number of plots
+and variables shown to quantify the amount of information conveyed by
+the visualization. Using only 17 lines of code, we designed a simple
+visualization that shows 2 linked plots of 4 variables in the worldPop
+data set. In contrast, the most complex visualization required 87
+lines of code, and it shows 15 variables across 6 linked plots
+(Figure~\ref{fig:climate}). All of the visualizations that we designed
+involved at least 2 interaction variables (e.g. year and country in
+Figure~1) and 2 plots. Indeed, Animint is most appropriate for
+interactive visualizations of multi-variate data that are not easy to
+view all at once in one plot.
+
+Table~\ref{tab:examples} also shows Animint system requirements for
+plots of various sizes. We timed the compilation step in R code
+(``seconds'' column), and measured the size in megabytes of the
+compiled CSV file database (``MB'' column), and found that both
+increase with the data set size (``rows'' column). 
+%Although we do not present timings for the rendering step, 
+We also noticed that the time required for the interactive updates and
+rendering increases with the amount of data displayed at once
+(``onscreen'' column). In particular, the climate data visualization
+has noticeably slow animations, since it displays about 88980
+geometric elements at once. We observed this slowdown across all
+browsers, which suggested that there is an inherent bottleneck when
+rendering large interactive plots in web browsers using JavaScript and
+SVG. Another Animint with a similar amount of total data is based on
+the evolution data (\url{http://bit.ly/O0VTS4}), but since it shows
+less data onscreen (about 2703 elements), it exhibits faster
+responses to interactivity and animation. 
+
 \subsection{Animated examples}
 
-Mostly useful when one of the variables is time, as in Figure~1. TODO
-COMMENTARY.
+Animation is useful mainly for data sets which have a time variable,
+as in the World Bank data of Figure~1. 
 
-Figure~\ref{fig:tornado} shows an interactive animation of the tornado
-data. TODO COMMENTARY.
+Figure~\ref{fig:tornado} shows an interactive animation of tornadoes
+observed in the United States between 1950 and 2012. Clicking a state
+on the map updates the time series bars to show the tornado counts
+from that state. Clicking a bar on the time series updates the
+selected year.
 
-
-Figure~\ref{fig:climate} shows an interactive animation of the climate
-data. TODO COMMENTARY.
-
+Figure~\ref{fig:climate} shows an interactive animation of climate
+time series data observed in Central America. Two maps display the
+spatial distribution of two temperature variables, which are shown
+over time in corresponding the time series plots below. Scatterplots
+also show the relationships between the two temperature variables, for
+the selected time and region. Clicking any of the 6 plots updates all
+of them.
 
 \subsection{Non-animated examples}
 
 When the data to visualize do not contain a time variable, we have
 found that Animint is still useful for creating interactive but
-non-animated plots.
+non-animated plots. In fact, five of the nine examples in
+Table~\ref{tab:examples} are non-animated. For example, these plots
+are useful to illustrate complex concepts such as a change point
+detection model in the breakpoints data
+(\url{http://bit.ly/1gGYFIV}). Different model parameters and data sets
+can be explored by encoding these as Animint interaction variables.
 
-TODO more discussion -- Discuss relationships between multivariate data. I may be able to provide an example in soybeans (but I'm not sure if I'm allowed to share that data, so it might be good to find some other linked variables - the ones I'm thinking about are protein, oil, and yield.)
+%TODO more discussion -- Discuss relationships between multivariate data. I may be able to provide an example in soybeans (but I'm not sure if I'm allowed to share that data, so it might be good to find some other linked variables - the ones I'm thinking about are protein, oil, and yield.)
 
 \section{User feedback and observations}
 
@@ -1102,21 +1151,16 @@ could be used to indicate the text the user views when they hover the
 mouse over a data point.
 
 Animint's performance can be measured using speed, memory, and disk
-space requirements in the compilation and rendering steps. In general,
-the performance of the compilation step is related to the total amount
-of data (``rows'' column in Table~\ref{tab:examples}), and the
-performance of the rendering step is related to the amount of data
-displayed at once (``onscreen'' column in
-Table~\ref{tab:examples}). Although we showed in
-Section~\ref{sec:compare} that Animint provides smoother interactivity
-than client-server systems, future versions of Animint could
-definitely be made even more efficient and responsive. For example,
-the compilation step currently saves geom-specific CSV files and could
-be improved by saving CSV files for each showSelected subset of
-data. This would also allow for faster rendering for large data sets,
-since then the plots could be displayed as soon as the first selection
-is downloaded. In contrast, the current code downloads all of the data
-before displaying the geom.
+space requirements in the compilation and rendering steps. Although we
+showed in Section~\ref{sec:compare} that Animint provides smoother
+interactivity than client-server systems, future versions of Animint
+could definitely be made even more efficient and responsive. For
+example, the compilation step currently saves geom-specific CSV files
+and could be improved by saving CSV files for each showSelected subset
+of data. This would also allow for faster rendering for large data
+sets, since then the plots could be displayed as soon as the first
+selection is downloaded. In contrast, the current code downloads all
+of the data before displaying the geom.
 
 This highlights one of the main motivations for using a declarative
 DSL like Animint: none of the designer's R code needs to be changed to
