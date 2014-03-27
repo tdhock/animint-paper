@@ -757,7 +757,7 @@ interaction with respect to both year and country variables.
     %of Figure~1 
     using several libraries that can create interactive animations.
     For each library
-    we show the number of lines of code (LOC), programming language, 
+    we show the number of lines of code (LOC), programming style, 
     number of interaction variables, and URL of the interactive version. 
 %  Note that different countries can not be interactively selected using
 % the visualization created with R package animation.
