@@ -105,7 +105,7 @@ tab <- data.frame("lines of R code"=code.lines,
                   row.names=base)
 tab <- tab[order(tab$lines, decreasing=FALSE),]
 tab$Fig <- NA
-tab[c("WorldBank", "tornado", "climate"), "Fig"] <- c(1L, 2L, 3L)
+tab[c("WorldBank", "tornado", "climate"), "Fig"] <- c(1L, 3L, 4L)
 print(tab)
 xt <- xtable(tab, digits=1, align=rep("r", ncol(tab)+1))
 print(xt, file="table-examples.tex", floating=FALSE)
