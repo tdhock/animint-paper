@@ -397,7 +397,7 @@ file. Second and more importantly, Vega does not currently support the
 complex data-driven interactive animations that Animint currently
 supports. However, it should be possible for Vega to support
 interactive animations in the future, by expanding their JSON
-file format definition to support mark proporties based on the
+file format definition to support mark properties based on the
 clickSelects and showSelected ideas introduced in this paper.
 %in Section~\ref{sec:design}.
 
