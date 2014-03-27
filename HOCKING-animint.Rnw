@@ -229,8 +229,9 @@ Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
 sets. In this paper, we introduce Animint, a new domain-specific
 language (DSL) for designing linked, interactive, animated data
-visualizations. To explain exactly what kinds of visualizations we are
-interested in creating, we begin with an example.
+visualizations \citep{animint}. To explain exactly what kinds of
+visualizations we are interested in creating, we begin with an
+example.
 
 In this paper, we are concerned with data sets that can be described
 as a data table, with columns for each variable and rows for each
@@ -376,7 +377,7 @@ expressed in fewer lines of code than the other packages.
 
 \subsection{D3 and other JavaScript libraries}
 
-The current implementation of Animint uses \href{http://d3js.org/}{D3}
+Animint uses \href{http://d3js.org/}{D3}
 to render interactive animations in a web browser \citep{d3}. D3 is
 more powerful than animint, but is also more verbose. For example, the
 code in Figure~\ref{fig:code} shows that it takes a lot more D3 code
@@ -427,7 +428,7 @@ lines of code.
 \subsection{Libraries based on the grammar of graphics}  
 
 In this section we discuss the differences between Animint and
-several other high-level DSLs for data visualization based on the grammar of graphics philosophy \citep{wilkinson}: ggplot2, Vega, and ggvis.
+several other high-level DSLs for data visualization based on the grammar of graphics philosophy \citep{wilkinson}: ggplot2,  ggvis, and Vega.
 
 \begin{figure*}[b!]
   \centering
@@ -449,7 +450,7 @@ several other high-level DSLs for data visualization based on the grammar of gra
 \end{figure*}
 
 \paragraph{ggplot2}
-The current implementation of Animint extends the declarative DSL of
+Animint extends the declarative DSL of
 \href{http://ggplot2.org/}{ggplot2} \citep{ggplot2-book,
   ggplot2-paper}. Strictly speaking, ggplot2 is for non-interactive
 and non-animated visualizations. In this paper, we propose the
@@ -458,6 +459,32 @@ ggplot2, which extend it to accommodate interactive, animated
 graphics. This allows R users to create web-ready graphics using the
 grammar of graphics, which is familiar to many statisticians and R
 programmers.
+
+\paragraph{ggvis} The authors of ggplot2 are currently working on a
+package for interactive graphics called
+\href{http://ggvis.rstudio.com/}{ggvis} \citep{ggvis}. Unlike Animint,
+ggvis does not directly extend ggplot2, but provides a new
+implementation of some of the same ideas about the grammar of
+graphics. There are many other differences between ggvis and Animint,
+but the main difference is that ggvis is more powerful and verbose
+when used with the shiny web server \citep{shiny}, while Animint is
+more succinct for expressing interactive plots that show/hide data
+subsets (for a concrete example, see the comparison of World Bank data
+visualizations in Table~\ref{tab:packages}). At the level of defining
+plots in R code, a ggvis object corresponds to a single plot, while an
+Animint object is a list of several plots which are linked using the
+clickSelects and showSelected aesthetics. Another difference is that
+sharing a ggvis visualization requires a web server that runs R and
+shiny, but Animint uses static files and client-side JavaScript so it
+does not require any special web server software. The two packages
+also have different interactive features: ggvis uses sliders,
+checkboxes, and other HTML form elements, and Animint provides
+clickable SVG elements. This usually results in a richer Animint data
+visualization using fewer lines of code. For example, in a ggvis of
+the WorldBank data, it is natural to use a slider to select the
+displayed year. In contrast, in Animint we used a clickable multiple
+time series plot for the same purpose, giving the viewer a more
+comprehensive view of these multidimensional data (Figure~1).
 
 \paragraph{Vega}
 Like Animint, \href{http://trifacta.github.io/vega/}{Vega} is a
@@ -480,29 +507,6 @@ clickSelects and showSelected ideas introduced in this paper.
 %in Section~\ref{sec:design}.
 
 
-\paragraph{ggvis} The authors of ggplot2 are currently working on a
-package for interactive graphics called
-\href{http://ggvis.rstudio.com/}{ggvis} \citep{ggvis}. There are many
-differences between ggvis and Animint, but the main difference is that
-ggvis is more powerful and verbose, while Animint is more succinct for
-expressing interactive plots that show/hide data subsets (for a
-concrete example, see the comparison of World Bank data visualizations
-in Table~\ref{tab:packages}). At the level of defining plots in R
-code, a ggvis object corresponds to a single plot, while an Animint
-object is a list of several plots which are linked using the
-clickSelects and showSelected aesthetics. Another difference is that
-sharing a ggvis visualization requires a web server that runs R and
-shiny \citep{shiny}, but Animint uses static files and client-side
-JavaScript so it does not require any special web server software. The
-two packages also have different interactive features: ggvis uses
-sliders, checkboxes, and other HTML form elements, and Animint
-provides clickable SVG elements. This usually results in a richer
-Animint data visualization using fewer lines of code. For example, in
-a ggvis of the WorldBank data (Figure~1), it is natural to use a
-slider to select the displayed year. In contrast, in Animint we used a
-clickable multiple time series plot for the same purpose, giving the
-viewer a more comprehensive view of these multidimensional data.
-
 \subsection{Systems which are not publicly available}
 
 The system described by \citet{cleveland} involves interaction via a
@@ -518,7 +522,7 @@ supports selecting single values, but Cleveland's system supports
 selecting several values. Importantly, this is a limitation of the
 current implementation, not the proposed Animint DSL. Finally,
 Animint is publicly available on GitHub
-(\url{http://github.com/tdhock/animint}), but Cleveland's system is
+\citep{animint}, but Cleveland's system is
 not publicly available.
 
 Another system with interactive facilities similar to Animint is
@@ -1111,10 +1115,13 @@ need to work on a better compiler and rendering engine. Indeed,
 \citet{declarative} noted that this is one of the main benefits of
 declarative language design: ``By decoupling specification from
 implementation, developers can implement language optimizations
-without interfering with the work of designers.'' While several
+without interfering with the work of designers.'' 
+
+While several
 optimizations remain to be implemented, the current Animint library
 already provides an efficient syntax for the design of interactive,
-animated data visualizations.
+animated data visualizations. It is free/open-source software
+available on GitHub \citep{animint}.
 
 \acknowledgments{The authors wish to thank Animint users Carson
   Sievert, MC Du Plessis, Song Liu, and Nikoleta Juretic who have
