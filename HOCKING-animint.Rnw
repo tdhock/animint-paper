@@ -448,7 +448,7 @@ The main idea of Animint is that a large class of interactive plots
 can be specified using just two interactive keywords:
 \texttt{clickSelects} and \texttt{showSelected}. For example, after
 clicking a \texttt{clickSelects=year} element, the plot
-\texttt{showSelected=year} is updated to show only the elements
+is updated to show only the \texttt{showSelected=year} elements
 corresponding to the selected year.
 
 Animint implements these two interactive keywords as aesthetics in
