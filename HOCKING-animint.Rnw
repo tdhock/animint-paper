@@ -1,9 +1,9 @@
-\documentclass[journal]{vgtc}                % final (journal style)
-%\documentclass[review,journal]{vgtc}         % review (journal style)
+\documentclass[review,journal]{vgtc}         % review (journal style)
+%\documentclass[journal]{vgtc}                % final (journal style)
 %\documentclass[widereview]{vgtc}             % wide-spaced review
 %\documentclass[preprint,journal]{vgtc}       % preprint (journal style)
 %\documentclass[electronic,journal]{vgtc}     % electronic version, journal
-\usepackage{color}
+%\usepackage{color}
 \usepackage{stmaryrd}
 \usepackage{stfloats}
 %% Uncomment one of the lines above depending on where your paper is
@@ -55,7 +55,7 @@
 %% If you are submitting a paper to a conference for review with a double
 %% blind reviewing process, please replace the value ``0'' below with your
 %% OnlineID. Otherwise, you may safely leave it at ``0''.
-\onlineid{0}
+\onlineid{158}
 
 %% declare the category of your paper, only shown in review mode
 \vgtccategory{Research}
@@ -402,17 +402,20 @@ Animint.
   \label{fig:tornado}
 \end{figure*}
 
-
 There are many other libraries which can generate web plots with
 limited interactivity, but which are unable to produce interactive
-animations. For example, the \texttt{rCharts} R package is a wrapper
+animations. For example, the rCharts R package is a wrapper
 around several JavaScript libraries \citep{rcharts}. The major
-difference is that \texttt{rCharts} sacrifices some of the flexibility
-of Animint for expressive power. Thus, \texttt{rCharts} can produce
+difference is that rCharts is more expressive but less flexible
+than Animint. Thus, rCharts can produce
 several simple visualizations with only 1 line of R code, but it can
 not produce interactive animations. In contrast, Animint's high-level
 DSL can be used to specify more complex visualizations using only tens
 of lines of R code.
+
+Finally, Dimensional Charting (dc.js) is another JavaScript library
+which can produce interactive visualization consisting of several
+linked plots \citep{dc}.
 
 \subsection{Animated graphics libraries}
 
@@ -810,10 +813,9 @@ interactive and animated data visualizations, we implemented the World
 Bank visualization of Figure~1 using two other R packages
 (Table~\ref{tab:packages}). The main result of our comparison is that
 Animint requires significantly fewer lines of code, since it uses a
-declarative grammar to specify interactive animations.
-
-%\subsection{D3} TODO: discuss D3.
-
+declarative grammar to specify interactive animations. Note that is it
+possible to implement the World Bank visualization in pure D3, but
+would require significantly more code (Figure~\ref{fig:code}).
 
 \subsection{R package animation}
 \label{sec:compare-animation}
@@ -965,8 +967,9 @@ resulted in quick, responsive interactive animations.
 
 Another application for which a web server system like ggvis+shiny
 would be preferable is for performing arbitrary calculations in R/C
-code on the server and then sending the result across the
-network. However, this power is not really necessary for interactive
+code on the server, in response to user inputs, and then sending the
+result across the network for plotting in the user's web
+browser. However, this power is not always necessary for interactive
 animations, since the only operation needed is calculating data
 subsets.
 
@@ -1024,7 +1027,7 @@ has noticeably slow animations, since it displays about 88980
 geometric elements at once. We observed this slowdown across all
 browsers, which suggested that there is an inherent bottleneck when
 rendering large interactive plots in web browsers using JavaScript and
-SVG. Another Animint with a similar amount of total data is based on
+SVG. Another Animint with a similar amount of total rows is based on
 the evolution data (\url{http://bit.ly/O0VTS4}), but since it shows
 less data onscreen (about 2703 elements), it exhibits faster
 responses to interactivity and animation. 
@@ -1056,10 +1059,17 @@ non-animated plots. In fact, five of the nine examples in
 Table~\ref{tab:examples} are non-animated. For example, these plots
 are useful to illustrate complex concepts such as a change point
 detection model in the breakpoints data
-(\url{http://bit.ly/1gGYFIV}). Different model parameters and data sets
-can be explored by encoding these as Animint interaction variables. 
+(\url{http://bit.ly/1gGYFIV}). The user can explore different model
+parameters and data sets since these are encoded as Animint
+interaction variables.
 
-In particular, the authors have found that Animint is useful for exploring pairwise relationships in multivariate data. With the selection brushing, it is easy to explore outliers and other extreme values in the dataset and to see how those relationships translate to other variables. With traditional non-interactive graphics, it would be much more difficult (if not impossible) to explore individual points within a larger multivariate context. 
+Also, we have found that Animint is useful for exploring pairwise
+relationships in multivariate data (e.g. using pairwise scatter
+plots). By using clickSelects, it is easy to explore outliers and
+other extreme values in the dataset and to see how those relationships
+translate to other variables. With traditional non-interactive
+graphics, it would be much more difficult (if not impossible) to
+explore individual points within a larger multivariate context.
 
 %TODO more discussion -- Discuss relationships between multivariate data. I may be able to provide an example in soybeans (but I'm not sure if I'm allowed to share that data, so it might be good to find some other linked variables - the ones I'm thinking about are protein, oil, and yield.)
 
