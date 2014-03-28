@@ -1,6 +1,6 @@
 \documentclass[review,journal]{vgtc}         % review (journal style)
-%\documentclass[journal]{vgtc}                % final (journal style)
 %\documentclass[widereview]{vgtc}             % wide-spaced review
+%\documentclass[journal]{vgtc}                % final (journal style)
 %\documentclass[preprint,journal]{vgtc}       % preprint (journal style)
 %\documentclass[electronic,journal]{vgtc}     % electronic version, journal
 %\usepackage{color}
@@ -58,7 +58,7 @@
 \onlineid{158}
 
 %% declare the category of your paper, only shown in review mode
-\vgtccategory{Research}
+\vgtccategory{System}
 
 %% allow for this line if you want the electronic option to work properly
 \vgtcinsertpkg
@@ -225,7 +225,7 @@ geom_point(aes(
   \label{fig:code}
 \end{figure*}
 
-Interactive, animated data visualizations are a useful tool for
+Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
 sets. In this paper, we introduce Animint, a new domain-specific
 language (DSL) for designing linked, interactive, animated data
@@ -237,12 +237,12 @@ In this paper, we are concerned with data sets that can be described
 as a data table, with columns for each variable and rows for each
 observation or data point. Consider the World Bank data set, which
 consist of several economic variables measured for 205 countries from
-1960 to 2012. The visualization in Figure~1 shows six variables from
-this data set: year, country, life expectancy, fertility rate, region,
-and population. We have chosen to emphasize the country United States
-and the year 1996. The benefit of the interactive visualization is
-that the reader or user may interact with the plot to view data about
-another country or time period.
+1960 to 2012 \citep{WorldBank}. The visualization in Figure~1 shows
+six variables from this data set: year, country, life expectancy,
+fertility rate, region, and population. We have chosen to emphasize
+the country United States and the year 1996. The benefit of the
+interactive visualization is that the reader or user may interact with
+the plot to view data about another country or time period.
 %(\url{http://bit.ly/1fzfUdN}). 
 Finally, since one of the variables in this visualization is the year
 of measurement, it is natural to animate the visualization to see how
@@ -413,9 +413,11 @@ not produce interactive animations. In contrast, Animint's high-level
 DSL can be used to specify more complex visualizations using only tens
 of lines of R code.
 
-Finally, Dimensional Charting (dc.js) is another JavaScript library
-which can produce interactive visualization consisting of several
-linked plots \citep{dc}.
+Finally, Dimensional Charting (DC) is another JavaScript library which
+can produce interactive visualizations consisting of several linked
+plots \citep{dc}. Like Animint, DC builds on top of D3. Unlike
+Animint, DC does not use the grammar of graphics, so DC designers must
+use more lines of code.
 
 \subsection{Animated graphics libraries}
 
@@ -428,6 +430,12 @@ animation is rewinding and fast-forwarding through the
 animation frames. Second, Animint uses an declarative DSL, which
 enables more complex interactive animations to be defined in fewer
 lines of code.
+
+Another way to produce an animated scatterplot of the World Bank data
+is by using a Google motion chart, available in R through the
+googleVis package \citep{googleVis}. Unlike Animint, googleVis has no
+high level DSL, so it can not be used to produce a multi-plot
+visualization with a linked multiple time series.
 
 \subsection{Libraries based on the grammar of graphics}  
 
@@ -538,8 +546,13 @@ discuss it further.
 
 Finally, implementations of the grammar of graphics system of
 \citet{wilkinson} exist as the Visualization Markup Language (ViZml)
-and the Graphics Production Language (GPL) in IBM SPSS, but do not
-support interactive animations.
+and the Graphics Production Language (GPL) in IBM SPSS Statistics
+software, but do not support interactive animations.
+
+In conclusion, other systems that implement the grammar of graphics
+are limited to non-interactive plots, and other systems that implement
+interactive animations do not exploit the powerful grammar of
+graphics. Animint is the first system that implements both.
 
 \section{Design of the Animint system}
 \label{sec:design}
@@ -616,7 +629,7 @@ create the year labels using
 
 <<yearText-geom, tidy=FALSE>>=
 yearText <- geom_text(
-  aes(label=sprintf("year = ", year), 
+  aes(label=sprintf("year = %d", year), 
       showSelected=year),
   x=5, y=80, 
   data=years)
@@ -1038,18 +1051,23 @@ Animation is useful mainly for data sets which have a time variable,
 as in the World Bank data of Figure~1. 
 
 Figure~\ref{fig:tornado} shows an interactive animation of tornadoes
-observed in the United States between 1950 and 2012. Clicking a state
-on the map updates the time series bars to show the tornado counts
-from that state. Clicking a bar on the time series updates the
-selected year.
+observed in the United States between 1950 and 2012. At any moment in
+time, the user can simultaneously view the spatial distribution of
+tornadoes in the selected year over all states, and see the trend over
+time for the selected state. Clicking a state on the map updates the
+time series bars to show the tornado counts from that state. Clicking
+a bar on the time series updates the selected year.
 
 Figure~\ref{fig:climate} shows an interactive animation of climate
 time series data observed in Central America. Two maps display the
 spatial distribution of two temperature variables, which are shown
 over time in corresponding the time series plots below. Scatterplots
 also show the relationships between the two temperature variables, for
-the selected time and region. Clicking any of the 6 plots updates all
-of them. This set of 6 linked plots is easily defined with Animint, using only the clickSelects and showSelected aesthetics; the design of Animint's DSL allows for this level of flexibility while using minimal lines of code to define the plots and the relationship between them. 
+the selected time and region. Clicking any of the plots updates all 6
+of them. The clickSelects and showSelected aesthetics make it easy to
+design this set of 6 linked plots in only 87 lines of code. Animint's
+DSL allows for this level of flexibility while using minimal lines of
+code to define the plots and the relationship between them.
 
 \subsection{Non-animated examples}
 
@@ -1064,7 +1082,7 @@ parameters and data sets since these are encoded as Animint
 interaction variables.
 
 Also, we have found that Animint is useful for exploring pairwise
-relationships in multivariate data (e.g. using pairwise scatter
+relationships in multivariate data (e.g. using several scatter
 plots). By using clickSelects, it is easy to explore outliers and
 other extreme values in the dataset and to see how those relationships
 translate to other variables. With traditional non-interactive
