@@ -225,7 +225,7 @@ geom_point(aes(
   \label{fig:code}
 \end{figure*}
 
-Interactive, animated data visualization is a useful tool for
+Interactive, animated data visualizations are a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
 sets. In this paper, we introduce Animint, a new domain-specific
 language (DSL) for designing linked, interactive, animated data
@@ -256,7 +256,7 @@ to design such interactive animations.
 % and then the user is free to choose the selection. Do you have some
 % idea how to get that message across?
 
-In this paper we will discuss 3 important roles that contribute to the
+In this paper we will discuss three important roles that contribute to the
 creation of an Animint visualization: the developer, who implements
 the Animint library; the designer, who uses the Animint library to
 define a visualization; and the user, who views the visualization in a
@@ -1046,7 +1046,7 @@ spatial distribution of two temperature variables, which are shown
 over time in corresponding the time series plots below. Scatterplots
 also show the relationships between the two temperature variables, for
 the selected time and region. Clicking any of the 6 plots updates all
-of them.
+of them. This set of 6 linked plots is easily defined with Animint, using only the clickSelects and showSelected aesthetics; the design of Animint's DSL allows for this level of flexibility while using minimal lines of code to define the plots and the relationship between them. 
 
 \subsection{Non-animated examples}
 
@@ -1057,7 +1057,9 @@ Table~\ref{tab:examples} are non-animated. For example, these plots
 are useful to illustrate complex concepts such as a change point
 detection model in the breakpoints data
 (\url{http://bit.ly/1gGYFIV}). Different model parameters and data sets
-can be explored by encoding these as Animint interaction variables.
+can be explored by encoding these as Animint interaction variables. 
+
+In particular, the authors have found that Animint is useful for exploring pairwise relationships in multivariate data. With the selection brushing, it is easy to explore outliers and other extreme values in the dataset and to see how those relationships translate to other variables. With traditional non-interactive graphics, it would be much more difficult (if not impossible) to explore individual points within a larger multivariate context. 
 
 %TODO more discussion -- Discuss relationships between multivariate data. I may be able to provide an example in soybeans (but I'm not sure if I'm allowed to share that data, so it might be good to find some other linked variables - the ones I'm thinking about are protein, oil, and yield.)
 
