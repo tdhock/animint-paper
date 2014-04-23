@@ -1160,7 +1160,7 @@ must be proficient in both R and JavaScript. This represents a
 significant barrier for source code contributions from developers who
 are proficient with one language but not the other.
 
-Animint users define interactive animations using only R code, and no
+Animint designers define interactive animations using only R code, and no
 knowledge of JavaScript is necessary. This is convenient for useRs
 from a statistical background, but presents a barrier for web
 developers who are more familiar with JavaScript than R. For these web
@@ -1172,11 +1172,11 @@ possibly building clickSelects and showSelected extensions into Vega
 The current Animint implementation is limited to two specific types of
 interactivity: highlighting the selected clickSelects
 element, and showing/hiding \mbox{showSelected} elements. In the
-future, we could implement several types of interactivity without
+future, we could implement several other types of interactivity without
 changing the Animint DSL. Examples include zooming, multiple
 selection, increase/decrease animation speed, and plot
 resizing. However, some kinds of interactivity would require additions
-to the Animint grammer. For example, a \texttt{tooltip} aesthetic
+to the Animint grammar. For example, a \texttt{tooltip} aesthetic
 could be used to indicate the text the user views when they hover the
 mouse over a data point.
 
@@ -1190,7 +1190,7 @@ and could be improved by saving CSV files for each showSelected subset
 of data. This would also allow for faster rendering for large data
 sets, since then the plots could be displayed as soon as the first
 selection is downloaded. In contrast, the current code downloads all
-of the data before displaying the geom.
+of the data before displaying any geoms.
 
 This highlights one of the main motivations for using a declarative
 DSL like Animint: none of the designer's R code needs to be changed to
