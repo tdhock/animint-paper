@@ -970,21 +970,23 @@ is preferable to use an entirely JavaScript-based system like
 Animint.
 
 In contrast, a web server system like ggvis+shiny would be more
-appropriate for interactive animations that have many more subsets of
-the data than can ever be transferred over the network. In that case,
-the web server will initially send only the first data subset, and
-then send only the subsets of data that the client requests. However,
-since the data sets we examined were not too large
-(Table~\ref{tab:examples}), client-side rendering using Animint
-resulted in quick, responsive interactive animations.
-
-Another application for which a web server system like ggvis+shiny
-would be preferable is for performing arbitrary calculations in R/C
-code on the server, in response to user inputs, and then sending the
-result across the network for plotting in the user's web
-browser. However, this power is not always necessary for interactive
-animations, since the only operation needed is calculating data
-subsets.
+appropriate for
+%  interactive animations that have many more subsets of
+% the data than can ever be transferred over the network. In that case,
+% the web server will initially send only the first data subset, and
+% then send only the subsets of data that the client requests. However,
+% since the data sets we examined were not too large
+% (Table~\ref{tab:examples}), client-side rendering using Animint
+% resulted in quick, responsive interactive animations.
+% Another application for which a web server system like ggvis+shiny
+% would be preferable is for 
+performing arbitrary calculations in R/C code on the server, in
+response to user inputs, and then sending the result across the
+network for plotting in the user's web browser. This power is not
+always necessary for interactive animations, since the only operation
+needed is showing precomputed data subsets. However, the web server
+system would certainly be preferable when there are many more data
+subsets than could ever be precomputed. In that case, the web server would only compute the subsets that the user interactively specifies.
 
 \begin{table*}[b!]
   \centering
@@ -1054,7 +1056,7 @@ Figure~\ref{fig:tornado} shows an interactive animation of tornadoes
 observed in the United States between 1950 and 2012. At any moment in
 time, the user can simultaneously view the spatial distribution of
 tornadoes in the selected year over all states, and see the trend over
-time for the selected state. Clicking a state on the map updates the
+all years for the selected state. Clicking a state on the map updates the
 time series bars to show the tornado counts from that state. Clicking
 a bar on the time series updates the selected year.
 
@@ -1185,12 +1187,8 @@ space requirements in the compilation and rendering steps. Although we
 showed in Section~\ref{sec:compare} that Animint provides smoother
 interactivity than client-server systems, future versions of Animint
 could definitely be made even more efficient and responsive. For
-example, the compilation step currently saves geom-specific CSV files
-and could be improved by saving CSV files for each showSelected subset
-of data. This would also allow for faster rendering for large data
-sets, since then the plots could be displayed as soon as the first
-selection is downloaded. In contrast, the current code downloads all
-of the data before displaying any geoms.
+example, of the plots in
+Table~\ref{tab:examples}, the longest compilation step took 23.7 seconds.
 
 This highlights one of the main motivations for using a declarative
 DSL like Animint: none of the designer's R code needs to be changed to
