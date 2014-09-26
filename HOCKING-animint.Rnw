@@ -1,4 +1,5 @@
-\documentclass[review,journal]{vgtc}         % review (journal style)
+\documentclass[10pt,journal,compsoc]{IEEEtran}
+%\documentclass[review,journal]{vgtc}         % review (journal style)
 %\documentclass[widereview]{vgtc}             % wide-spaced review
 %\documentclass[journal]{vgtc}                % final (journal style)
 %\documentclass[preprint,journal]{vgtc}       % preprint (journal style)
@@ -52,16 +53,15 @@
 
 \newcommand{\bitly}[1]{\href{http://bit.ly/#1}{\texttt{#1}}}
 
+\begin{document}
+
 %% If you are submitting a paper to a conference for review with a double
 %% blind reviewing process, please replace the value ``0'' below with your
 %% OnlineID. Otherwise, you may safely leave it at ``0''.
-\onlineid{158}
 
 %% declare the category of your paper, only shown in review mode
-\vgtccategory{System}
 
 %% allow for this line if you want the electronic option to work properly
-\vgtcinsertpkg
 
 %% In preprint mode you may define your own headline.
 %\preprinttext{To appear in an IEEE VGTC sponsored conference.}
@@ -73,22 +73,82 @@
 %% This is how authors are specified in the journal style
 
 %% indicate IEEE Member or Student Member in form indicated below
-\author{Toby Dylan Hocking and Susan VanderPlas}
-\authorfooter{
-%% insert punctuation at end of each item
-\item
- Toby Dylan Hocking is with McGill Human Genetics. E-mail: toby.hocking@mail.mcgill.ca.
-\item
- Susan VanderPlas is with Iowa State Statistics. E-mail: srvanderplas@gmail.com.
-}
+\author{Toby Dylan Hocking, 
+  Carson Sievert, 
+  Susan VanderPlas,%
+\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem
+    Toby Dylan Hocking 
+    is with the McGill University department of Human Genetics,
+    Susan VanderPlas and Carson Sievert 
+    are with Iowa State University department of Statistics.
+\protect\\
+% note need leading \protect in front of \\ to get a newline within \thanks as
+% \\ is fragile and will error, could use \hfil\break instead.
+E-mail: toby.hocking@mail.mcgill.ca.}% <-this % stops a space
+\thanks{Manuscript received April 19, 2005; revised September 17, 2014.}}
 
-%other entries to be set up for journal
-\shortauthortitle{Hocking \MakeLowercase{\textit{et al.}}: Animint: a
-  Grammar for Interactive Animations}
-%\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
+% note the % following the last \IEEEmembership and also \thanks - 
+% these prevent an unwanted space from occurring between the last author name
+% and the end of the author line. i.e., if you had this:
+% 
+% \author{....lastname \thanks{...} \thanks{...} }
+%                     ^------------^------------^----Do not want these spaces!
+%
+% a space would be appended to the last name and could cause every name on that
+% line to be shifted left slightly. This is one of those "LaTeX things". For
+% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
+% "AB" then you have to do: "\textbf{A}\textbf{B}"
+% \thanks is no different in this regard, so shield the last } of each \thanks
+% that ends a line with a % and do not let a space in before the next \thanks.
+% Spaces after \IEEEmembership other than the last one are OK (and needed) as
+% you are supposed to have spaces between the names. For what it is worth,
+% this is a minor point as most people would not even notice if the said evil
+% space somehow managed to creep in.
 
-%% Abstract section.
-\abstract{Animint is a novel high-level domain-specific language (DSL)
+
+
+% The paper headers
+\markboth{Journal of \LaTeX\ Class Files,~Vol.~13, No.~9, September~2014}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Advanced Demo of IEEEtran.cls for Journals}
+% The only time the second header will appear is for the odd numbered pages
+% after the title page when using the twoside option.
+% 
+% *** Note that you probably will NOT want to include the author's ***
+% *** name in the headers of peer review papers.                   ***
+% You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
+% you desire.
+
+
+
+% The publisher's ID mark at the bottom of the page is less important with
+% Computer Society journal papers as those publications place the marks
+% outside of the main text columns and, therefore, unlike regular IEEE
+% journals, the available text space is not reduced by their presence.
+% If you want to put a publisher's ID mark on the page you can do it like
+% this:
+%\IEEEpubid{0000--0000/00\$00.00~\copyright~2014 IEEE}
+% or like this to get the Computer Society new two part style.
+%\IEEEpubid{\makebox[\columnwidth]{\hfill 0000--0000/00/\$00.00~\copyright~2014 IEEE}%
+%\hspace{\columnsep}\makebox[\columnwidth]{Published by the IEEE Computer Society\hfill}}
+% Remember, if you use this you must call \IEEEpubidadjcol in the second
+% column for its text to clear the IEEEpubid mark (Computer Society journal
+% papers don't need this extra clearance.)
+
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+% for Computer Society papers, we must declare the abstract and index terms
+% PRIOR to the title within the \IEEEtitleabstractindextext IEEEtran
+% command as these need to go into the title area created by \maketitle.
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\IEEEtitleabstractindextext{%
+\begin{abstract}
+Animint is a novel high-level domain-specific language (DSL)
   for linked, interactive, animated plots. It builds on top
   of previous work on the grammar of graphics (ggplot2 in R) and
   interactive visualization using web standards (D3 in JavaScript). In
@@ -105,40 +165,53 @@
   it is first compiled and then rendered in a web browser using D3. We
   discuss the design of Animint, then compare to related libraries,
   and show several example visualizations of high-dimensional time
-  series data.} % end of abstract
+  series data.
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+Information visualization, user interfaces, toolkits, 2D
+  graphics, interactive, animation
+\end{IEEEkeywords}
+
+
+% make the title area
+
+
+% To allow for easy dual compilation without having to reenter the
+% abstract/keywords data, the \IEEEtitleabstractindextext text will
+% not be used in maketitle, but will appear (i.e., to be "transported")
+% here as \IEEEdisplaynontitleabstractindextext when compsoc mode
+% is not selected <OR> if conference mode is selected - because compsoc
+% conference papers position the abstract like regular (non-compsoc)
+% papers do!
+\IEEEdisplaynontitleabstractindextext
+% \IEEEdisplaynontitleabstractindextext has no effect when using
+% compsoc under a non-conference mode.
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+}
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
-\keywords{Information visualization, user interfaces, toolkits, 2D
-  graphics, interactive, animation}
 
 %% ACM Computing Classification System (CCS). 
 %% See <http://www.acm.org/class/1998/> for details.
 %% The ``\CCScat'' command takes four arguments.
 
-\CCScatlist{ % not used in journal version
- \CCScat{K.6.1}{Management of Computing and Information Systems}%
-{Project and People Management}{Life Cycle};
- \CCScat{K.7.m}{The Computing Profession}{Miscellaneous}{Ethics}
-}
 
-%% Uncomment below to include a teaser figure.
-  \teaser{
-  \centering
-  \includegraphics[width=\textwidth]{figure-1}
-  \caption{This interactive animation of World Bank data was designed
-    with only 20 lines of Animint code
-    (\url{http://bit.ly/1fzfUdN}). \textbf{Top}: Five geometric
-    elements span two linked plots: clicking a clickSelects
-    element changes the currently selected year or country, and
-    updates the corresponding \mbox{showSelected}
-    elements. \textbf{Left}: a multiple time series from 1960 to 2012
-    of the life expectancy of 205 countries, with a bold line showing
-    the selected country and a vertical grey tallrect showing the
-    selected year.  \textbf{Right}: a scatterplot of life expectancy
-    versus fertility rate of all countries. The two text elements show
-    the current selection: ``year = 1996'' and ``United States.''}
-}
+
+
 
 %% Uncomment below to disable the manuscript note
 %\renewcommand{\manuscriptnotetxt}{}
@@ -151,15 +224,31 @@
 %%%%%%%%%%%%%%%%%%%%%% START OF THE PAPER %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{document}
-
 %% The ``\maketitle'' command must be the first command after the
 %% ``\begin{document}'' command. It prepares and prints the title block.
 
-%% the only exception to this rule is the \firstsection command
-\firstsection{Introduction}
 
 \maketitle
+
+%% Uncomment below to include a teaser figure.
+\begin{figure*}[b!]
+  \centering
+  \includegraphics[width=\textwidth]{figure-1}
+  \caption{This interactive animation of World Bank data was designed
+    with only 20 lines of Animint code (TODO:bit.ly URL with new
+    version after Carson adds widgets).  \textbf{Top text}: Five
+    geometric elements span two linked plots: clicking a clickSelects
+    element changes the currently selected year or country, and
+    updates the corresponding \mbox{showSelected} elements.
+    \textbf{Left plot}: a multiple time series from 1960 to 2012 of
+    the life expectancy of 205 countries, with bold lines showing the
+    selected countries and a vertical grey tallrect showing the
+    selected year.  \textbf{Right plot}: a scatterplot of life
+    expectancy versus fertility rate of all countries. The two text
+    elements show the current selection: year=1975 and
+    country=$\{\textrm{United States}, \textrm{Vietnam}\}$}
+  \label{fig:1}
+\end{figure*}
 
 \begin{figure*}[b!]
   \centering
@@ -277,13 +366,13 @@ data.
 %Section~\ref{sec:implementation}.
 
 Our definition of an ``interactive'' visualization is synonymous to
-what \citet{cleveland} called ``direct manipulation'' --- the user
-directly specifies data of interest by using the mouse on the
-corresponding plotted elements. Our definition of an ``animated''
-visualization is one that shows new data points over time as the user
-watches. The goal of the Animint DSL that we introduce in this paper
-is to make it easy for designers to express visualizations which are
-both animated and interactive.
+what \citet{cleveland} called ``direct manipulation'' (TODO:ref the
+other paper) --- the user directly specifies data of interest by using
+the mouse on the corresponding plotted elements. Our definition of an
+``animated'' visualization is one that shows new data points over time
+as the user watches. The goal of the Animint DSL that we introduce in
+this paper is to make it easy for designers to express visualizations
+which are both animated and interactive.
 %TODO: examples of animated and interactive, World
 %Bank and Fig 9 of \citet{d3}.
 
@@ -368,7 +457,6 @@ Section~7.
 %% \section{Introduction} %for journal use above \firstsection{..} instead
 
 \section{Related Work}
-
 
 In this section we offer a comparison between Animint and several
 related systems, focusing on libraries/packages with free/open-source
@@ -522,20 +610,21 @@ clickSelects and showSelected ideas introduced in this paper.
 
 \subsection{Systems which are not publicly available}
 
-The system described by \citet{cleveland} involves interaction via a
-rectangular brush that can select several data points. Its enhanced
-linking feature highlights the selected data points across several
-plots, which is similar to the selection functionality implemented in
-Animint. There are four important differences between Animint and this
-system. First, Animint is based on a high-level DSL, but Cleveland's
-system proposes no such language. Second, Animint supports a brush for
-every selection variable, but Cleveland's system only supports a
-single brush. Third, the current implementation of Animint only
-supports selecting single values, but Cleveland's system supports
-selecting several values. Importantly, this is a limitation of the
-current implementation, not the proposed Animint DSL. Finally, Animint
-is publicly available on GitHub \citep{animint}, but Cleveland's
-system is not publicly available.
+The system described by \citet{cleveland, brushing-scatterplots}
+involves interaction via a rectangular brush that can select several
+data points. Its enhanced linking feature highlights the selected data
+points across several plots, which is similar to the selection
+functionality implemented in Animint. There are four important
+differences between Animint and this system. First, Animint is based
+on a high-level DSL, but Cleveland's system proposes no such
+language. Second, Animint supports a brush for every selection
+variable, but Cleveland's system only supports a single brush. Third,
+the current implementation of Animint only supports selecting single
+values, but Cleveland's system supports selecting several
+values. Importantly, this is a limitation of the current
+implementation, not the proposed Animint DSL. Finally, Animint is
+publicly available on GitHub \citep{animint}, but Cleveland's system
+is not publicly available.
 
 Another system with interactive facilities similar to Animint is
  \citet{tableau}. Like Animint, it is based on a declarative
@@ -1205,9 +1294,9 @@ already provides an efficient syntax for the design of interactive,
 animated data visualizations. It is free/open-source software
 available on GitHub \citep{animint}.
 
-\acknowledgments{The authors wish to thank Animint users Carson
-  Sievert, MC Du Plessis, Song Liu, and Nikoleta Juretic who have
-  contributed constructive criticism and helped its development.  }
+\section*{Acknowledgements}
+
+The authors wish to thank Animint users MC Du Plessis, Song Liu, and Nikoleta Juretic who have contributed constructive criticism and helped its development.  
 
 % TDH 13 March 2014 This was in the template.tex file.
 %\bibliographystyle{abbrv}
