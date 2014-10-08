@@ -1343,6 +1343,9 @@ available with showSelected \citep{iva}.
 TODO: discuss that it would be nice to have scales that update for
 each selection.
 
+TODO: discuss that it would be nice to interactively change variable
+mappings.
+
 As discussed in Section~\ref{sec:design} and illustrated in
 Figure~\ref{fig:design}, the compiler is written in R, and the
 renderer is written in JavaScript. This means that Animint developers
