@@ -766,7 +766,7 @@ ggplot2 aesthetics in R code, as explained below.
     black signals below. It also contains an href tag, which opens a
     new genome browser web page zoomed to the same region as the
     selected data.}
-  \label{fig:climate}
+  \label{fig:ChIPseq}
 \end{figure*}
 
 Animint implements the \texttt{clickSelects} and \texttt{showSelected}
@@ -1225,9 +1225,9 @@ comments (80 characters max per line). We counted the number of plots
 and variables shown to quantify the amount of information conveyed by
 the visualization. Using only 17 lines of code, we designed a simple
 visualization that shows 2 linked plots of 4 variables in the worldPop
-data set. In contrast, the most complex visualization required 87
-lines of code, and it shows 15 variables across 6 linked plots
-(Figure~\ref{fig:climate}). All of the visualizations that we designed
+data set. In contrast, the most complex visualization required 229
+lines of code, and it shows 44 variables across 5 linked plots
+(Figure~\ref{fig:ChIPseq}). All of the visualizations that we designed
 involved at least 2 interaction variables (e.g. year and country in
 Figure~1) and 2 plots. Indeed, Animint is most appropriate for
 interactive visualizations of multi-variate data that are not easy to
@@ -1279,23 +1279,27 @@ code to define the plots and the relationship between them.
 
 When the data to visualize do not contain a time variable, we have
 found that Animint is still useful for creating interactive but
-non-animated plots. In fact, five of the eleven examples in
-Table~\ref{tab:examples} are non-animated. For example, these plots
+non-animated plots. In fact, seven of the eleven examples in
+Table~\ref{tab:examples} are not animated. For example, these plots
 are useful to illustrate complex concepts such as a change point
 detection model in the breakpoints data
 (\url{http://bit.ly/1gGYFIV}). The user can explore different model
 parameters and data sets since these are encoded as Animint
 interaction variables.
 
-Also, we have found that Animint is useful for exploring pairwise
-relationships in multivariate data (e.g. using several scatter
-plots). By using \texttt{clickSelects}, it is easy to explore outliers and
-other extreme values in the dataset and to see how those relationships
-translate to other variables. With traditional non-interactive
-graphics, it would be much more difficult (if not impossible) to
-explore individual points within a larger multivariate context.
+Another non-animated example is Figure~\ref{fig:ChIP-seq}, which was
+used to explain a complex machine learning model for predicting
+differences between samples. The interactive visualization allows the
+user to show how the predictions change as a function of the model
+complexity parameter, in several train and test samples. It also uses
+facets, a feature from ggplot2 that allows multi-panel plots with
+aligned axes. Finally, it includes hyperlinks which open related web
+pages in new windows.
 
-%TODO more discussion -- Discuss relationships between multivariate data. I may be able to provide an example in soybeans (but I'm not sure if I'm allowed to share that data, so it might be good to find some other linked variables - the ones I'm thinking about are protein, oil, and yield.)
+Overall, we have found that Animint is useful for exploring
+relationships in many different kinds of multivariate data. By using
+\texttt{clickSelects} and \texttt{showSelected}, it is easy to design
+interactive plots that reveal patterns in complex data.
 
 \section{User feedback and observations}
 
@@ -1356,17 +1360,39 @@ publications.''
 There are several limitations to the current implementation of
 Animint, which suggest avenues for future work.
 
-TODO: discuss that AND is the only logical combination variable
-available with showSelected \citep{iva}... ? E.g. it would not be
-feasible to compute and plot statistics for a multiple selection
-variable. For example you may want to compute a smoothing line with
-only the selected poinst
+Animint implements several linked brushes, one of the hallmarks of
+interactive visual analysis \citep{iva}. However, the main drawback to
+the current implementation is that a selection is defined as a set of
+distinct elements (e.g. year=\{1991, 1992\}) rather than a logical
+expression (e.g. year $>1990$). Importantly, this is a drawback of the
+current implementation, not the Animint DSL. 
 
-TODO: discuss that it would be nice to have scales that update for
-each selection.
+Another limitation of the current implementation is that axes and
+legends are computed at compile-time, and are not updated after
+clicks. Thus it is difficult to use interactivity to visualize
+different data subsets which have very different ranges of values. So
+for example, it would be awkward to use \texttt{showSelected} to show
+one panel of a scatter plot matrix of several variables. A workaround
+is shown in Figure~\ref{fig:ChIPseq}, which omits the x axis on the
+bottom plot, since in fact the x values are all normalized to [0,1]. A
+future implementation of Animint would benefit with scales that update
+after each click.
 
-TODO: discuss that it would be nice to interactively change variable
-mappings.
+Currently, the user is unable to change variable mappings, since these
+are specified by the designer at compile time. A better interactive
+system would allow the user to interactively change variable mappings.
+
+Since Animint does not perform any computations other than showing and
+hiding data subsets, there are some limitations to what can be
+displayed with multiple selection variables. For instance, in the
+WorldBank visualization of Figure~1, it would not be feasible to
+display a single smoothing line computed from all the selected
+countries. This is because \texttt{showSelected=country} means to show
+one thing for each selected country (not one thing computed based on
+the set of selected countries). Supporting this kind of interaction
+would require substantial modifications to the Animint system,
+including the addition of a web server to perform computations on the
+multiple selection variable sets.
 
 As discussed in Section~\ref{sec:design} and illustrated in
 Figure~\ref{fig:design}, the compiler is written in R, and the
