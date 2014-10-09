@@ -14,6 +14,7 @@ UStornadoCounts <-
 seg.color <- "#55B1F7"
 viz <-
   list(map=ggplot()+
+       theme_animint(width=750, height=500)+
        make_text(UStornadoes, -100, 50, "year",
                  "Tornado paths and endpoints in %d")+
        geom_segment(aes(x=startLong, y=startLat, xend=endLong, yend=endLat,
@@ -26,10 +27,9 @@ viz <-
                     data=USpolygons, fill="grey", colour="black", alpha=3/4)+
        theme(axis.line=element_blank(), axis.text=element_blank(), 
              axis.ticks=element_blank(), axis.title=element_blank()),
-       width=list(map=750, ts=300),
-       height=list(map=500, ts=400),
        ##time=list(variable="year", ms=2000),
        ts=ggplot()+
+       theme_animint(width=300, height=400)+
        xlab("year")+
        ylab("Number of tornadoes")+
        geom_bar(aes(year, count, clickSelects=year, showSelected=state),

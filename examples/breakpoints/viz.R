@@ -11,6 +11,7 @@ breakpoints$segments$line <- "estimate"
 breakpoints$breaks$line <- "estimate"
 viz <- 
   list(signal=ggplot()+
+       theme_animint(width=1000)+
        geom_point(aes(position, signal, showSelected=samples),
                   data=breakpoints$signals)+
        geom_line(aes(position, signal, colour=line),
@@ -29,6 +30,7 @@ viz <-
                   data=breakpoints$breaks)+
        scale_colour_manual(values=signal.colors),
        error=ggplot()+
+       theme_animint(width=500)+
        geom_line(aes(segments, error, group=type,
                      showSelected=samples,
                      colour=type, linetype=type, size=type),
@@ -39,6 +41,7 @@ viz <-
                      clickSelects=samples),
                  data=only.error, lwd=4),
        roc=ggplot()+
+       theme_animint(width=500)+
        geom_path(aes(FPR, TPR, group=samples,
                      clickSelects=samples), data=roc, lwd=4)+
        geom_point(aes(FPR, TPR, showSelected=samples,
@@ -49,8 +52,7 @@ viz <-
                   "probability(predict breakpoint|no breakpoint)"))+
        ylab(paste("True positive rate =",
                   "probability(predict breakpoint|breakpoint)"))+
-       ggtitle("ROC curves"),
-       width=list(signal=1000, error=500, roc=500))
+       ggtitle("ROC curves"))
 ## Make manual scales.
 fp.fn <- list(colour=c(FP="skyblue",FN="#E41A1C",E="black",I="black"),
               linetype=c(E="solid",FP="solid",FN="solid",I="dashed"),

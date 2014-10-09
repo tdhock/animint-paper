@@ -57,9 +57,9 @@ for(sub.dir.i in seq_along(sub.dirs)){
   n.rows[[sub.dir.i]] <- n.rows.i
   n.plots[[sub.dir.i]] <- n.plots.i
   seconds[[sub.dir.i]] <- system.time({
-    meta <- gg2animint(viz, sub.dir, open.browser=FALSE)
+    meta <- animint2dir(viz, sub.dir, open.browser=FALSE)
   })[["elapsed"]]
-  cmd <- sprintf("du -sc %s/*.csv", sub.dir)
+  cmd <- sprintf("du -sc %s/*.tsv", sub.dir)
   du.lines <- system(cmd, intern=TRUE)
   last.line <- du.lines[length(du.lines)]
   total.size[[sub.dir.i]] <- as.integer(sub("\ttotal", "", last.line))
@@ -105,7 +105,7 @@ tab <- data.frame("lines of R code"=code.lines,
                   row.names=base)
 tab <- tab[order(tab$lines, decreasing=FALSE),]
 tab$Fig <- NA
-tab[c("WorldBank", "tornado", "climate"), "Fig"] <- c(1L, 3L, 4L)
+tab[c("WorldBank", "tornado", "climate", "ChIPseq"), "Fig"] <- c(1L, 3L, 4L, 5L)
 print(tab)
 xt <- xtable(tab, digits=1, align=rep("r", ncol(tab)+1))
 print(xt, file="table-examples.tex", floating=FALSE)

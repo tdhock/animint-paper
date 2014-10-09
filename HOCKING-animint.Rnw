@@ -752,6 +752,15 @@ will be shown in the linked plots. Also, note the \texttt{clickSelects} and
 Figures~1, 3, and 4. These notes can be directly translated to
 ggplot2 aesthetics in R code, as explained below.
 
+\begin{figure*}[b!]
+  \centering
+  \includegraphics[width=\textwidth]{screenshot-chip-seq-edited}
+  \caption{Visualization containing 5 linked interactive plots of a
+    L1-regularized logistic regression model of ChIP-seq data
+    (\url{http://bit.ly/1CYob4g}). TODO}
+  \label{fig:climate}
+\end{figure*}
+
 Animint implements the \texttt{clickSelects} and \texttt{showSelected} interactive
 keywords as aesthetics in ggplot2. An aesthetic is a declarative
 mapping from a data variable to a characteristic of a geometric plot
@@ -1320,12 +1329,9 @@ In another application, the Animint user was a genomics researcher:
 ``viewing and exploring my complex intestinal microbiome dataset in
 [Animint] allowed me to grasp the patterns and relationships between
 samples at an almost intuitive level. The interactive aspect of it was
-very helpful for browsing through the dataset --- especially when
-compared to scrolling through huge spreadsheets! Constructive
-criticism: finding ways to speed up data loading would help maximize
-the software's utility for the visualization of large datasets.''
+very helpful for browsing through the dataset.''
 
-Finally, users also appreciated the web-based output format, and the
+Finally, users also appreciated the simple web interface, and the
 detail that is possible to show in interactive plots, but impossible
 to show in publications: ``...  the web interface is simple and easy
 to use.  It also enables us to publish more detailed interactive
@@ -1338,7 +1344,7 @@ There are several limitations to the current implementation of
 Animint, which suggest avenues for future work.
 
 TODO: discuss that AND is the only logical combination variable
-available with showSelected \citep{iva}.
+available with showSelected \citep{iva}... ?
 
 TODO: discuss that it would be nice to have scales that update for
 each selection.

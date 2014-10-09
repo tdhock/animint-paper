@@ -64,6 +64,7 @@ viz$scatterNow <- ggplot()+
 for(var.name in var.names){
   long.name <- long.names[[var.name]]
   viz[[sprintf("%sTimeSeries", var.name)]] <- ggplot()+
+    theme_animint(width=463)+
     geom_hline(yintercept=0)+
     make_tallrect(climate, "time2") +
     xlab("Year of measurement")+
@@ -88,10 +89,3 @@ viz$scatterHere <- ggplot()+
                         clickSelects="time2", showSelected="id"),
              data=climate, alpha=dot.alpha,
              selected.color="black", selected.fill="white")
-viz$width <-
-  structure(as.list(rep(400, length(viz))),
-            names=names(viz))
-viz$width[grep("TimeSeries", names(viz$width))] <- 463
-
-
-
