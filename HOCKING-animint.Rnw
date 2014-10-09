@@ -235,20 +235,22 @@ Information visualization, user interfaces, toolkits, 2D
   \centering
   \includegraphics[width=\textwidth]{figure-1}
   \caption{This interactive animation of World Bank data was designed
-    with only 20 lines of Animint code (TODO:bit.ly URL with new
-    version after Carson adds widgets).  \textbf{Top text}: Five
-    geometric elements span two linked plots: clicking a
-    \texttt{clickSelects} element changes the currently selected year
-    or country, and updates the corresponding \texttt{showSelected}
-    elements.  \textbf{Left plot}: a multiple time series from 1960 to
-    2012 of the life expectancy of 205 countries, with bold lines
-    showing the selected countries and a vertical grey tallrect
-    showing the selected year.  \textbf{Right plot}: a scatterplot of
-    life expectancy versus fertility rate of all countries. The two
-    text elements show the current selection: year=1975 and
-    country=$\{\textrm{United States}, \textrm{Vietnam}\}$}
+    with only 20 lines of Animint code (\url{http://bit.ly/1rjwX4r}).
+    \textbf{Top text}: Five geometric elements span two linked plots:
+    clicking a \texttt{clickSelects} element changes the currently
+    selected year or country, and updates the corresponding
+    \texttt{showSelected} elements.  \textbf{Left plot}: a multiple
+    time series from 1960 to 2012 of the life expectancy of 205
+    countries, with bold lines showing the selected countries and a
+    vertical grey tallrect showing the selected year.  \textbf{Right
+      plot}: a scatterplot of life expectancy versus fertility rate of
+    all countries. The two text elements show the current selection:
+    year=1975 and country=$\{\textrm{United States},
+    \textrm{Vietnam}\}$}
   \label{fig:1}
 \end{figure*}
+
+\section{Introduction}
 
 Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
@@ -436,73 +438,6 @@ elements, each with a clear aesthetic mapping from data variables to
 geometric properties.  The Animint DSL extends ggplot2 by adding
 \texttt{clickSelects} and \texttt{showSelected} aesthetics.
 
-The Animint library includes a compiler that converts a list of
-ggplots to an interactive web visualization rendered using the
-Data-Driven Documents (D3) library for JavaScript \citep{d3}. One of
-the main reasons for the success and popularity of D3 is that it
-allows visualizations to be specified using the terminology of the
-Document Object Model (DOM), which makes learning D3 easy for web
-designers. Animint's DSL abandons the DOM standard and sacrifices some
-of the flexibility of D3, but makes it easier to express one kind of
-interaction: showing and hiding subsets of data. 
-%% Thus, designers
-%% familiar with ggplot2 should find it easy to use the Animing DSL to
-%% declare complex interactive animations in only a few dozen lines of R
-%% code.
-The Animint DSL thus enables design of a large class of complex
-interactive data visualizations using just a few lines of code.
-
-Finally, another key strength of ggplot2 and D3 for visualization
-design are the libraries' declarative syntax. \citet{declarative}
-proposed a declarative syntax for animated transitions, and studied
-the benefits of declarative languages for data visualization. Animint
-is another declarative DSL, but defined at a higher level of
-abstraction than D3. It enables designers to focus on data
-visualization, while the Animint library developers can work on
-improving the lower-level rendering details.
-
-The rest of this paper is organized as follows: we discuss related work in
-Section~2, and the design of the Animint system in Section~3. Then we
-perform a detailed comparison with other R packages in Section~4, and
-show some example applications of Animint in Section~5. Finally, we
-share some user feedback in Section~6 and then discuss future work in
-Section~7.
-
-%% \section{Introduction} %for journal use above \firstsection{..} instead
-
-\section{Related Work}
-
-In this section we offer a comparison between Animint and several
-related systems, focusing on libraries with free/open-source software
-implementations in JavaScript and R. The main difference is that
-Animint's declarative DSL allows interactive animations to be
-expressed much more easily than the other libraries.
-
-\subsection{Types of selection}
-For example, it is popular to select regions with brushing tools--see
-\citep{heer2008generalized}, \citep{scented-widgets} for lots of good
-examples of selection modalities. Which of these does the system
-support? Do the authors regret losing the ability to multi-select, or
-is the grammar theoretically expandable to adding those too? Are these
-unnecessary, or uninteresting? Are they HARD to express, or simply
-things that the authors didn't get around to doing?
-
-\subsection{D3 and other JavaScript libraries}
-
-Animint uses \href{http://d3js.org/}{D3} to render interactive
-animations in a web browser \citep{d3}. D3 uses a lower level of
-abstraction than Animint, so is able to express a wider variety of
-visualizations. However, Animint can be used to more succinctly
-declare certain types of data visualizations. For example,
-Figure~\ref{fig:code} shows some Animint and D3 code required to
-define the scatterplot in the WorldBank visualization. D3 uses a
-data-bind operation followed by several accessor functions, whereas
-Animint uses a shorter syntax involving a simple \texttt{aes} mapping
-of data variables to geometric attributes. Importantly, Animint is
-able to express interactivity using the simple \texttt{clickSelects}
-and \texttt{showSelected} keywords, whereas D3 would require much more
-code involving handler functions for mouse click events.
-
 \begin{figure*}[b!]
   \centering
   \begin{tabular}{ccc}
@@ -572,6 +507,73 @@ geom_point(aes(
     but D3 and Vega do not.}
   \label{fig:code}
 \end{figure*}
+
+The Animint library includes a compiler that converts a list of
+ggplots to an interactive web visualization rendered using the
+Data-Driven Documents (D3) library for JavaScript \citep{d3}. One of
+the main reasons for the success and popularity of D3 is that it
+allows visualizations to be specified using the terminology of the
+Document Object Model (DOM), which makes learning D3 easy for web
+designers. Animint's DSL abandons the DOM standard and sacrifices some
+of the flexibility of D3, but makes it easier to express one kind of
+interaction: showing and hiding subsets of data. 
+%% Thus, designers
+%% familiar with ggplot2 should find it easy to use the Animing DSL to
+%% declare complex interactive animations in only a few dozen lines of R
+%% code.
+The Animint DSL thus enables design of a large class of complex
+interactive data visualizations using just a few lines of code.
+
+Finally, another key strength of ggplot2 and D3 for visualization
+design are the libraries' declarative syntax. \citet{declarative}
+proposed a declarative syntax for animated transitions, and studied
+the benefits of declarative languages for data visualization. Animint
+is another declarative DSL, but defined at a higher level of
+abstraction than D3. It enables designers to focus on data
+visualization, while the Animint library developers can work on
+improving the lower-level rendering details.
+
+The rest of this paper is organized as follows: we discuss related work in
+Section~2, and the design of the Animint system in Section~3. Then we
+perform a detailed comparison with other R packages in Section~4, and
+show some example applications of Animint in Section~5. Finally, we
+share some user feedback in Section~6 and then discuss future work in
+Section~7.
+
+%% \section{Introduction} %for journal use above \firstsection{..} instead
+
+\section{Related Work}
+
+In this section we offer a comparison between Animint and several
+related systems, focusing on libraries with free/open-source software
+implementations in JavaScript and R. The main difference is that
+Animint's declarative DSL allows interactive animations to be
+expressed much more easily than the other libraries.
+
+\subsection{Types of selection}
+For example, it is popular to select regions with brushing tools--see
+\citep{heer2008generalized}, \citep{scented-widgets} for lots of good
+examples of selection modalities. Which of these does the system
+support? Do the authors regret losing the ability to multi-select, or
+is the grammar theoretically expandable to adding those too? Are these
+unnecessary, or uninteresting? Are they HARD to express, or simply
+things that the authors didn't get around to doing?
+
+\subsection{D3 and other JavaScript libraries}
+
+Animint uses \href{http://d3js.org/}{D3} to render interactive
+animations in a web browser \citep{d3}. D3 uses a lower level of
+abstraction than Animint, so is able to express a wider variety of
+visualizations. However, Animint can be used to more succinctly
+declare certain types of data visualizations. For example,
+Figure~\ref{fig:code} shows some Animint and D3 code required to
+define the scatterplot in the WorldBank visualization. D3 uses a
+data-bind operation followed by several accessor functions, whereas
+Animint uses a shorter syntax involving a simple \texttt{aes} mapping
+of data variables to geometric attributes. Importantly, Animint is
+able to express interactivity using the simple \texttt{clickSelects}
+and \texttt{showSelected} keywords, whereas D3 would require much more
+code involving handler functions for mouse click events.
 
 There are many other libraries which can generate web plots with
 limited interactivity, but which are unable to produce interactive
@@ -754,17 +756,23 @@ ggplot2 aesthetics in R code, as explained below.
 
 \begin{figure*}[b!]
   \centering
-  \includegraphics[width=\textwidth]{screenshot-chip-seq-edited}
-  \caption{Visualization containing 5 linked interactive plots of a
-    L1-regularized logistic regression model of ChIP-seq data
-    (\url{http://bit.ly/1CYob4g}). TODO}
+  \includegraphics[width=\textwidth]{figure-chip-seq}
+  \caption{Visualization with 4 selection variables used to navigate
+    through 1,292,464 rows of data in 5 linked interactive plots 
+    %of a L1-regularized logistic regression model of ChIP-seq data
+    (\url{http://bit.ly/1pVZZaS}). The bottom plot shows a
+    facets plot with aligned x axes, used to emphasize that the
+    blue probability function is defined at the same positions as the
+    black signals below. It also contains an href tag, which opens a
+    new genome browser web page zoomed to the same region as the
+    selected data.}
   \label{fig:climate}
 \end{figure*}
 
-Animint implements the \texttt{clickSelects} and \texttt{showSelected} interactive
-keywords as aesthetics in ggplot2. An aesthetic is a declarative
-mapping from a data variable to a characteristic of a geometric plot
-element. Some standard ggplot2 aesthetics are
+Animint implements the \texttt{clickSelects} and \texttt{showSelected}
+interactive keywords as aesthetics in ggplot2. An aesthetic is a
+declarative mapping from a data variable to a visual property of a
+geometric plot element. Some standard ggplot2 aesthetics are
 \begin{description}
 \item[x] horizontal position,
 \item[y] vertical position,
@@ -878,14 +886,14 @@ example. The tallrect plots a rectangle for every row of the
 \texttt{years} data table. The rectangle spans the entire y region,
 and the \texttt{xmin} and \texttt{xmax} aesthetics define the left and
 right limits. Since the designer specified \texttt{clickSelects=year},
-users can click on a tallrect to select a year. Finally,
-\texttt{alpha=1/2} specifies that the selected tallrect should have an
-opacity of 50\%. Since color is black by default, this results in a
-selected semi-transparent tallrect which appears grey. Since
-non-selected \texttt{clickSelects} plot elements have 1/2 less
-opacity by default, this results in non-selected rectangles which
-are completely transparent, blending in with the white
-background.
+users can click on a tallrect to select a year. 
+%% Finally,
+%% \texttt{alpha=1/2} specifies that the selected tallrect should have an
+%% opacity of 50\%. Since color is black by default, this results in a
+%% selected semi-transparent tallrect which appears grey. Since
+%% non-selected \texttt{clickSelects} plot elements have 1/2 less opacity
+%% by default, this results in non-selected rectangles which are
+%% completely transparent, blending in with the white background.
 
 
 %% Animint also provides a shorthand syntax for tallrects, as they are a
@@ -921,36 +929,39 @@ objects are valid ggplots. However, plotting them using the standard
 ggplot2 library will show a non-interactive plot will all
 geometric elements, including data for all years and countries. To
 plot them with Animint, we define a list of ggplots and options, then
-call the \texttt{gg2animint} compiler:
+call the \texttt{animint2dir} compiler:
 
-<<gg2animint,fig.pos='htbp'>>=
+<<animint2dir,fig.pos='htbp'>>=
 viz <- 
   list(scatterPlot=scatterPlot,
        timeSeries=timeSeries,
        time=list(variable="year", ms=3000),
        duration=list(year=1000))
-gg2animint(viz, out.dir="WorldBank")
+animint2dir(viz, out.dir="WorldBank")
 @ 
 
 The \texttt{time} option specifies that in absence of user
 interaction, we want the plots to animate over time, progressing at a
 rate of one year every 3 seconds. We also use the \texttt{duration}
 option to specify a smooth transition over 1 second for the year
-variable. The \texttt{gg2animint} compiler saves some data files and a
+variable. The \texttt{animint2dir} compiler saves some data files and a
 web page in the \texttt{WorldBank} directory, then it opens the
 interactive plot in a web browser.
 
 \subsection{User interaction}
 
-For single
-selection variables such as year, clicking sets the value of the
-corresponding selection variable. For multiple selection variables
-such as country, clicking adds or removes values from the set of
-selected values. 
+\citet{instrumental-interaction} discussed the advantages of direct
+manipulation in graphical user interfaces, and our Animint system
+follows principal 2 ``Physical actions on objects vs. complex syntax''
+such as dialog boxes. In particular, the user can update the selection
+by clicking on the data objects themselves. This contrasts other
+systems which use menus and widgets, and thus suffer from less
+articulatory directness \citep{Hutchins:1985}.
 
-\citet{instrumental-interaction} discussed direct manipulation in
-post-wimp interfaces -- our system follows principal 2 ``Physical
-actions on objects vs. complex syntax'' such as dialog boxes.
+For single selection variables such as year, clicking sets the value
+of the corresponding selection variable. For multiple selection
+variables such as country, clicking adds or removes values from the
+set of selected values.
 
 
 \subsection{Implementation details}
@@ -982,18 +993,18 @@ converts a list of ggplots and options to a comma-separated values
 (CSV) file database and a JSON plot meta-data file. The compiler scans
 the aesthetics in all of the ggplots to determine how many selection
 variables are present, and which plots to update after a selection
-variable is clicked. It also uses ggplot2 to automatically calculate
+variable is clicked. It uses ggplot2 to automatically calculate
 the axes scales, legends, and labels. It outputs this information to
 the JSON plot meta-data file. It also uses ggplot2 to convert data
 variables (e.g. life expectancy and region) to visual properties
-(e.g. y position and color). The data are separated into separate CSV
+(e.g. y position and color). The data are separated into several CSV
 files, so for large data sets the web browser only needs to download
 the subset of data required to render the current selection
 \citep{2013-immens}. Finally, the rendering engine
 (\texttt{index.html}, \texttt{d3.v3.js}, and \texttt{animint.js}
 files) is copied to the plot directory. Since the compiled plot is
 just a directory of files, the designer can easily upload interactive
-plots to the web for sharing visualizations with users.
+plots to the web for sharing with users.
 
 The \texttt{animint.js} renderer is implemented in about 1500 lines of
 JavaScript/D3 code that renders the CSV and JSON plot data files as
@@ -1014,10 +1025,11 @@ To show the advantages that the Animint grammar brings for creating
 interactive and animated data visualizations, we implemented the World
 Bank visualization of Figure~1 using two other R packages
 (Table~\ref{tab:packages}). The main result of our comparison is that
-Animint requires significantly fewer lines of code, since it uses a
-declarative grammar to specify interactive animations. Note that is it
-possible to implement the World Bank visualization in pure D3, but
-would require significantly more code (Figure~\ref{fig:code}).
+Animint requires significantly fewer lines of code, and produces
+interactive plots with more articulatory directness
+\citep{Hutchins:1985}. Note that is it possible to implement the World
+Bank visualization in pure D3 (Figure~\ref{fig:code}), but would
+require significantly more code.
 
 \subsection{R package animation}
 \label{sec:compare-animation}
@@ -1043,7 +1055,8 @@ and interaction with respect to both year and country variables.
     %of Figure~1 
     using several libraries that can create interactive animations.
     For each library
-    we show the number of lines of code (LOC), programming style, 
+    we show the number of lines of code (LOC), the on-screen objects 
+    that can be clicked,  the
     number of interaction variables, and URL of the interactive version. 
 %  Note that different countries can not be interactively selected using
 % the visualization created with R package animation.
@@ -1054,7 +1067,7 @@ and interaction with respect to both year and country variables.
   \begin{tabular}{cccccc}
     library & 
     LOC &
-    style &
+    click on &
     %language &
     %years & 
     interaction vars &
@@ -1063,15 +1076,15 @@ and interaction with respect to both year and country variables.
     \hline
     animint & 
     20 &
-    declarative & 
+    plotted data & 
     %R &
     %2013- & 
     several & 
-      \bitly{1fzfUdN}
+      \bitly{1rjwX4r}
     \\
     animation & 
     38 &
-    imperative &
+    play/pause &
     %R  &
     %2007- & 
     1 = time & 
@@ -1086,7 +1099,7 @@ and interaction with respect to both year and country variables.
     %% \\
     ggvis/shiny & 
     84 &
-    reactive & 
+    widgets & 
     %R  &
     %2012- & 
     several & 
@@ -1125,7 +1138,7 @@ difference between these two types of systems that affects
 responsiveness of a web-based interactive plotting system:
 client-server communication overhead. All the \mbox{Animint}
 JavaScript plot rendering code is executed in the web browser, whereas
-ggvis executes some plotting code on the server. This means that after
+ggvis executes some computations on the server. This means that after
 a mouse click, ggvis can not update a plot immediately, but instead
 must wait for the server to respond with the plot data.
 
@@ -1140,9 +1153,30 @@ lag after each mouse click (500--1000ms). Note that since we used a
 local web server, these times represent the overhead of the web server
 system, and would be larger with a remote web server.
 
+\begin{table*}[b!]
+  \centering
+  \input{table-examples}
+  \vskip 0.2cm
+  \caption{Characteristics of eleven interactive visualizations designed with 
+    Animint. From left to right, we show the data set name, the 
+    lines of R code including data processing but not including comments
+    (80 characters max per line), 
+    the amount of time it takes to compile the visualization (seconds), 
+    the total size of the uncompressed CSV files in megabytes (MB),
+    the total number of data points (rows), 
+    the median number of data points shown at once (onscreen),
+    the number of data columns visualized (variables), 
+    the number of clickSelects/showSelected variables (interactive),
+    the number of linked panels (plots),
+    if the plot is animated, 
+    and the corresponding Figure number in this paper (Fig).
+  }
+\label{tab:examples}
+\end{table*}
+
 When we used Animint to make the World Bank data visualization, the
-compilation from R objects to 2.3MB of uncompressed CSV data files
-took 2.5s. Using a local web server, the Animint JavaScript rendered
+compilation from R objects to 2.1MB of uncompressed CSV data files
+took 2.3s. Using a local web server, the Animint JavaScript rendered
 the plot very quickly (100--200ms). We also observed very fast plot
 updates after mouse clicks in Animint: 20--30ms response times for
 selecting the year, and 60--70ms response times for selecting the
@@ -1178,33 +1212,12 @@ system would certainly be preferable when there are many more data
 subsets than could ever be precomputed. In that case, the web server
 would only compute the subsets that the user interactively specifies.
 
-\begin{table*}[b!]
-  \centering
-  \input{table-examples}
-  \vskip 0.2cm
-  \caption{Characteristics of nine interactive visualizations designed with 
-    Animint. From left to right, we show the data set name, the 
-    lines of R code including data processing but not including comments
-    (80 characters max per line), 
-    the amount of time it takes to compile the visualization (seconds), 
-    the total size of the uncompressed CSV files in megabytes (MB),
-    the total number of data points (rows), 
-    the median number of data points shown at once (onscreen),
-    the number of data columns visualized (variables), 
-    the number of clickSelects/showSelected variables (interactive),
-    the number of linked panels (plots),
-    if the plot is animated, 
-    and the corresponding Figure number in this paper (Fig).
-  }
-\label{tab:examples}
-\end{table*}
-
 \section{Example applications}
 
 In this section we discuss the range of examples that we have designed
 with Animint. Table~\ref{tab:examples} shows several characteristics
-of nine different interactive visualizations that we have designed
-using Animint.
+of eleven interactive visualizations that we have designed using
+Animint.
 
 We quantified the implementation difficulty of the Animint examples
 using lines of R code, including data processing but not including
@@ -1266,7 +1279,7 @@ code to define the plots and the relationship between them.
 
 When the data to visualize do not contain a time variable, we have
 found that Animint is still useful for creating interactive but
-non-animated plots. In fact, five of the nine examples in
+non-animated plots. In fact, five of the eleven examples in
 Table~\ref{tab:examples} are non-animated. For example, these plots
 are useful to illustrate complex concepts such as a change point
 detection model in the breakpoints data
@@ -1344,7 +1357,10 @@ There are several limitations to the current implementation of
 Animint, which suggest avenues for future work.
 
 TODO: discuss that AND is the only logical combination variable
-available with showSelected \citep{iva}... ?
+available with showSelected \citep{iva}... ? E.g. it would not be
+feasible to compute and plot statistics for a multiple selection
+variable. For example you may want to compute a smoothing line with
+only the selected poinst
 
 TODO: discuss that it would be nice to have scales that update for
 each selection.
