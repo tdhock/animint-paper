@@ -1378,14 +1378,14 @@ expression (e.g. year $>1990$). Importantly, this is a drawback of the
 current implementation, not the Animint DSL. 
 
 Another limitation of the current implementation is that axes and
-legends are computed at compile-time, and are not updated after
-clicks. Thus it is difficult to use interactivity to visualize
-different data subsets which have very different ranges of values. So
-for example, it would be awkward to use \texttt{showSelected} to show
+legends are computed at compile-time, and are not updated when the selection changes.
+Thus it is difficult to use interactivity to visualize
+different data subsets which have very different ranges of values.
+For example, it would be awkward to use \texttt{showSelected} to show
 one panel of a scatter plot matrix of several variables. A workaround
 is shown in Figure~\ref{fig:ChIPseq}, which omits the x axis on the
 bottom plot, since in fact the x values are all normalized to [0,1]. A
-future implementation of Animint would benefit with scales that update
+future implementation of Animint would benefit from scales that update
 after each click.
 
 Currently, the user is unable to change variable mappings, since these
@@ -1424,8 +1424,8 @@ The current Animint implementation is limited to two specific types of
 interactivity: highlighting the selected \texttt{clickSelects}
 element, and showing/hiding \texttt{showSelected} elements. In the
 future, we could implement several other types of interactivity without
-changing the Animint DSL. Examples include zooming, multiple
-selection, increase/decrease animation speed, and plot
+changing the Animint DSL. Examples include zooming, 
+increase/decrease animation speed, and plot
 resizing. However, some kinds of interactivity would require additions
 to the Animint grammar. For example, a \texttt{tooltip} aesthetic
 could be used to indicate the text the user views when they hover the
@@ -1437,7 +1437,8 @@ showed in Section~\ref{sec:compare} that Animint provides smoother
 interactivity than client-server systems, future versions of Animint
 could definitely be made even more efficient and responsive. For
 example, of the plots in
-Table~\ref{tab:examples}, the longest compilation step took 23.7 seconds.
+Table~\ref{tab:examples}, the longest compilation step took 56.3 seconds,
+which may be reduced by optimizing the R code compiler.
 
 This highlights one of the main motivations for using a declarative
 DSL like Animint: none of the designer's R code needs to be changed to
@@ -1451,8 +1452,7 @@ without interfering with the work of designers.''
 While several
 optimizations remain to be implemented, the current Animint library
 already provides an efficient syntax for the design of interactive,
-animated data visualizations. It is free/open-source software
-available on GitHub \citep{animint}.
+animated data visualizations.
 
 \section*{Acknowledgements}
 
