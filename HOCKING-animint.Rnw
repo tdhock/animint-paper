@@ -688,7 +688,7 @@ Animint also internally uses a JSON file to store meta-data about an
 interactive animation. The main difference 
 is that Vega does not support interactions and animation that show and hide
 data subsets across multiple linked plots. Finally,
-\citet{2014-reactive-vega} propose some declarative interaction
+\citet{2014-reactive-vega} proposed some declarative Vega
 extensions ``critical for developing interactive data
 visualizations.''  Those extensions are defined at a lower level of
 abstraction than the \texttt{clickSelects} and \texttt{showSelected}
@@ -745,13 +745,18 @@ can be specified using just two interactive keywords:
 \texttt{clickSelects} and \texttt{showSelected}. For example, after
 clicking a \texttt{clickSelects=year} element, the plot
 is updated to show only the \texttt{showSelected=year} elements
-corresponding to the selected year.
+corresponding to the selected year. These two simple keywords
+form the basis of the Animint DSL which makes it easy for designers
+to translate ideas into code and then visualizations.
 
-The first step in the design of an Animint is usually to make a sketch
-of the desired interactive plot on paper or a whiteboard. First sketch
+The first step in the design of any data visualization
+is usually to make a sketch
+of the desired interactive plot on paper or a whiteboard. 
+In any plot a designer would sketch
 the axes, legends, a few geometric elements, and note which variables
-will be shown in the linked plots. Also, note the \texttt{clickSelects} and
-\mbox{showSelected} variables for each geometric element, as shown in
+will be shown in the linked plots. An Animint designer needs only add
+the \texttt{clickSelects} and
+\mbox{showSelected} mappings for each geometric element, as shown in
 Figures~1, 3, and 4. These notes can be directly translated to
 ggplot2 aesthetics in R code, as explained below.
 
