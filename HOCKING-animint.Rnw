@@ -403,12 +403,13 @@ variable, one or several values can be selected at a time,
 e.g. year=1996 and country=\{United States, Vietnam\}. 
 Like Cleveland's system, Animint supports enhanced
 linking to highlight the selected value(s) of each selection variable. In
-contrast to Cleveland's single rectangular brush that select points in
+contrast to Cleveland's single rectangular brush that selects points in
 plots of a single data table, an Animint designer may designate
 several selection variables in plots of several linked data tables. To
 declare a clickable plot element that changes the selected value of
 the year variable, an Animint designer writes
-\texttt{clickSelects=year} within a ggplot2 aes specification.
+\texttt{clickSelects=year}.
+%within a ggplot2 aes specification.
 
 To achieve data-driven animations, Animint defines one other important
 operation involving selection variables: showing and hiding subsets of
@@ -550,7 +551,7 @@ implementations in JavaScript and R. The main difference is that
 Animint's declarative DSL allows interactive animations to be
 expressed much more easily than the other libraries.
 
-\subsection{Types of selection}
+\subsection{Types of selection} TODO
 For example, it is popular to select regions with brushing tools--see
 \citep{heer2008generalized}, \citep{scented-widgets} for lots of good
 examples of selection modalities. Which of these does the system
@@ -605,7 +606,7 @@ animation frames.
 Another way to produce an animated scatterplot of the World Bank data
 is by using a Google motion chart, available in R through the
 googleVis package \citep{googleVis}. The main limitation of this
-system is that it is limited to a few pre-defined plot types, only one
+system is that it can only produce a few pre-defined plot types, only one
 of which can be viewed at any time.
 
 \subsection{Libraries based on the grammar of graphics}  
@@ -684,8 +685,8 @@ to express all plots that can be made using pure D3, but provides a
 JSON file format capable of defining many common plots
 (Figure~\ref{fig:code}). As discussed in Section~\ref{sec:design},
 Animint also internally uses a JSON file to store meta-data about an
-interactive animation. There main difference between Vega and Animint
-is that Vega does not interactions and animation that show and hide
+interactive animation. The main difference 
+is that Vega does not support interactions and animation that show and hide
 data subsets across multiple linked plots. Finally,
 \citet{2014-reactive-vega} propose some declarative interaction
 extensions ``critical for developing interactive data
