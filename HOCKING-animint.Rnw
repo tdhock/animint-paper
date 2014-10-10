@@ -1456,7 +1456,9 @@ animated data visualizations.
 
 \section*{Acknowledgements}
 
-The authors wish to thank Animint users MC Du Plessis, Song Liu, and Nikoleta Juretic who have contributed constructive criticism and helped its development.  
+The authors wish to thank Animint users MC Du Plessis, Song Liu,
+Nikoleta Juretic, and Eric Audemard
+who have contributed constructive criticism and helped its development.  
 
 % TDH 13 March 2014 This was in the template.tex file.
 %\bibliographystyle{abbrv}
