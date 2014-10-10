@@ -1293,7 +1293,7 @@ detection model in the breakpoints data
 parameters and data sets since these are encoded as Animint
 interaction variables.
 
-Another non-animated example is Figure~\ref{fig:ChIP-seq}, which was
+Another non-animated example is Figure~\ref{fig:ChIPseq}, which was
 used to explain a complex machine learning model for predicting
 differences between samples. The interactive visualization allows the
 user to show how the predictions change as a function of the model
@@ -1309,12 +1309,16 @@ interactive plots that reveal patterns in complex data.
 
 \section{User feedback and observations}
 
-We and our users have created interactive visualizations using Animint
-that would be too complex to implement in other systems. 
-%% Examples
-%% discussed in previous sections include animated visualizations of
-%% multiple time series data and non-animated visualizations of other
-%% high-dimensional data sets. 
+By working with researchers in several fields of research,
+we have created a wide variety of
+interactive visualizations using Animint.
+Typically, the researchers have a complex data set that
+they wish to visualize,
+but they do not have the expertise or time to create
+an interactive data visualization.
+The Animint DSL made it easy to collaborate with the various domain experts,
+who were able to provide us with annotated sketches of the desired plots,
+which we then translated to R code.
 In this section we share comments and
 constructive criticism that we have obtained from our users.
 
