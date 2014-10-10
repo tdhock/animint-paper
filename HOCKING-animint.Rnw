@@ -285,7 +285,7 @@ to make it easy to design such interactive animations.
 In this paper we will discuss three important roles that contribute to the
 creation of an Animint visualization: the developer, who implements
 the Animint library; the designer, who uses the Animint library to
-define a visualization; and the user, who views the visualization in a
+define a visualization; and the user, who selects data subsets to view in a
 web browser. The main goal of Animint is to provide an expressive
 language for designers, while allowing users the freedom to interact
 with the plot to selectively view data subsets of interest. The
