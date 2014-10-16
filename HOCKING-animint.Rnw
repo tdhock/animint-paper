@@ -256,24 +256,25 @@ Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
 sets. In this paper, we introduce Animint, a new domain-specific
 language (DSL) for designing linked, interactive, animated data
-visualizations. To explain exactly what kinds of visualizations we are
-interested in creating, we begin with an illustrative example.
+visualizations. To demonstrate its design, we begin with an 
+illustrative example.
 
-We are concerned with tabular data sets, with columns for each
-variable and rows for each observation or data point. Consider the
-World Bank data set, which consist of several economic variables
-measured for 205 countries from 1960 to 2012 \citep{WorldBank}. The
-visualization in Figure~1 shows six variables from this data set:
-year, country, life expectancy, fertility rate, region, and
-population. We have chosen to emphasize the year 1996 and the contries
-United States and Vietnam. The benefit of the interactive
-visualization is that the reader or user may interact with the plot to
-view data about another country or time period.
-%(\url{http://bit.ly/1fzfUdN}). 
-Finally, since one of the variables in this visualization is the year
-of measurement, it is natural to use animation to show how the data
-changes with respect to the year variable. The purpose of Animint is
-to make it easy to design such interactive animations.
+Consider the World Bank data set, which consists of several economic variables
+measured for 205 countries from 1960 to 2012 \citep{WorldBank}. Figure~1 
+shows six variables from this data set: year, country, life expectancy, 
+fertility rate, region, and population. In Figure~1, the year 1996 and 
+the countries United States and Vietnam are selected, but readers 
+are encouraged to explore other selections using the interactive version.
+%% TODO: Let's update this example and facet the bar chart by region
+%% \url{http://bit.ly/1fzfUdN}.
+In the interactive version, the selected value of the year variable 
+is automatically incremented which forces the visualization to update
+and allows one to visualize changes in the relationship between life 
+expectancy and fertility rates over time for a select subset of countries. 
+This is just one example where an interactive animation can lead to 
+insight and exploratory freedom otherwise not possible using static plots.
+The purpose of Animint is to make the creation of such visualizations 
+accessible to a larger community.
 
 % I wanted to just emphasize the difference between an Animint
 % interactive graphic and a static graphic. In static graphics the
@@ -282,8 +283,9 @@ to make it easy to design such interactive animations.
 % and then the user is free to choose the selection. Do you have some
 % idea how to get that message across?
 
-In this paper we will discuss three important roles that contribute to the
-creation of an Animint visualization: the developer, who implements
+%% Carson: There are only *two* roles in *creating* visualizations
+In general, there are three influential roles in the
+consumption of an Animint visualization: the developer, who implements
 the Animint library; the designer, who uses the Animint library to
 define a visualization; and the user, who selects data subsets to view in a
 web browser. The main goal of Animint is to provide an expressive
@@ -293,11 +295,10 @@ designer specifies data sets and maps variables to interactive visual
 elements using the Animint DSL, then uses the Animint library to
 compile and save an interactive animation. The user writes no code,
 but can view and interact with an Animint visualization by clicking
-Scalable Vector Graphics (SVG) elements in a web browser. A final goal
-is that the Animint library developer should be the only role
-concerned with low-level plotting details such as drawing axes and
-legends, freeing the designer and user to focus on interpreting the
-data.
+Scalable Vector Graphics (SVG) elements in a web browser. The Animint 
+library developer is responsible for the plot rendering details
+which allows others to focus on designing and consuming visualizations.
+
 %interested in re-implementing the Animint
 %system, we discuss details of its implementation in
 %Section~\ref{sec:implementation}.
@@ -434,9 +435,9 @@ The Animint DSL is implemented as an extension of ggplot2
 the grammar of graphics \citep{wilkinson}. The ggplot2 language was
 created as a high-level abstraction for non-interactive
 visualizations. One of the key strengths of ggplot2 is that it allows
-a designer to declare a visualization in terms of distinct geometric
-elements, each with a clear aesthetic mapping from data variables to
-geometric properties.  The Animint DSL extends ggplot2 by adding
+a designer to declare a visualization using multiple layers of distinct 
+geometric elements, each with a clear aesthetic mapping from data 
+variables to geometric properties. The Animint DSL extends ggplot2 by adding
 \texttt{clickSelects} and \texttt{showSelected} aesthetics.
 
 \begin{figure*}[b!]
@@ -509,6 +510,10 @@ geom_point(aes(
   \label{fig:code}
 \end{figure*}
 
+%% Carson: This seems like an opportunity to compare to Vega.
+%% Animint is similar in the respect that the renderer takes 
+%% a JSON object as it's 'input', but it doesn't have the equivalent
+%% of Animint's compiler.
 The Animint library includes a compiler that converts a list of
 ggplots to an interactive web visualization rendered using the
 Data-Driven Documents (D3) library for JavaScript \citep{d3}. One of
@@ -516,14 +521,9 @@ the main reasons for the success and popularity of D3 is that it
 allows visualizations to be specified using the terminology of the
 Document Object Model (DOM), which makes learning D3 easy for web
 designers. Animint's DSL abandons the DOM standard and sacrifices some
-of the flexibility of D3, but makes it easier to express one kind of
-interaction: showing and hiding subsets of data. 
-%% Thus, designers
-%% familiar with ggplot2 should find it easy to use the Animing DSL to
-%% declare complex interactive animations in only a few dozen lines of R
-%% code.
-The Animint DSL thus enables design of a large class of complex
-interactive data visualizations using just a few lines of code.
+of the flexibility of D3, but it reduces the cognitive effort required
+to create visualizations that allow users to quickly show/hide 
+various subsets of data (especially for those familiar with ggplot2).
 
 Finally, another key strength of ggplot2 and D3 for visualization
 design are the libraries' declarative syntax. \citet{declarative}
@@ -560,6 +560,11 @@ is the grammar theoretically expandable to adding those too? Are these
 unnecessary, or uninteresting? Are they HARD to express, or simply
 things that the authors didn't get around to doing?
 
+%% Carson: I think here we should touch on the differences between 
+%% continuous (brushing) versus discrete (clicking) selection. One
+%% benefit of having a brush is that it is easier to select elements
+%% when there is a high density in a small area.
+
 \subsection{D3 and other JavaScript libraries}
 
 Animint uses \href{http://d3js.org/}{D3} to render interactive
@@ -576,11 +581,15 @@ able to express interactivity using the simple \texttt{clickSelects}
 and \texttt{showSelected} keywords, whereas D3 would require much more
 code involving handler functions for mouse click events.
 
+%% Carson: I think this paragraph needs to be a bit more careful/specific
+%% with it's claims. For example, ggvis now has linked brushing,
+%% Winston Chang presented it at useR 2014 -- 
+%% https://twitter.com/winston_chang/status/484039769265938432
 There are many other libraries which can generate web plots with
 limited interactivity, but which are unable to produce interactive
 animations. For example, the rCharts R package is a wrapper around
 several JavaScript libraries \citep{rcharts}. In contrast to Animint,
-rCharts does not include a DSL for describing interactions between
+rCharts currently does not include heuristics for describing interactions between
 multiple plots. Thus rCharts can produce several simple visualizations
 with only 1 line of R code, but it can not produce multi-plot interactive
 animations. In contrast, Animint's high-level DSL can be used to
