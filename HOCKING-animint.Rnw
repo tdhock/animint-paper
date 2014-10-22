@@ -302,17 +302,15 @@ data.
 %system, we discuss details of its implementation in
 %Section~\ref{sec:implementation}.
 
-The goal of the Animint DSL is to make it easy for designers to
-express visualizations which are both animated and interactive. For
-the purposes of this paper, we define ``interactive'' to mean that
-graphical elements such as data points may be clicked to update the
-data that is shown in related plots. This is closely related to the
-concept of ``direct manipulation,'' which was introduced by
-\citet{shneiderman82} and later applied to statistical data
-visualization \citep{Hutchins:1985, brushing-scatterplots,
+The Animint DSL is for visualizations which are both interactive and
+animated. For the purposes of this paper, we define ``interactive'' to
+mean that graphical elements such as data points may be clicked to
+update the data that is shown in related plots. This is closely
+related to the concept of ``direct manipulation,'' which was
+introduced by \citet{shneiderman82} and later applied to statistical
+data visualization \citep{Hutchins:1985, brushing-scatterplots,
   cleveland}. Our definition of an ``animated'' visualization is one
-that can be watched like a video, automatically updating over
-time. 
+that can be watched like a video, automatically updating over time.
 
 %% There is also a very nice discussion about Semantic and
 %% Articulatory distance which we could use. Our DSL lowers the
