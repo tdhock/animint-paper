@@ -254,27 +254,28 @@ Information visualization, user interfaces, toolkits, 2D
 
 Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
-sets. In this paper, we introduce Animint, a new domain-specific
-language (DSL) for designing linked, interactive, animated data
-visualizations. To demonstrate its design, we begin with an 
-illustrative example.
+sets. In this paper, we introduce Animint, a system for designing
+linked, interactive, animated data visualizations. To demonstrate its
+design, we begin with an illustrative example.
 
-Consider the World Bank data set, which consists of several economic variables
-measured for 205 countries from 1960 to 2012 \citep{WorldBank}. Figure~1 
-shows six variables from this data set: year, country, life expectancy, 
-fertility rate, region, and population. In Figure~1, the year 1996 and 
-the countries United States and Vietnam are selected, but readers 
-are encouraged to explore other selections using the interactive version.
+Consider the World Bank data set, which consists of several economic
+variables measured for 205 countries from 1960 to 2012
+\citep{WorldBank}. Figure~1 shows six variables from this data set:
+year, country, life expectancy, fertility rate, region, and
+population. In the static PDF version of this figure, the year 1975
+and the countries United States and Vietnam are selected, but readers
+are encouraged to explore other selections using a web browser to view
+the interactive version.
 %% TODO: Let's update this example and facet the bar chart by region
 %% \url{http://bit.ly/1fzfUdN}.
-In the interactive version, the selected value of the year variable 
-is automatically incremented which forces the visualization to update
-and allows one to visualize changes in the relationship between life 
-expectancy and fertility rates over time for a select subset of countries. 
-This is just one example where an interactive animation can lead to 
-insight and exploratory freedom otherwise not possible using static plots.
-The purpose of Animint is to make the creation of such visualizations 
-accessible to a larger community.
+In the interactive version, the selected value of the year variable is
+automatically incremented every few seconds, using animation to
+visualize changes in the relationship between life expectancy and
+fertility rates for a subset of countries. This is just one example in
+which interaction and animation help to reveal patterns in a
+high-dimensional data set. The Animint system provides a
+domain-specific language (DSL) that simplifies the creation of such
+interactive and animated data visualizations.
 
 % I wanted to just emphasize the difference between an Animint
 % interactive graphic and a static graphic. In static graphics the
@@ -399,7 +400,7 @@ in each plot.
 In Animint, the central concept of interactivity is a selection
 variable, such as year or country in Figure~1. For each selection
 variable, one or several values can be selected at a time,
-e.g. year=1996 and country=\{United States, Vietnam\}. 
+e.g. year=1975 and country=\{United States, Vietnam\}. 
 Like Cleveland's system, Animint supports enhanced
 linking to highlight the selected value(s) of each selection variable. In
 contrast to Cleveland's single rectangular brush that selects points in
@@ -549,20 +550,6 @@ implementations in JavaScript and R. The main difference is that
 Animint's declarative DSL allows interactive animations to be
 expressed much more easily than the other libraries.
 
-\subsection{Types of selection} TODO
-For example, it is popular to select regions with brushing tools--see
-\citep{heer2008generalized}, \citep{scented-widgets} for lots of good
-examples of selection modalities. Which of these does the system
-support? Do the authors regret losing the ability to multi-select, or
-is the grammar theoretically expandable to adding those too? Are these
-unnecessary, or uninteresting? Are they HARD to express, or simply
-things that the authors didn't get around to doing?
-
-%% Carson: I think here we should touch on the differences between 
-%% continuous (brushing) versus discrete (clicking) selection. One
-%% benefit of having a brush is that it is easier to select elements
-%% when there is a high density in a small area.
-
 \subsection{D3 and other JavaScript libraries}
 
 Animint uses \href{http://d3js.org/}{D3} to render interactive
@@ -701,16 +688,19 @@ visualizations.''  Those extensions are defined at a lower level of
 abstraction than the \texttt{clickSelects} and \texttt{showSelected}
 keywords of Animint.
 
+\subsection{Other systems with interactive selection} 
 
-\subsection{Other systems}
-
-The system described by \citet{cleveland, brushing-scatterplots}
-involves interaction via a rectangular brush that can select several
-data points. Its enhanced linking feature highlights the selected data
-points across several plots, which is similar to the selection
-functionality implemented in Animint. There main important difference
-is that Animint supports a brush for every selection variable, but
-Cleveland's system only supports a single brush.
+There are many different methods for interactively specifying a set of
+selected data points \citep{scented-widgets, heer2008generalized}. A
+common interaction involves a rectangular brush that can select
+several data points in a single data table \citep{cleveland,
+  brushing-scatterplots}, and highlights the selected data points
+across several plots. Importantly, Animint supports selecting and
+highlighting several different variables (e.g. year and
+country), each of which supports either single or multiple
+selection. However, the current implementation of Animint does not
+support selection using a rectangular brush (users must click each
+data point to add it to the set of selected values).
 
 Another system with interactive facilities similar to Animint is
  \citet{tableau}. Like Animint, it is based on a declarative
@@ -1378,10 +1368,13 @@ There are several limitations to the current implementation of
 Animint, which suggest avenues for future work.
 
 Animint implements several linked plots, one of the hallmarks of
-interactive visual analysis \citep{iva}. However, the main drawback to
+interactive visual analysis \citep{iva}. However, one limitation to
 the current implementation is that a selection is defined as a set of
 distinct elements (e.g. year=\{1991, 1992\}) rather than a logical
-expression (e.g. year $>1990$). Importantly, this is a drawback of the
+expression (e.g. year $>1990$). Thus Animint does not yet
+implement a rectangular brush for specifying values of 
+multiple selection variables. 
+Importantly, this is a drawback of the
 current implementation, not the Animint DSL. 
 
 Another limitation of the current implementation is that axes and
@@ -1420,11 +1413,11 @@ multiple selection variable sets.
 
 As discussed in Section~\ref{sec:design} and illustrated in
 Figure~\ref{fig:design}, the compiler is written in R, and the
-renderer is written in JavaScript. This means that Animint developers
-must be proficient in both R and JavaScript. This represents a
-significant barrier for source code contributions from developers who
-are proficient with one language but not the other.
-
+renderer is written in JavaScript. 
+%% This means that Animint developers
+%% must be proficient in both R and JavaScript. This represents a
+%% significant barrier for source code contributions from developers who
+%% are proficient with one language but not the other.
 Animint designers define interactive animations using only R code, and no
 knowledge of JavaScript is necessary. This is convenient for useRs
 from a statistical background, but presents a barrier for web
@@ -1450,7 +1443,7 @@ Animint's performance can be measured using speed, memory, and disk
 space requirements in the compilation and rendering steps. Although we
 showed in Section~\ref{sec:compare} that Animint provides smoother
 interactivity than client-server systems, future versions of Animint
-could definitely be made even more efficient and responsive. For
+could be made even more efficient and responsive. For
 example, of the plots in
 Table~\ref{tab:examples}, the longest compilation step took 56.3 seconds,
 which may be reduced by optimizing the R code compiler.
