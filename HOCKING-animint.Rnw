@@ -1377,7 +1377,7 @@ publications.''
 There are several limitations to the current implementation of
 Animint, which suggest avenues for future work.
 
-Animint implements several linked brushes, one of the hallmarks of
+Animint implements several linked plots, one of the hallmarks of
 interactive visual analysis \citep{iva}. However, the main drawback to
 the current implementation is that a selection is defined as a set of
 distinct elements (e.g. year=\{1991, 1992\}) rather than a logical
@@ -1385,30 +1385,37 @@ expression (e.g. year $>1990$). Importantly, this is a drawback of the
 current implementation, not the Animint DSL. 
 
 Another limitation of the current implementation is that axes and
-legends are computed at compile-time, and are not updated when the selection changes.
-Thus it is difficult to use interactivity to visualize
-different data subsets which have very different ranges of values.
-For example, it would be awkward to use \texttt{showSelected} to show
-one panel of a scatter plot matrix of several variables. A workaround
-is shown in Figure~\ref{fig:ChIPseq}, which omits the x axis on the
-bottom plot, since in fact the x values are all normalized to [0,1]. A
-future implementation of Animint would benefit from scales that update
-after each click.
+legends are computed only once during the compilation step, and for
+some plots it would be preferable to recompute the scales when the
+selection changes. Thus it is difficult to use interactivity to
+visualize different data subsets which have very different ranges of
+values. For example, it would be awkward to use interactivity to show
+different panels of a scatter plot matrix of several variables. A
+workaround is shown in Figure~\ref{fig:ChIPseq}, which omits the x
+axis on the bottom plot, since in fact the x values are all normalized
+to [0,1]. A future implementation of Animint would benefit from scales
+that update after each click.
 
-Currently, the user is unable to change variable mappings, since these
+Currently, the user who interacts with a rendered plot 
+is unable to change variable mappings, since these
 are specified by the designer at compile time. A better interactive
 system would allow the user to interactively change variable mappings.
 
 Since Animint does not perform any computations other than showing and
-hiding data subsets, there are some limitations to what can be
-displayed with multiple selection variables. For instance, in the
+hiding data subsets, there is a limitation to what can be
+displayed with multiple selection variables. 
+The limitation is that it is not feasible to precompute 
+something to display for each of the combinatorial number of
+possible selections
+of a multiple selection variable.
+For instance, in the
 WorldBank visualization of Figure~1, it would not be feasible to
 display a single smoothing line computed from all the selected
 countries. This is because \texttt{showSelected=country} means to show
 one thing for each selected country (not one thing computed based on
 the set of selected countries). Supporting this kind of interaction
 would require substantial modifications to the Animint system,
-including the addition of a web server to perform computations on the
+including adding the ability to perform computations on
 multiple selection variable sets.
 
 As discussed in Section~\ref{sec:design} and illustrated in
@@ -1430,13 +1437,14 @@ possibly building \texttt{clickSelects} and \texttt{showSelected} extensions int
 The current Animint implementation is limited to two specific types of
 interactivity: highlighting the selected \texttt{clickSelects}
 element, and showing/hiding \texttt{showSelected} elements. In the
-future, we could implement several other types of interactivity without
-changing the Animint DSL. Examples include zooming, 
-increase/decrease animation speed, and plot
-resizing. However, some kinds of interactivity would require additions
-to the Animint grammar. For example, a \texttt{tooltip} aesthetic
-could be used to indicate the text the user views when they hover the
-mouse over a data point.
+future, we could implement several other types of interactivity
+without changing the Animint DSL. Examples include zooming,
+increase/decrease animation speed, and plot resizing. However, some
+kinds of interactivity would require extensions to the Animint
+grammar. For example, a \texttt{tooltip} aesthetic could be used to
+indicate the text the user views when they hover the mouse over a data
+point. Or a \texttt{hoverSelects} aesthetic could be used to change
+the selection when hovering over a data point.
 
 Animint's performance can be measured using speed, memory, and disk
 space requirements in the compilation and rendering steps. Although we
