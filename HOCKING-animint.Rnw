@@ -776,7 +776,7 @@ ggplot2 aesthetics in R code, as explained below.
     (\url{http://bit.ly/1pVZZaS}). The bottom plot shows a
     facets plot with aligned x axes, used to emphasize that the
     blue probability function is defined at the same positions as the
-    black signals below. It also contains an href tag, which opens a
+    black signals below. It also contains an href tag (web link), which opens a
     new genome browser web page zoomed to the same region as the
     selected data.}
   \label{fig:ChIPseq}
