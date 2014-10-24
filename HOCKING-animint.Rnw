@@ -503,7 +503,9 @@ geom_point(aes(
   \end{tabular}
   \caption{Comparison of code used to define points on a scatterplot.
     Note that the Animint code is shorter and simpler than the D3 and
-    Vega code. Also, Animint implements the proposed
+    Vega code. Animint and Vega provide nice defaults for plot elements such 
+    as the axes and labels, but these elements still need to be expressed 
+    in the D3 code. Also, Animint implements the proposed
     \texttt{clickSelects} and \texttt{showSelected} aesthetics (red),
     but D3 and Vega do not.}
   \label{fig:code}
@@ -546,15 +548,15 @@ Section~7.
 
 In this section we offer a comparison between Animint and several
 related systems, focusing on libraries with free/open-source software
-implementations in JavaScript and R. The main difference is that
-Animint's declarative DSL allows interactive animations to be
-expressed much more easily than the other libraries.
+implementations in JavaScript and R. Put simply, Animint supports many 
+features available in low-level implementations that are not available 
+for higher-level efforts without sacrificing expressiveness.
 
 \subsection{D3 and other JavaScript libraries}
 
 Animint uses \href{http://d3js.org/}{D3} to render interactive
 animations in a web browser \citep{d3}. D3 uses a lower level of
-abstraction than Animint, so is able to express a wider variety of
+abstraction than Animint, so it is able to express a wider variety of
 visualizations. However, Animint can be used to more succinctly
 declare certain types of data visualizations. For example,
 Figure~\ref{fig:code} shows some Animint and D3 code required to
@@ -571,15 +573,13 @@ code involving handler functions for mouse click events.
 %% Winston Chang presented it at useR 2014 -- 
 %% https://twitter.com/winston_chang/status/484039769265938432
 There are many other libraries which can generate web plots with
-limited interactivity, but which are unable to produce interactive
+limited interactivity, but are currently unable to produce interactive
 animations. For example, the rCharts R package is a wrapper around
 several JavaScript libraries \citep{rcharts}. In contrast to Animint,
 rCharts currently does not include heuristics for describing interactions between
-multiple plots. Thus rCharts can produce several simple visualizations
-with only 1 line of R code, but it can not produce multi-plot interactive
-animations. In contrast, Animint's high-level DSL can be used to
-specify more complex visualizations using only tens of lines of R
-code.
+multiple plots. Thus, rCharts can easily produce graphics with simple interactive
+features (such as tooltips), but it can not produce multi-plot 
+interactive animations as easily as Animint.
 
 Finally, Dimensional Charting (DC) is another JavaScript library which
 can produce interactive visualizations consisting of several linked
@@ -700,7 +700,7 @@ highlighting several different variables (e.g. year and
 country), each of which supports either single or multiple
 selection. However, the current implementation of Animint does not
 support selection using a rectangular brush (users must click each
-data point to add it to the set of selected values).
+data point to add/remove it from the set of selected values).
 
 Another system with interactive facilities similar to Animint is
  \citet{tableau}. Like Animint, it is based on a declarative
