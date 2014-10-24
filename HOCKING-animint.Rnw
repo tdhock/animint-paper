@@ -548,7 +548,7 @@ Section~7.
 
 In this section we offer a comparison between Animint and several
 related systems, focusing on libraries with free/open-source software
-implementations in JavaScript and R. Put simply, Animint supports many 
+implementations in JavaScript and R. In short, Animint supports many 
 features available in low-level implementations that are not available 
 for higher-level efforts without sacrificing expressiveness.
 
@@ -703,9 +703,26 @@ support selection using a rectangular brush (users must click each
 data point to add/remove it from the set of selected values).
 
 Another system with interactive facilities similar to Animint is
- \citet{tableau}. Like Animint, it is based on a declarative
-DSL. The Tableau DSL is called VizQL, which is based on another DSL
-called Polaris \citep{polaris}. TODO: CARSON DISCUSS TABLEAU.
+ \citet{tableau}. Like Animint, it has a declarative
+interface that can acheive interactive animations. 
+Tableau is built on top of VizQL, a visual query language
+which took influence from Polaris \citep{polaris}. 
+Visual query languages remove the burden of writing database 
+queries to begin the data visualization process. 
+In fact, the system will automatically and dynamically 
+execute (and, in some cases, cache) any queries required to render 
+various properties of the user defined visualization. 
+
+One fundamental limitation to a visual query language is the
+restriction to database primitives. For instance, suppose 
+we want to visualize the residuals of different models 
+fit to different subsets of the data. This would require us 
+to precompute the residuals using a different language 
+(such as R) and write tables back to the database. This can
+lead to an inefficient workflow if we aren't interested in 
+keeping certain models/tables. Starting with version 8.1,
+Tableau does offer R integration, but the types of objects 
+that can transfered are limited.
 
 Finally, implementations of the grammar of graphics system of
 \citet{wilkinson} exist as the Visualization Markup Language (ViZml)
