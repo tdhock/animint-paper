@@ -235,7 +235,7 @@ Information visualization, user interfaces, toolkits, 2D
   \centering
   \includegraphics[width=\textwidth]{figure-1}
   \caption{This interactive animation of World Bank data was designed
-    with only 20 lines of Animint code (\url{http://bit.ly/1rjwX4r}).
+    with only 20 lines of Animint code (\url{http://bit.ly/worldBank}).
     \textbf{Top text}: Five geometric elements span two linked plots:
     clicking a \texttt{clickSelects} element changes the currently
     selected year or country, and updates the corresponding
@@ -265,7 +265,7 @@ year, country, life expectancy, fertility rate, region, and
 population. In the static PDF version of this figure, the year 1975
 and the countries United States and Vietnam are selected, but readers
 are encouraged to view and select other countries using a web browser
-(\url{http://bit.ly/1rjwX4r}).
+(\url{http://bit.ly/worldBank}).
 %% TODO: Let's update this example and facet the bar chart by region
 In the interactive version, the selected value of the year variable is
 automatically incremented every few seconds, using animation to
@@ -566,7 +566,7 @@ declare certain types of data visualizations. For example,
 Figure~\ref{fig:code} shows some Animint and D3 code required to
 define the scatterplot in the WorldBank visualization. D3 uses a
 data-bind operation followed by several accessor functions, whereas
-Animint uses a shorter syntax involving a simple \texttt{aes} mapping
+Animint uses a shorter syntax involving an \texttt{aes} mapping
 of data variables to geometric attributes. Importantly, Animint is
 able to express interactivity using the simple \texttt{clickSelects}
 and \texttt{showSelected} keywords, whereas D3 would require much more
@@ -656,26 +656,29 @@ ggplot2, which extend it to accommodate interactive, animated
 graphics. 
 
 Another R package that uses the grammar of graphics to define
-interactive graphics is called \href{http://ggvis.rstudio.com/}{ggvis}
+interactive graphics is \href{http://ggvis.rstudio.com/}{ggvis}
 \citep{ggvis}. Unlike Animint, ggvis does not directly extend ggplot2,
 but provides a new implementation of some of the same ideas about the
-grammar of graphics. There are many other differences between ggvis
-and Animint. The main difference is that ggvis can be used to define
-single plots, but Animint can be used to define multiple plots which
-are linked using the \texttt{clickSelects} and \texttt{showSelected}
-aesthetics. Another difference is that sharing a ggvis visualization
-requires a web server that runs R and shiny, but Animint uses static
-files and client-side JavaScript so it does not require any special
-web server software. The two packages also have different interactive
-features: ggvis uses sliders, checkboxes, and other HTML form
-elements, whereas Animint users can directly click the SVG elements
-that are used to visualize the data. For example, in a ggvis of the
-WorldBank data, it is natural to use a slider to select the displayed
-year. In contrast, in Animint we used a multiple time series plot
-where the year can be selected by directly clicking the data values on
-the plot (Figure~1). The Animint plot is thus easier for the user
-since it has more articulatory directness \citep{Hutchins:1985}, and
-less spatial offset \citep{instrumental-interaction}.
+grammar of graphics. The main difference is that ggvis relies on shiny's
+reactive framework to acheive interactivity. That is, in order to be interactive, ggvis requires a web server that runs R and shiny. Animint does not require any special web server software since it uses static files and client-side JavaScript. If Animint users are familiar with shiny, they may leverage it's reactive framework to acheive interactivity that is not possible with \texttt{clickSelects} and \texttt{showSelected} alone. This simple example demonstrates that one can incorporate widgets to change x/y/color variables without writing one line of HTML/JavaScript \url{http://bit.ly/animint-rmarkdown}.
+
+%% Carson: I might be persuaded, but I don't think the argument below will 
+%% stand the test of time. ggvis is rapidly evolving and already 
+%% has decent support for 'direct manipulation' and 'linked plots':
+%% shiny::runGitHub(repo = "ggvis", username = "rstudio", subdir = "demo/apps/brush-linked")
+%% I'll see if I can come up with a ggvis example that is closer to animint's
+%% than Susan's current example -- https://srvanderplas.shinyapps.io/ggvis-animint/
+
+% The two packages also have different interactive
+% features: ggvis uses sliders, checkboxes, and other HTML form
+% elements, whereas Animint users can directly click the SVG elements
+% that are used to visualize the data. For example, in a ggvis of the
+% WorldBank data, it is natural to use a slider to select the displayed
+% year. In contrast, in Animint we used a multiple time series plot
+% where the year can be selected by directly clicking the data values on
+% the plot (Figure~1). The Animint plot is thus easier for the user
+% since it has more articulatory directness \citep{Hutchins:1985}, and
+% less spatial offset \citep{instrumental-interaction}.
 
 %\paragraph{Vega}
 Like Animint, \href{http://trifacta.github.io/vega/}{Vega} is a
@@ -693,7 +696,7 @@ visualizations.''  Those extensions are defined at a lower level of
 abstraction than the \texttt{clickSelects} and \texttt{showSelected}
 keywords of Animint.
 
-Finally, implementations of the grammar of graphics system of
+Implementations of the grammar of graphics system of
 \citet{wilkinson} exist as the Visualization Markup Language (ViZml)
 and the Graphics Production Language (GPL) in IBM SPSS Statistics
 software, but do not support interactive animations.
@@ -717,13 +720,25 @@ Another system with interactive facilities similar to Animint is
 interface that can acheive interactive animations. 
 Tableau is built on top of VizQL, a visual query language
 which took influence from Polaris \citep{polaris}. 
-Visual query languages remove the burden of writing database 
-queries to begin the data visualization process. 
-In fact, the system will automatically and dynamically 
-execute (and, in some cases, cache) any queries required to render 
-various properties of the user defined visualization. 
+Visual query languages automatically and dynamically 
+execute (and, in some cases, cache) database queries 
+required to render various properties of the user 
+defined visualization. 
 
-One fundamental limitation to a visual query language is the
+Tableau's visual query approach is quite nice for many cases, but
+it does not easily acheive the same level of flexibility 
+that ggplot2's layered grammar of graphics provides.
+That is, ggplot2 allows for a different data table 
+to be mapped to a different layer of geometries/marks, 
+while Tableau requires each layer to be a function of a 
+single query result. This proves to be an important
+difference in the selection model as well since the ability to
+select and target different layers of marks/geometries. 
+In context of the World Bank visualization, if we page through
+the different years, it is not possible target only the rectangles
+\url{http://bit.ly/worldBank-tableau}.
+
+Another fundamental limitation to a visual query language is the
 restriction to database primitives. For instance, suppose 
 we want to visualize the residuals of different models 
 fit to different subsets of the data. This would require us 
@@ -732,12 +747,8 @@ to precompute the residuals using a different language
 lead to an inefficient workflow if we aren't interested in 
 keeping certain models/tables. Starting with version 8.1,
 Tableau does offer R integration, but the types of objects 
-that can be transferred are limited.
-
-In conclusion, other systems that implement the grammar of graphics
-have limited interactivity, and other systems that implement
-interactive animations do not exploit the powerful grammar of
-graphics. Animint is the first system that implements both.
+that can be transferred are limited and it removes the REPL
+environment that R users enjoy.
 
 \section{The Animint system}
 \label{sec:design}
@@ -1003,7 +1014,7 @@ in 2 parts: the compiler and the renderer.
     World Bank visualization shown in Figure~1. \textbf{Top}: the
     interactive animation is a list of 4 R objects: 2 ggplots and 2
     option lists. \textbf{Center}: Animint R code compiles data in
-    ggplot geoms to a database of CSV files
+    ggplot geoms to a database of TSV files
     (\textcolor{red}{$\rightarrowtriangle$}). It also compiles plot
     meta-data including ggplot aesthetics, animation time
     options, and transition duration options to a JSON meta-data file
@@ -1015,15 +1026,15 @@ in 2 parts: the compiler and the renderer.
 \end{figure}
 
 The compiler is implemented in about 1500 lines of R code that
-converts a list of ggplots and options to a comma-separated values
-(CSV) file database and a JSON plot meta-data file. The compiler scans
+converts a list of ggplots and options to a tab-separated values
+(TSV) file database and a JSON plot meta-data file. The compiler scans
 the aesthetics in all of the ggplots to determine how many selection
 variables are present, and which plots to update after a selection
 variable is clicked. It uses ggplot2 to automatically calculate
 the axes scales, legends, and labels. It outputs this information to
 the JSON plot meta-data file. It also uses ggplot2 to convert data
 variables (e.g. life expectancy and region) to visual properties
-(e.g. y position and color). The data are separated into several CSV
+(e.g. y position and color). The data are separated into several TSV
 files, so for large data sets the web browser only needs to download
 the subset of data required to render the current selection
 \citep{2013-immens}. Finally, the rendering engine
@@ -1033,7 +1044,7 @@ just a directory of files, the designer can easily upload interactive
 plots to the web for sharing with users.
 
 The \texttt{animint.js} renderer is implemented in about 1500 lines of
-JavaScript/D3 code that renders the CSV and JSON plot data files as
+JavaScript/D3 code that renders the TSV and JSON plot data files as
 SVG in a web browser. 
 %% The main idea for implementing interactivity is
 %% that clicking a \texttt{clickSelects=year} geom calls the
@@ -1049,7 +1060,7 @@ selection variable every few seconds.
 
 To show the advantages that the Animint grammar brings for creating
 interactive and animated data visualizations, we implemented the World
-Bank visualization of Figure~1 using two other R packages
+Bank visualization of Figure~1 using two other R packages and Tableau
 (Table~\ref{tab:packages}). The main result of our comparison is that
 Animint requires significantly fewer lines of code, and produces
 interactive plots with more articulatory directness
@@ -1106,7 +1117,7 @@ and interaction with respect to both year and country variables.
     %R &
     %2013- & 
     several & 
-      \bitly{1rjwX4r}
+      \bitly{worldBank}
     \\
     animation & 
     38 &
@@ -1131,6 +1142,12 @@ and interaction with respect to both year and country variables.
     several & 
     \bitly{1diUYsg}
     \\
+    Tableau &
+      &
+    widgets/plot &
+    several &
+    \bitly{worldBank-tableau}
+    \\
   \end{tabular}
  \end{center}
 \end{table}
@@ -1153,9 +1170,10 @@ interactive animation.
 
 Another difference is the amount of work required to deploy or share a
 visualization. A compiled Animint visualization consists of static
-CSV, JSON, HTML, and JavaScript files which can be easily served with
-any web server. In contrast, ggvis+shiny requires a web server with R
-installed, significantly complicating deployment to the web.
+TSV, JSON, HTML, and JavaScript files which can be easily served with
+any web server. In contrast, ggvis+shiny requires a web server with R 
+and special software installed, significantly complicating 
+deployment to the web.
 
 There are also inherent speed tradeoffs to using a client-server
 plotting system like ggvis+shiny rather than an entirely web
@@ -1188,7 +1206,7 @@ system, and would be larger with a remote web server.
     lines of R code including data processing but not including comments
     (80 characters max per line), 
     the amount of time it takes to compile the visualization (seconds), 
-    the total size of the uncompressed CSV files in megabytes (MB),
+    the total size of the uncompressed TSV files in megabytes (MB),
     the total number of data points (rows), 
     the median number of data points shown at once (onscreen),
     the number of data columns visualized (variables), 
@@ -1201,7 +1219,7 @@ system, and would be larger with a remote web server.
 \end{table*}
 
 When we used Animint to make the World Bank data visualization, the
-compilation from R objects to 2.1MB of uncompressed CSV data files
+compilation from R objects to 2.1MB of uncompressed TSV data files
 took 2.3s. Using a local web server, the Animint JavaScript rendered
 the plot very quickly (100--200ms). We also observed very fast plot
 updates after mouse clicks in Animint: 20--30ms response times for
@@ -1262,7 +1280,7 @@ view all at once in one plot.
 Table~\ref{tab:examples} also shows Animint system requirements for
 plots of various sizes. We timed the compilation step in R code
 (``seconds'' column), and measured the size in megabytes of the
-compiled CSV file database (``MB'' column), and found that both
+compiled TSV file database (``MB'' column), and found that both
 increase with the data set size (``rows'' column). 
 %Although we do not present timings for the rendering step, 
 We also noticed that the time required for the interactive updates and
@@ -1414,10 +1432,13 @@ axis on the bottom plot, since in fact the x values are all normalized
 to [0,1]. A future implementation of Animint would benefit from scales
 that can be updated after each click.
 
-Currently, the user who interacts with a rendered plot 
-is unable to change variable mappings, since these
-are specified by the designer at compile time. A better interactive
-system would allow the user to interactively change variable mappings.
+% Carson: this next part is no longer a serious drawback, right?
+% https://cpsievert.shinyapps.io/animintRmarkdown
+
+% Currently, the user who interacts with a rendered plot 
+% is unable to change variable mappings, since these
+% are specified by the designer at compile time. A better interactive
+% system would allow the user to interactively change variable mappings.
 
 Since Animint does not perform any computations other than showing and
 hiding data subsets, there is a limitation to what can be
@@ -1457,12 +1478,10 @@ interactivity: highlighting the selected \texttt{clickSelects}
 element, and showing/hiding \texttt{showSelected} elements. In the
 future, we could implement several other types of interactivity
 without changing the Animint DSL. Examples include zooming,
-increase/decrease animation speed, and plot resizing. However, some
+panning, and plot resizing. However, some
 kinds of interactivity would require extensions to the Animint
-grammar. For example, a \texttt{tooltip} aesthetic could be used to
-indicate the text the user views when they hover the mouse over a data
-point. Or a \texttt{hoverSelects} aesthetic could be used to change
-the selection when hovering over a data point.
+grammar. For example, a \texttt{hoverSelects} aesthetic 
+could be used to change the selection when hovering over a data point.
 
 Animint's performance can be measured using speed, memory, and disk
 space requirements in the compilation and rendering steps. Although we
