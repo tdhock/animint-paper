@@ -659,8 +659,25 @@ Another R package that uses the grammar of graphics to define
 interactive graphics is \href{http://ggvis.rstudio.com/}{ggvis}
 \citep{ggvis}. Unlike Animint, ggvis does not directly extend ggplot2,
 but provides a new implementation of some of the same ideas about the
-grammar of graphics. The main difference is that ggvis relies on shiny's
-reactive framework to acheive interactivity. That is, in order to be interactive, ggvis requires a web server that runs R and shiny. Animint does not require any special web server software since it uses static files and client-side JavaScript. If Animint users are familiar with shiny, they may leverage it's reactive framework to acheive interactivity that is not possible with \texttt{clickSelects} and \texttt{showSelected} alone. This simple example demonstrates that one can incorporate widgets to change x/y/color variables without writing one line of HTML/JavaScript \url{http://bit.ly/animint-rmarkdown}.
+grammar of graphics. The main difference is that ggvis relies on
+shiny's reactive framework to acheive interactivity
+\citep{shiny}. That is, in order to be interactive, ggvis requires a
+web server that runs R and shiny. Animint does not require any special
+web server software since it uses static files and client-side
+JavaScript. 
+%% TDH 20 Nov 2014: I think the next paragraph about animint+shiny is
+%% off-topic in the related work section, and more generally off-topic
+%% in this paper (which is supposed to be about
+%% clickSelects/showSelected). If you want to include a discussion of
+%% animint+shiny, maybe in Example Applications or in
+%% Discussion/Future Work?
+
+%% If Animint users are familiar with shiny, they may
+%% leverage it's reactive framework to acheive interactivity that is not
+%% possible with \texttt{clickSelects} and \texttt{showSelected}
+%% alone. This simple example demonstrates that one can incorporate
+%% widgets to change x/y/color variables without writing one line of
+%% HTML/JavaScript \url{http://bit.ly/animint-rmarkdown}.
 
 %% Carson: I might be persuaded, but I don't think the argument below will 
 %% stand the test of time. ggvis is rapidly evolving and already 
@@ -669,16 +686,26 @@ reactive framework to acheive interactivity. That is, in order to be interactive
 %% I'll see if I can come up with a ggvis example that is closer to animint's
 %% than Susan's current example -- https://srvanderplas.shinyapps.io/ggvis-animint/
 
-% The two packages also have different interactive
-% features: ggvis uses sliders, checkboxes, and other HTML form
-% elements, whereas Animint users can directly click the SVG elements
-% that are used to visualize the data. For example, in a ggvis of the
-% WorldBank data, it is natural to use a slider to select the displayed
-% year. In contrast, in Animint we used a multiple time series plot
-% where the year can be selected by directly clicking the data values on
-% the plot (Figure~1). The Animint plot is thus easier for the user
-% since it has more articulatory directness \citep{Hutchins:1985}, and
-% less spatial offset \citep{instrumental-interaction}.
+%% TDH 20 Nov 2014 Indeed, that ggvis demo/apps/brush-linked is a nice
+%% example of (1) direct manipulation, which animint can do and (2)
+%% computing something based on the multiple selection, which animint
+%% can NOT do, and is discussed in more detail in section 4.2
+%% (WorldBank comparison with ggvis/shiny -- the R+shiny web server is
+%% slower than client-side JavaScript alone) and future work (Animint
+%% can not compute and display 1 thing based on the set of selected
+%% values of a multiple selection variable).
+
+The two packages also have different features for interacting with a
+data visualization: ggvis uses sliders, checkboxes, and other HTML
+form elements, whereas Animint users can directly click the SVG
+elements that are used to visualize the data. For example, a ggvis of
+the WorldBank data would animate over the years by adding a play/pause
+button to a slider widget which controls the selected year. In
+contrast, in Animint we used a multiple time series plot where the
+year can be selected by directly clicking the data values on the plot
+(Figure~1). The Animint plot is thus easier for the user since it has
+more articulatory directness \citep{Hutchins:1985}, and less spatial
+offset \citep{instrumental-interaction}.
 
 %\paragraph{Vega}
 Like Animint, \href{http://trifacta.github.io/vega/}{Vega} is a
@@ -725,18 +752,26 @@ execute (and, in some cases, cache) database queries
 required to render various properties of the user 
 defined visualization. 
 
-Tableau's visual query approach is quite nice for many cases, but
-it does not easily acheive the same level of flexibility 
-that ggplot2's layered grammar of graphics provides.
-That is, ggplot2 allows for a different data table 
-to be mapped to a different layer of geometries/marks, 
-while Tableau requires each layer to be a function of a 
-single query result. This proves to be an important
-difference in the selection model as well since the ability to
-select and target different layers of marks/geometries. 
-In context of the World Bank visualization, if we page through
-the different years, it is not possible target only the rectangles
-\url{http://bit.ly/worldBank-tableau}.
+Tableau's graphical user interface (GUI) and visual query approach
+makes it easy to design several kinds of linked plots, but it does not
+easily acheive the same level of flexibility that Animint/ggplot2's
+layered grammar of graphics provides. In particular, ggplot2 allows
+for each layer of geoms in a plot to have a different data source and
+variable mapping, while Tableau requires each mark of a plot to be a
+function of a single query result. This results in a substantial
+conceptual difference between the selection models of Tableau and
+Animint. In Tableau, there is a selection set for each plot, which may
+include several different marks. In contrast, Animint keeps track of a
+selection set for each selection variable, each of which has
+geom-specific effects based on the geom's clickSelects/showSelected
+variables.
+
+%% TDH 20 Nov 2014 I feel like the next paragraph is unfair to Tableau
+%% in particular and GUIs in general. Yes the GUI is a limitation, but
+%% so is the learning curve of the R language and REPL. Can you
+%% re-word that to say that GUIs are better for some people and REPLs
+%% are better for others? Also if you really want to use REPL I think
+%% you should explain what the acronym stands for.
 
 Another fundamental limitation to a visual query language is the
 restriction to database primitives. For instance, suppose 
@@ -1255,6 +1290,23 @@ needed is showing precomputed data subsets. However, the web server
 system would certainly be preferable when there are many more data
 subsets than could ever be precomputed. In that case, the web server
 would only compute the subsets that the user interactively specifies.
+
+\subsection{Tableau}
+
+We implemented a version of the WorldBank data visualization using
+Tableau's GUI (\url{http://bit.ly/worldBank-tableau}).
+%% TDH 20 Nov 2014: When I click on a country on the scatterplot it
+%% does not select that country's time series --- is that an inherent
+%% limitation of Tableau that we should discuss?
+It was impossible to implement all features of the multiple time
+series plot of the data visualization, since it includes multiple
+layers with different data sources and variable mappings (a line for
+each country and a tallrect for each year). Since each mark in a
+Tableau plot is limited to a single data source, it was impossible to
+control the clickable multiple time series and the clickable tallrects
+in different ways based on the two different selection variables. In
+conclusion, although Tableau is useful for many simple interactive
+data visualizations, it is inherently limited in ways that Animint is not.
 
 \section{Example applications}
 
