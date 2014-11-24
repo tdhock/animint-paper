@@ -258,7 +258,7 @@ sets. In this paper, we introduce Animint, a system for designing
 linked, interactive, animated data visualizations. To demonstrate its
 design, we begin with an illustrative example.
 
-Consider the World Bank data set, which consists of several economic
+The World Bank data set consists of several economic
 variables measured for 205 countries from 1960 to 2012
 \citep{WorldBank}. Figure~1 shows six variables from this data set:
 year, country, life expectancy, fertility rate, region, and
@@ -412,7 +412,7 @@ the year variable, an Animint designer writes
 
 To achieve data-driven animations, Animint defines one other important
 operation involving selection variables: showing and hiding subsets of
-data. For example, in the scatterplot of Figure~1 we draw a point for
+data in response to user selection. For example, in the scatterplot of Figure~1 we draw a point for
 each country, and want to move and change the size of each point as
 the selected year changes. To accomplish this, an Animint designer can
 simply declare \texttt{showSelected=year} which means to show only the
@@ -1063,7 +1063,7 @@ the subset of data required to render the current selection
 (\texttt{index.html}, \texttt{d3.v3.js}, and \texttt{animint.js}
 files) is copied to the plot directory. Since the compiled plot is
 just a directory of files, the designer can easily upload interactive
-plots to the web for sharing with users.
+plots to the web.% for sharing with users.
 
 The \texttt{animint.js} renderer is implemented in about 1500 lines of
 JavaScript/D3 code that renders the TSV and JSON plot data files as
@@ -1182,9 +1182,9 @@ graphics library combined with the recommended shiny web server
 package \citep{shiny, ggvis}. Showing and hiding data subsets was
 accomplished by clicking on a slider for year and a menu for country,
 not by clicking on the plot elements. In contrast, we designed
-Figure~1 using only 20 lines of R code with the Animint package. The
-reason why the implementation is significantly simpler using Animint
-is because its DSL is designed specifically for this type of
+Figure~1 using only 20 lines of R code with the Animint package. 
+Implementation is significantly simpler using Animint
+because Animint's DSL is designed specifically for this type of
 interactive animation.
 %Although creating such visualizations in ggvis+shiny is
 %possible, it requires significantly more work for limited
@@ -1209,8 +1209,8 @@ a mouse click, ggvis can not update a plot immediately, but instead
 must wait for the server to respond with the plot data.
 
 We quantified speed differences between the two systems by timing web
-page loading using DevTools in the Chromium web browser Version
-33.0.1750.152 Ubuntu 12.04 (256984). We also used \texttt{getTime()}
+page loading using DevTools in the Chromium web browser (Version
+33.0.1750.152, on Ubuntu 12.04 (256984)). We also used \texttt{getTime()}
 in JavaScript to record timings for interactive plot updates (on a
 desktop computer with a 2.8GHz Intel Core i7 CPU). Using ggvis with a
 local web server and the World Bank data resulted in a web page that
@@ -1337,7 +1337,7 @@ and animation.
 
 \subsection{Animated examples}
 
-Animation is useful mainly for data sets which have a time variable,
+Animation is very useful for data sets which have a time variable,
 as in the World Bank data of Figure~1.
 
 Figure~\ref{fig:tornado} shows an interactive animation of tornadoes
@@ -1362,10 +1362,10 @@ design this set of 6 linked plots in only 87 lines of code.
 
 \subsection{Non-animated examples}
 
-When the data to visualize do not contain a time variable, we have
-found that Animint is still useful for creating interactive but
-non-animated plots. In fact, seven of the eleven examples in
-Table~\ref{tab:examples} are not animated. For example, these plots
+Animint is still useful for creating interactive but
+non-animated plots when there is not a time variable in the data. 
+In fact, seven of the eleven examples in
+Table~\ref{tab:examples} are not animated. For example, linked plots
 are useful to illustrate complex concepts such as a change point
 detection model in the breakpoints data
 (\url{http://bit.ly/1gGYFIV}). The user can explore different model
