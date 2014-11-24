@@ -255,8 +255,8 @@ Information visualization, user interfaces, toolkits, 2D
 Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
 sets. In this paper, we introduce Animint, a system for designing
-linked, interactive, animated data visualizations. To demonstrate its
-design, we begin with an illustrative example.
+linked, interactive, animated data visualizations. To demonstrate the
+purpose of Animint, we begin with an illustrative example.
 
 The World Bank data set consists of several economic
 variables measured for 205 countries from 1960 to 2012
@@ -284,34 +284,35 @@ interactive and animated data visualizations.
 % idea how to get that message across?
 
 %% Carson: There are only *two* roles in *creating* visualizations
-In general, there are three influential roles in the
-consumption of an Animint visualization: the developer, who implements
-the Animint library; the designer, who uses the Animint library to
-define a visualization; and the user, who selects data subsets to view in a
-web browser. The main goal of Animint is to provide an expressive
-language for designers, while allowing users the freedom to interact
-with the plot to selectively view data subsets of interest. The
-designer specifies data sets and maps variables to interactive visual
-elements using the Animint DSL, then uses the Animint library to
-compile and save an interactive animation. The user writes no code,
-but can view and interact with an Animint visualization by clicking
-Scalable Vector Graphics (SVG) elements in a web browser. The Animint
-library developer is responsible for the plot rendering details,
-which allows the others to focus on designing and consuming visualizations.
+In general, there are three influential roles involving an Animint
+visualization: the developer, who implements the Animint library; the
+designer, who uses the Animint library to define a visualization; and
+the user, who selects data subsets to view in a web browser. The main
+goal of Animint is to provide an expressive language for designers,
+while allowing users the freedom to interact with the plot to
+selectively view data subsets of interest. The designer specifies data
+sets and maps variables to interactive visual elements using the
+Animint DSL, then uses the Animint library to compile and save an
+interactive animation. The user writes no code, but can view and
+interact with an Animint visualization by clicking Scalable Vector
+Graphics (SVG) elements in a web browser. The Animint library
+developer is responsible for the plot rendering details, which allows
+the others to focus on designing and consuming visualizations.
 
 %interested in re-implementing the Animint
 %system, we discuss details of its implementation in
 %Section~\ref{sec:implementation}.
 
-The Animint DSL is for visualizations which are both interactive and
-animated. For the purposes of this paper, we define ``interactive'' to
-mean that graphical elements such as data points may be clicked to
-update the data that is shown in related plots. This is closely
-related to the concept of ``direct manipulation,'' which was
-introduced by \citet{shneiderman82} and later applied to statistical
-data visualization \citep{Hutchins:1985, brushing-scatterplots,
-  cleveland}. Our definition of an ``animated'' visualization is one
-that can be watched like a video, automatically updating over time.
+The Animint DSL is for visualizations which can be both interactive
+and animated. For the purposes of this paper, we define
+``interactive'' to mean that graphical elements such as data points
+may be clicked to update the data that is shown in related plots. This
+is closely related to the concept of ``direct manipulation,'' which
+was introduced by \citet{shneiderman82} and later applied to
+statistical data visualization \citep{Hutchins:1985,
+  brushing-scatterplots, cleveland}. Our definition of an ``animated''
+visualization is one that can be watched like a video, automatically
+updating over time.
 
 %% There is also a very nice discussion about Semantic and
 %% Articulatory distance which we could use. Our DSL lowers the
@@ -429,14 +430,15 @@ smooth transitions in data-driven animations
 transitions.
 
 The Animint DSL is implemented as an extension of ggplot2
-\citep{ggplot2-book, ggplot2-paper}, which is an R implementation of
-the grammar of graphics \citep{wilkinson}. The ggplot2 language was
-created as a high-level abstraction for non-interactive
+\citep{ggplot2-book, ggplot2-paper}, which is a popular R package that
+implements the grammar of graphics \citep{wilkinson}. The ggplot2
+language was created as a high-level abstraction for non-interactive
 visualizations. One of the key strengths of ggplot2 is that it allows
-a designer to declare a visualization using multiple layers of distinct
-geometric elements, each with a clear aesthetic mapping from data
-variables to geometric properties. The Animint DSL extends ggplot2 by adding
-\texttt{clickSelects} and \texttt{showSelected} aesthetics.
+a designer to declare a visualization using multiple layers of
+distinct geometric elements, each with a clear aesthetic mapping from
+data variables to geometric properties. The Animint DSL extends
+ggplot2 by adding \texttt{clickSelects} and \texttt{showSelected}
+aesthetics.
 
 \begin{figure*}[b!]
   \centering
@@ -527,17 +529,19 @@ simplifies creation of visualizations in which users can quickly show/hide
 various subsets of data (especially for those familiar with ggplot2).
 
 Finally, another key strength of ggplot2 and D3 for visualization
-design are the libraries' declarative syntax. \citet{declarative}
-proposed a declarative syntax for animated transitions, and studied
-the benefits of declarative languages for data visualization. Animint
-is another declarative DSL, but defined at a higher level of
-abstraction than D3. It enables designers to focus on data
-visualization, while the Animint library developers can work on
-improving the lower-level rendering details.
+design are the libraries' declarative syntax, which allows a
+visualization designer to specify \emph{what} they want to render
+rather than \emph{how} to render it. \citet{declarative} proposed a
+declarative syntax for animated transanitions, and studied the
+benefits of declarative languages for data visualization. Animint is
+another declarative DSL, but defined at a higher level of abstraction
+than D3. It enables designers to focus on data visualization, while
+the Animint library developers can work on improving the lower-level
+rendering details.
 
 The rest of this paper is organized as follows: we discuss related work in
 Section~2, and the design of the Animint system in Section~3. Then we
-perform a detailed comparison with other R packages in Section~4, and
+perform a detailed comparison study in Section~4, and
 show some example applications of Animint in Section~5. Finally, we
 share some user feedback in Section~6 and then discuss future work in
 Section~7.
@@ -546,7 +550,7 @@ Section~7.
 
 \section{Related Work}
 
-In this section we offer a comparison between Animint and several
+In this section we discuss the differences between Animint and several
 related systems, focusing on libraries with free/open-source software
 implementations in JavaScript and R.
 %% In short, Animint supports many
@@ -760,17 +764,17 @@ variables.
 %% are better for others? Also if you really want to use REPL I think
 %% you should explain what the acronym stands for.
 
-Another fundamental limitation to a visual query language is the
-restriction to database primitives. For instance, suppose
-we want to visualize the residuals of different models
-fit to different subsets of the data. This would require us
-to precompute the residuals using a different language
-(such as R) and write tables back to the database. This can
-lead to an inefficient workflow if we aren't interested in
-keeping certain models/tables. Starting with version 8.1,
-Tableau does offer R integration, but the types of objects
-that can be transferred are limited and it removes the REPL
-environment that R users enjoy.
+%% Another fundamental limitation to a visual query language is the
+%% restriction to database primitives. For instance, suppose
+%% we want to visualize the residuals of different models
+%% fit to different subsets of the data. This would require us
+%% to precompute the residuals using a different language
+%% (such as R) and write tables back to the database. This can
+%% lead to an inefficient workflow if we aren't interested in
+%% keeping certain models/tables. Starting with version 8.1,
+%% Tableau does offer R integration, but the types of objects
+%% that can be transferred are limited and it removes the REPL
+%% environment that R users enjoy.
 
 \section{The Animint system}
 \label{sec:design}
@@ -809,7 +813,7 @@ In any plot a designer would sketch
 the axes, legends, a few geometric elements, and note which variables
 will be shown in the linked plots. An Animint designer needs only add
 the \texttt{clickSelects} and
-\mbox{showSelected} mappings for each geometric element, as shown in
+\mbox{\texttt{showSelected}} mappings for each geometric element, as shown in
 Figures~1, 3, and 4. These notes can be directly translated to
 ggplot2 aesthetics in R code, as explained below.
 
@@ -911,7 +915,7 @@ Note that Animint allows any number of \mbox{showSelected}
 aesthetics. In this example, \texttt{showSelected=country} combined
 with \texttt{showSelected2=year} means to only show the subset of
 labels corresponding to both the selected year and country.  Since
-there is only 1 row for each (country,year) combination in the
+there is only 1 row for each (country, year) combination in the
 WorldBank data, this has the effect of drawing the selected country's
 label at the location of the selected year.
 
@@ -1063,7 +1067,7 @@ the subset of data required to render the current selection
 (\texttt{index.html}, \texttt{d3.v3.js}, and \texttt{animint.js}
 files) is copied to the plot directory. Since the compiled plot is
 just a directory of files, the designer can easily upload interactive
-plots to the web.% for sharing with users.
+plots to any web server.% for sharing with users.
 
 The \texttt{animint.js} renderer is implemented in about 1500 lines of
 JavaScript/D3 code that renders the TSV and JSON plot data files as
@@ -1209,8 +1213,8 @@ a mouse click, ggvis can not update a plot immediately, but instead
 must wait for the server to respond with the plot data.
 
 We quantified speed differences between the two systems by timing web
-page loading using DevTools in the Chromium web browser (Version
-33.0.1750.152, on Ubuntu 12.04 (256984)). We also used \texttt{getTime()}
+page loading using DevTools in the Chromium web browser Version
+33.0.1750.152, on Ubuntu 12.04 (256984). We also used \texttt{getTime()}
 in JavaScript to record timings for interactive plot updates (on a
 desktop computer with a 2.8GHz Intel Core i7 CPU). Using ggvis with a
 local web server and the World Bank data resulted in a web page that
@@ -1252,11 +1256,11 @@ country.
 %being performed several times rather than simply saved for quick
 %viewing later.
 
-The conclusion of our speed comparison is that the overhead of
-communicating with a web server results in significant slowdowns for
-interactive animations. It is clear that for quick response times, it
-is preferable to use an entirely JavaScript-based system like
-Animint.
+The conclusion of our speed comparison is that the overhead of waiting
+for a web server to perform computations results in significant
+slowdowns for interactive animations. It is clear that for quick
+response times, it is preferable to use an entirely JavaScript-based
+system like Animint.
 
 In contrast, a web server system like ggvis+shiny would be more
 appropriate for
@@ -1470,12 +1474,13 @@ the x axis on the bottom plot, since in fact the x values are all
 normalized to [0,1]. A future implementation of Animint would benefit
 from scales that can be updated after each click.
 
-Some Animint limitations can be resolved by Animint designers
-familiar with shiny's reactive framework. In fact, Animint provides
-"shiny bindings" which enables designers to easily embed Animint plots
-within shiny apps (no HTML/JS required); which in turn, enables users
-to re-compile from their browser. For example, users can redefine variable
-mappings in this shiny app \url{http://bit.ly/animint-shiny}.
+Some Animint limitations can be resolved by Animint designers who are
+familiar with the shiny web server R package \citep{shiny}.  Animint
+provides ``shiny bindings'' which enables a designer to embed an
+Animint plot within a shiny app without writing any HTML or
+JavaScript, which allows a user to re-compile an Animint from a web
+browser. For example, we implemented a shiny app in which users can
+redefine variable mappings (\url{http://bit.ly/animint-shiny}).
 
 Since Animint does not perform any computations other than showing and
 hiding data subsets, there is a limitation to what can be
