@@ -1475,9 +1475,7 @@ familiar with shiny's reactive framework. In fact, Animint provides
 "shiny bindings" which enables designers to easily embed Animint plots
 within shiny apps (no HTML/JS required); which in turn, enables users
 to re-compile from their browser. For example, users can redefine variable
-mappings in this shiny app
-\url{http://bit.ly/animint-shiny}.
-In *this example*, users may recompile scales on demand.
+mappings in this shiny app \url{http://bit.ly/animint-shiny}.
 
 Since Animint does not perform any computations other than showing and
 hiding data subsets, there is a limitation to what can be
