@@ -1405,12 +1405,18 @@ which we then translated to Animint R code.
 In this section we share comments and
 constructive criticism that we have obtained from our users.
 
+\subsection{Designer perspective}
+
 R users have found that Animint is easy to learn. One statistics
 Ph.D. student writes, ``animint is a fantastic framework for creating
 interactive graphics for someone familiar with R and ggplot2's grammar
 of graphics implementation. The API is very intuitive and allows one
 to quickly bring their static graphics to life in a way that
 facilitates exploratory data analysis.''
+
+TODO: expand to address reviewer comments.
+
+\subsection{User perspective}
 
 For the \texttt{prior} data visualization
 (\url{http://bit.ly/1peIT7t}), the Animint user is a machine learning
@@ -1424,7 +1430,6 @@ intuitive understanding of the performance of our proposed
 algorithm. An intuitive understanding of the results is important
 since it shows under which conditions our proposed method works well
 and provides avenues for further research.''
-
 
 Another user from a machine learning background found the interactive
 plots useful for presenting his work: ``the `regularization path' is a
@@ -1448,10 +1453,14 @@ to use.  It also enables us to publish more detailed interactive
 results on our website to accompany the results presented in
 publications.''
 
-\section{Discussion, limitations and future work}
+\section{Limitations and future work}
 
-There are several limitations to the current implementation of
-Animint, which suggest avenues for future work.
+There are several limitations to the Animint system, which suggest
+avenues for future work. Some limitations are specific to the current
+implementation as research software, and some limitations are inherent
+in the clickSelects/showSelected keywords.
+
+\subsection{Limitations of current implementation}
 
 Animint implements several linked plots, one of the hallmarks of
 interactive visual analysis \citep{iva}. However, one limitation to
@@ -1465,14 +1474,15 @@ current implementation, not the Animint DSL.
 
 A number of limitations derive from the fact that some plot elements
 are computed once during the compilation step and remain static on a
-rendered plot. For example, users are unable to change variable mappings
-since these are specified by the designer at compile time. Also, when
-different data subsets have very different ranges of values, it may be
-preferable to recompute scales when \texttt{clickSelects} selection(s)
-change. A workaround is shown in Figure~\ref{fig:ChIPseq}, which omits
-the x axis on the bottom plot, since in fact the x values are all
-normalized to [0,1]. A future implementation of Animint would benefit
-from scales that can be updated after each click.
+rendered plot. For example, users are unable to change variable
+mappings since these are specified by the designer at compile
+time. Also, when different data subsets have very different ranges of
+values, it may be preferable to recompute scales when
+\texttt{clickSelects} selection(s) change. A workaround is shown in
+Figure~\ref{fig:ChIPseq}, which omits the x axis on the bottom plot,
+since in fact the x values are all normalized to [0,1]. A future
+implementation of Animint would benefit from changes to the compiler
+and renderer that allow scales to be updated after each click.
 
 Some Animint limitations can be resolved by Animint designers who are
 familiar with the shiny web server R package \citep{shiny}.  Animint
@@ -1481,6 +1491,56 @@ Animint plot within a shiny app without writing any HTML or
 JavaScript, which allows a user to re-compile an Animint from a web
 browser. For example, we implemented a shiny app in which users can
 redefine variable mappings (\url{http://bit.ly/animint-shiny}).
+
+As discussed in Section~\ref{sec:design} and illustrated in
+Figure~\ref{fig:design}, the compiler is written in R, and the
+renderer is written in JavaScript.
+%% This means that Animint developers must be proficient in both R and
+%% JavaScript. This represents a significant barrier for source code
+%% contributions from developers who are proficient with one language
+%% but not the other.
+Animint designers define interactive animations using only R code, and
+no knowledge of JavaScript is necessary. This is convenient for useRs
+from a statistical background, but presents a barrier for web
+developers who are more familiar with JavaScript than R. For these web
+developers, it would be advantageous in the future to implement a
+compiler and renderer in pure JavaScript, by possibly building
+\texttt{clickSelects} and \texttt{showSelected} extensions into Vega
+\citep{vega}.
+
+The current Animint implementation is limited to two specific types of
+interactivity: highlighting the selected \texttt{clickSelects}
+element, and showing/hiding \texttt{showSelected} elements. In the
+future, we could implement several other types of interactivity
+without changing the Animint DSL. Examples include zooming,
+panning, and plot resizing. However, some
+kinds of interactivity would require extensions to the Animint
+grammar. For example, a \texttt{hoverSelects} aesthetic
+could be used to change the selection when hovering over a data point.
+
+\subsection{Limitations of clickSelects/showSelected keywords}
+
+TODO. discuss that grand tours are awkward in animint since each
+animation frame must be pre-computed, and there are many more possible
+It's not that they can't be computed beforehand. But if you have a
+large amount of projections that you want to view, that could be a
+bottleneck \citep{tourr}. The grand tour picks random projections, so
+I'm pretty sure the number of projections is infinite in the
+mathematical sense But there are also guided tours that pick
+"interesting" projections.
+
+TODO: discuss two main failure modes: 1. you really want to compute
+something on the fly (like a random projection) and 2. with multiple
+selection variables, there are too many items in the power set so they
+can't all be computed in advance.
+
+TODO: discuss conditioning on quantitative variables? any concrete
+example plots where this would be useful? 
+
+TODO: distinction between the clickSelects/showSelected keywords and
+the animint system which pre-computes everything? Could there be a
+clickSelects/showSelected system which does NOT pre-compute
+everything?
 
 Since Animint does not perform any computations other than showing and
 hiding data subsets, there is a limitation to what can be
@@ -1499,40 +1559,14 @@ would require substantial modifications to the Animint system,
 including adding the ability to perform computations on
 multiple selection variable sets.
 
-As discussed in Section~\ref{sec:design} and illustrated in
-Figure~\ref{fig:design}, the compiler is written in R, and the
-renderer is written in JavaScript.
-%% This means that Animint developers
-%% must be proficient in both R and JavaScript. This represents a
-%% significant barrier for source code contributions from developers who
-%% are proficient with one language but not the other.
-Animint designers define interactive animations using only R code, and no
-knowledge of JavaScript is necessary. This is convenient for useRs
-from a statistical background, but presents a barrier for web
-developers who are more familiar with JavaScript than R. For these web
-developers, it would be advantageous in the future to implement a
-compiler and renderer in pure JavaScript, by
-possibly building \texttt{clickSelects} and \texttt{showSelected} extensions into Vega
-\citep{vega}.
-
-The current Animint implementation is limited to two specific types of
-interactivity: highlighting the selected \texttt{clickSelects}
-element, and showing/hiding \texttt{showSelected} elements. In the
-future, we could implement several other types of interactivity
-without changing the Animint DSL. Examples include zooming,
-panning, and plot resizing. However, some
-kinds of interactivity would require extensions to the Animint
-grammar. For example, a \texttt{hoverSelects} aesthetic
-could be used to change the selection when hovering over a data point.
-
-Animint's performance can be measured using speed, memory, and disk
-space requirements in the compilation and rendering steps. Although we
-showed in Section~\ref{sec:compare} that Animint provides smoother
-interactivity than client-server systems, future versions of Animint
-could be made even more efficient and responsive. For
-example, of the plots in
-Table~\ref{tab:examples}, the longest compilation step took 56.3 seconds,
-which may be reduced by optimizing the R code compiler.
+TODO: revise paragraph. Animint's performance can be measured using
+speed, memory, and disk space requirements in the compilation and
+rendering steps. Although we showed in Section~\ref{sec:compare} that
+Animint provides smoother interactivity than client-server systems,
+future versions of Animint could be made even more efficient and
+responsive. For example, of the plots in Table~\ref{tab:examples}, the
+longest compilation step took 56.3 seconds, which may be reduced by
+optimizing the R code compiler.
 
 This highlights one of the main motivations for using a declarative
 DSL like Animint: none of the designer's R code needs to be changed to
@@ -1547,6 +1581,10 @@ While several
 optimizations remain to be implemented, the current Animint library
 already provides an efficient syntax for the design of interactive,
 animated data visualizations.
+
+in the future, I'd be interesting in trying to "solve" (1) for some
+class of problems where you want some elements to have smooth
+transitions when new data arrives.
 
 \section*{Acknowledgements}
 

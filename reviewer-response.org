@@ -1,3 +1,6 @@
+TODO: change the end of the manuscript and add a section that clearly
+outlines what is not posible in animint.
+
 ** Associate Editor
 
 All reviewers are enthusiastic about the goals of this paper. For
@@ -151,6 +154,7 @@ decisions made for this paper. I think the engineering is
 fantastic--but the best way to promote engineering alone is through
 getting the code used, not by writing an article about it. The article
 should be a chance to think more broadly.
+
 
 ** Reviewer: 3
 
