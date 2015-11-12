@@ -1,4 +1,53 @@
-\documentclass[10pt,journal,compsoc]{IEEEtran}
+\documentclass[10pt,journal,compsoc]{IEEEtran}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0, 0, 0}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.502,0,0}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0,0,1}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0,1}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
 %\documentclass[review,journal]{vgtc}         % review (journal style)
 %\documentclass[widereview]{vgtc}             % wide-spaced review
 %\documentclass[journal]{vgtc}                % final (journal style)
@@ -52,7 +101,7 @@
 }
 
 \newcommand{\bitly}[1]{\href{http://bit.ly/#1}{\texttt{#1}}}
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 %% If you are submitting a paper to a conference for review with a double
@@ -68,7 +117,7 @@
 
 %% Paper title.
 
-\title{Extending ggplot2's Grammar of Graphics Implementation to Enable Interactivity}
+\title{Animint: a Grammar for Interactive Animations}
 
 %% This is how authors are specified in the journal style
 
@@ -148,21 +197,24 @@ E-mail: toby.hocking@mail.mcgill.ca.}% <-this % stops a space
 % in the abstract or keywords.
 \IEEEtitleabstractindextext{%
 \begin{abstract}
-  The grammar of graphics provides a basis for thinking abstractly about 
-  graphical elements and their composition \citep{wilkinson}. It motivated 
-  a number of implementations for creating static graphics, including the 
-  popular R package ggplot2. This implementation introduced the notion of 
-  a \emph{layered} grammar where layers of data are mapped to layers of 
-  visual elements (aka aesthetics) within a single plot \citep{ggplot2-paper}. 
-  This paper discusses an extension of ggplot2's implementation that enables
-  animation and direct-manipulation interactivity. In ggplot2, aesthetics map 
-  data to a space of visual properties. Our extension adds new aesthetics that 
-  map data to a space of interactions. The scope of this interactive space that
-  enables is discussed using the categories presented in \citep{yi}. 
-  These concepts are implemented in the R package animint which leverages 
-  ggplot2 functionality for compilation and D3 for rendering the graphics 
-  in a web-browser. An open-source implementation is available at 
-  \url{https://github.com/tdhock/animint}.
+  Animint is a new domain-specific language (DSL) for linked,
+  interactive, animated plots. It builds on top of previous work on
+  the grammar of graphics (ggplot2 in R) and interactive visualization
+  using web standards (D3 in JavaScript). In other data visualization
+  systems, interactive animations are difficult to accomplish, since
+  they must be defined in terms of low-level operations and sometimes
+  100s of lines of code. In contrast, Animint's high-level DSL can be
+  used to produce a wide variety of complex interactive visualizations
+  with only 10s of lines of code. It works by adding 2 new aesthetics
+  to the grammar of graphics: \texttt{clickSelects}, which allows users to
+  select elements of the plot, and \texttt{showSelected}, which displays
+  only elements corresponding to the current selection. After using
+  the declarative Animint DSL to define an interactive animation in R
+  code, it is first compiled and then rendered in a web browser using
+  D3. We discuss the design of Animint, then compare to related
+  libraries, and show several example visualizations of
+  high-dimensional time series data. A free/open-source implementation
+  of Animint is available at \url{https://github.com/tdhock/animint}.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -248,11 +300,6 @@ Information visualization, user interfaces, toolkits, 2D
 \end{figure*}
 
 \section{Introduction}
-
-A ggplot2 layer is defined by five components: Data, Aesthetics, Statistics, Geometry, 
-  and Positional Adjustment.
-  
-
 
 Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
@@ -790,14 +837,7 @@ developers need to be concerned about.
 
 \subsection{The Animint grammar for interactive animations}
 
-<<opts, echo=FALSE, message=FALSE, cache=FALSE>>=
-library(animint)
-data(WorldBank)
-write.csv(WorldBank, "WorldBank.csv")
-opts_chunk$set(tidy=FALSE, eval=FALSE)
-opts_knit$set(out.format="latex")
-knit_theme$set("edit-matlab")
-@
+
 
 The main idea of Animint is that a large class of interactive plots
 can be specified using just two interactive keywords:
@@ -848,14 +888,18 @@ geometric plot element. Some standard ggplot2 aesthetics are
 For example, consider the following R code which defines the points in the
 World Bank data scatterplot on the right of Figure~1:
 
-<<countryPoints>>=
-countryPoints <- geom_point(
-    aes(x=fertility.rate, y=life.expectancy,
-        color=region, size=population,
-        clickSelects=country,
-        showSelected=year),
-    data=WorldBank)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{countryPoints} \hlkwb{<-} \hlkwd{geom_point}\hlstd{(}
+    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=fertility.rate,} \hlkwc{y}\hlstd{=life.expectancy,}
+        \hlkwc{color}\hlstd{=region,} \hlkwc{size}\hlstd{=population,}
+        \hlkwc{clickSelects}\hlstd{=country,}
+        \hlkwc{showSelected}\hlstd{=year),}
+    \hlkwc{data}\hlstd{=WorldBank)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The code defines a \verb+geom_point+, which means to create a point
 for every row in the \texttt{WorldBank} data table. The visual
@@ -873,13 +917,17 @@ In order to remind the plot user which subset of data are selected, we
 will draw a text label with the selected year and country. First, we
 create the year labels using
 
-<<yearText-geom, tidy=FALSE>>=
-yearText <- geom_text(
-  aes(label=sprintf("year = %d", year),
-      showSelected=year),
-  x=5, y=80,
-  data=years)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{yearText} \hlkwb{<-} \hlkwd{geom_text}\hlstd{(}
+  \hlkwd{aes}\hlstd{(}\hlkwc{label}\hlstd{=}\hlkwd{sprintf}\hlstd{(}\hlstr{"year = %d"}\hlstd{, year),}
+      \hlkwc{showSelected}\hlstd{=year),}
+  \hlkwc{x}\hlstd{=}\hlnum{5}\hlstd{,} \hlkwc{y}\hlstd{=}\hlnum{80}\hlstd{,}
+  \hlkwc{data}\hlstd{=years)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 Note that \texttt{data=years} specifies another data table, with 1 row
 for each year. Animint does not require that linked plots originate
@@ -904,14 +952,18 @@ defined as aesthetics.
 
 We can also add another label to show the selected country:
 
-<<countryText>>=
-countryText <- geom_text(
-    aes(x=fertility.rate, y=life.expectancy,
-        label=country,
-        showSelected=country,
-        showSelected2=year),
-    data=WorldBank)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{countryText} \hlkwb{<-} \hlkwd{geom_text}\hlstd{(}
+    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=fertility.rate,} \hlkwc{y}\hlstd{=life.expectancy,}
+        \hlkwc{label}\hlstd{=country,}
+        \hlkwc{showSelected}\hlstd{=country,}
+        \hlkwc{showSelected2}\hlstd{=year),}
+    \hlkwc{data}\hlstd{=WorldBank)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 Note that Animint allows any number of \mbox{showSelected}
 aesthetics. In this example, \texttt{showSelected=country} combined
@@ -924,23 +976,31 @@ label at the location of the selected year.
 Having defined these 3 geometric elements, we combine them in a single
 ggplot:
 
-<<scatterPlot>>=
-scatterPlot <- ggplot()+
-  countryPoints+
-  yearText+
-  countryText
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{scatterPlot} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
+  \hlstd{countryPoints}\hlopt{+}
+  \hlstd{yearText}\hlopt{+}
+  \hlstd{countryText}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 This completes the definition of the scatterplot. Now, we discuss the
 time series on the left of Figure~1. First, the tallrects in the
 background are used to select the year:
 
-<<yearRects-geom>>=
-yearRects <- geom_tallrect(
-  aes(xmin=year-1/2, xmax=year+1/2,
-      clickSelects=year),
-  data=years, alpha=1/2)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{yearRects} \hlkwb{<-} \hlkwd{geom_tallrect}\hlstd{(}
+  \hlkwd{aes}\hlstd{(}\hlkwc{xmin}\hlstd{=year}\hlopt{-}\hlnum{1}\hlopt{/}\hlnum{2}\hlstd{,} \hlkwc{xmax}\hlstd{=year}\hlopt{+}\hlnum{1}\hlopt{/}\hlnum{2}\hlstd{,}
+      \hlkwc{clickSelects}\hlstd{=year),}
+  \hlkwc{data}\hlstd{=years,} \hlkwc{alpha}\hlstd{=}\hlnum{1}\hlopt{/}\hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 %Animint is designed for
 %interactivity via direct manipulation of the plot elements.
@@ -979,15 +1039,19 @@ To create the time series plot, we combine the tallrects above with
 lines. To declare that clicking a line should change the selected
 country, we use the \texttt{clickSelects=country} aesthetic:
 
-<<timeSeries, tidy=FALSE>>=
-timeSeries <- ggplot()+
-  yearRects+
-  geom_line(
-    aes(x=year, y=life.expectancy,
-        group=country, color=region,
-        clickSelects=country),
-    data=WorldBank, size=3, alpha=3/5)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{timeSeries} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
+  \hlstd{yearRects}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}
+    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=year,} \hlkwc{y}\hlstd{=life.expectancy,}
+        \hlkwc{group}\hlstd{=country,} \hlkwc{color}\hlstd{=region,}
+        \hlkwc{clickSelects}\hlstd{=country),}
+    \hlkwc{data}\hlstd{=WorldBank,} \hlkwc{size}\hlstd{=}\hlnum{3}\hlstd{,} \hlkwc{alpha}\hlstd{=}\hlnum{3}\hlopt{/}\hlnum{5}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 Note that both the \texttt{timeSeries} and \texttt{scatterPlot}
 objects are valid ggplots. However, plotting them using the standard
@@ -996,14 +1060,18 @@ geometric elements, including data for all years and countries. To
 plot them with Animint, we define a list of ggplots and options, then
 call the \texttt{animint2dir} compiler:
 
-<<animint2dir,fig.pos='htbp'>>=
-viz <-
-  list(scatterPlot=scatterPlot,
-       timeSeries=timeSeries,
-       time=list(variable="year", ms=3000),
-       duration=list(year=1000))
-animint2dir(viz, out.dir="WorldBank")
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{viz} \hlkwb{<-}
+  \hlkwd{list}\hlstd{(}\hlkwc{scatterPlot}\hlstd{=scatterPlot,}
+       \hlkwc{timeSeries}\hlstd{=timeSeries,}
+       \hlkwc{time}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{variable}\hlstd{=}\hlstr{"year"}\hlstd{,} \hlkwc{ms}\hlstd{=}\hlnum{3000}\hlstd{),}
+       \hlkwc{duration}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{year}\hlstd{=}\hlnum{1000}\hlstd{))}
+\hlkwd{animint2dir}\hlstd{(viz,} \hlkwc{out.dir}\hlstd{=}\hlstr{"WorldBank"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The \texttt{time} option specifies that in absence of user
 interaction, we want the plots to animate over time, progressing at a

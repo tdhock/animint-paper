@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2012)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: HOCKING-animint.aux
+The style file: abbrvnat.bst
+Database file #1: refs.bib
+Warning--empty journal in tourr
+You've used 27 entries,
+            2773 wiz_defined-function locations,
+            764 strings with 8689 characters,
+and the built_in function-call counts, 11579 in all, are:
+= -- 1067
+> -- 550
+< -- 22
++ -- 192
+- -- 165
+* -- 881
+:= -- 1764
+add.period$ -- 98
+call.type$ -- 27
+change.case$ -- 133
+chr.to.int$ -- 27
+cite$ -- 55
+duplicate$ -- 553
+empty$ -- 1024
+format.name$ -- 202
+if$ -- 2455
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 23
+newline$ -- 157
+num.names$ -- 108
+pop$ -- 289
+preamble$ -- 1
+purify$ -- 109
+quote$ -- 0
+skip$ -- 420
+stack$ -- 0
+substring$ -- 410
+swap$ -- 65
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 282
+warning$ -- 1
+while$ -- 113
+width$ -- 0
+write$ -- 380
+(There was 1 warning)
