@@ -746,9 +746,17 @@ interactive plot in a web browser.
 manipulation in graphical user interfaces, and our Animint system
 follows principle 2 ``Physical actions on objects vs. complex syntax''
 such as dialog boxes. In particular, the user can update the selection
-by clicking on the data objects themselves. This contrasts other
-systems which use menus and widgets, and thus suffer from less
+by clicking on the data objects themselves or by clicking on elements
+in the legend which are directly mapped to the data. This contrasts
+othersystems which use menus and widgets, and thus suffer from less
 articulatory directness \citep{Hutchins:1985}.
+
+While it is typically preferable to click on the plot, there are
+situations where menus or widgets are necessary.  When there are many
+different elements that could be selected, for example, it can be
+convenient to have widgets that contain all the possible selected
+values.  Animint conveniently implements widgets to toggle the
+selected values.
 
 For single selection variables such as year, clicking sets the value
 of the corresponding selection variable. For multiple selection
@@ -780,13 +788,14 @@ in 2 parts: the compiler and the renderer.
   \label{fig:design}
 \end{figure}
 
-The compiler is implemented in about 1500 lines of R code that
+The compiler is implemented in about 1800 lines of R code that
 converts a list of ggplots and options to a tab-separated values
 (TSV) file database and a JSON plot meta-data file. The compiler scans
 the aesthetics in all of the ggplots to determine how many selection
 variables are present, and which plots to update after a selection
 variable is clicked. It uses ggplot2 to automatically calculate
-the axes scales, legends, and labels. It outputs this information to
+the axes scales, legends, labels, backgrounds, and borders. It outputs
+this information to
 the JSON plot meta-data file. It also uses ggplot2 to convert data
 variables (e.g. life expectancy and region) to visual properties
 (e.g. y position and color). The data are separated into several TSV
@@ -798,7 +807,7 @@ files) is copied to the plot directory. Since the compiled plot is
 just a directory of files, the designer can easily upload interactive
 plots to any web server.% for sharing with users.
 
-The \texttt{animint.js} renderer is implemented in about 1500 lines of
+The \texttt{animint.js} renderer is implemented in about 2200 lines of
 JavaScript/D3 code that renders the TSV and JSON plot data files as
 SVG in a web browser.
 %% The main idea for implementing interactivity is
