@@ -71,8 +71,8 @@
   designates which elements change. We use several example data sets
   to discuss the range of visualizations that can be easily specified
   using these two keywords. Finally, we discuss the current
-  limitations of Animint, an R package that implements these keywords:
-  \url{https://github.com/tdhock/animint}.
+  limitations of Animint, a new R package that implements these
+  keywords: \url{https://github.com/tdhock/animint}.
 \end{abstract}
 
 \section{Introduction}
@@ -188,9 +188,9 @@ like a video, automatically updating over time.
 %Bank and Fig 9 of \citet{d3}.
 
 The rest of this paper is organized as follows: we discuss related
-work in Section~2, and the usage of the clickSelects and showSelected
-keywords in Section~3. Then we discuss our current implementation in
-the animint R package in Section~4.
+work in Section~2, and the usage of the \texttt{clickSelects} and
+\texttt{showSelected} keywords in Section~3. Then we discuss our
+current implementation in the animint R package in Section~4.
 
 %% \section{Introduction} %for journal use above \firstsection{..} instead
 
@@ -354,11 +354,12 @@ selection operates on only one data set.
 %% designer may also declare a \texttt{duration} list of selection
 %% variables which should have smooth transitions.
 
-In this paper we propose adding the clickSelects and showSelected
-interactive keywords to the grammar of graphics. In particular, we
+In this section we explain the meaning of the new
+\texttt{clickSelects} and \texttt{showSelected} keywords that we
+propose to use for interactive graphic design. We
 propose using these keywords as new aesthetics in the ggplot2 system
-\citep{ggplot2-book}. An aesthetic is a declarative mapping from a data
-variable to a property of a geometric plot element. Some standard
+\citep{ggplot2-book}. An aesthetic is a declarative mapping from a
+data variable to a property of a geometric plot element. Some standard
 ggplot2 aesthetics are
 \begin{description}
 \item[x] horizontal position,
@@ -379,9 +380,9 @@ several economic variables measured for 205 countries from 1960 to
 two linked plots based on these data. In the static PDF version of
 this figure, the year 1979 and the countries United States and Vietnam
 are selected, but readers are encouraged to interactively select other
-values using a web browser
-(\url{http://bl.ocks.org/tdhock/raw/8ce47eebb3039263878f/}). In the
-interactive version, the selected value of the year variable is
+values using a web
+browser.\footnote{\url{http://bl.ocks.org/tdhock/raw/8ce47eebb3039263878f/}}
+In the interactive version, the selected value of the year variable is
 automatically incremented every few seconds, using animation to
 visualize yearly changes in the relationship between life expectancy
 and fertility rate.
@@ -403,147 +404,27 @@ and fertility rate.
   \label{fig:1}
 \end{figure*}
 
-\begin{figure*}[p]
-  \centering
-  \includegraphics[width=\textwidth]{figure-tornado}
-  \caption{Interactive animation of tornadoes recorded from 1950 to
-    2012 in the United States. \textbf{Left}:
-    map of the lower 48 United States with tornado paths in 1982. The
-    text shows the selected year, and clicking the map changes the
-    selected state, currently Texas. \textbf{Right}: time series of
-    tornado counts in Texas. Clicking a bar changes the selected year,
-    and the text shows selected state and the number of tornadoes
-    recorded there in that year (119 tornadoes in Texas in 1982).}
-  \label{fig:tornado}
-\end{figure*}
-
-\begin{figure*}[p]
-  \centering
-  \includegraphics[width=\textwidth]{figure-climate}
-  \caption{Visualization containing 6 linked, interactive, animated
-    plots of Central American climate data. \textbf{Top}: for the selected time
-    (December 1997), maps displaying the spatial distribution of two
-    temperature variables, and a scatterplot of these two
-    variables. The selected region is displayed with a black outline,
-    and can be changed by clicking a rect on the map or a point on the
-    scatterplot. \textbf{Bottom}: time series of the two temperature
-    variables with the selected region shown in violet, and a
-    scatterplot of all times for that region. The selected time can be
-    changed by clicking a background tallrect on a time series or a
-    point on the scatterplot. The selected region can be changed by
-    clicking a line on a time series.}
-  \label{fig:climate}
-\end{figure*}
-
-For example, consider the following R code which defines the points in the
-World Bank data scatterplot on the right of Figure~1:
-
-<<countryPoints>>=
-countryPoints <- geom_point(
-    aes(x=fertility.rate, y=life.expectancy,
-        color=region, size=population,
-        clickSelects=country,
-        key=country,
-        showSelected=year),
-    data=WorldBank)
-@
-
-The code defines a \verb+geom_point+, which means to create a point
-for every row in the \texttt{WorldBank} data table. The visual
-characteristics of each point are defined by the values of the
-corresponding data: the (x,y) position encodes fertility rate and life
-expectancy, point color encodes the region, and point size encodes the
-population. Note that scales are automatically constructed for the x
-and y axes, and legends are automatically constructed for color and
-size. The interactivity is also defined as a simple variable mapping:
-\texttt{clickSelects=country} means that clicking a point changes the
-selected country, and \texttt{showSelected=year} means to only plot
-the points for the selected year.
-
-In order to remind the plot user which subset of data are selected, we
-will draw a text label with the selected year and country. First, we
-create the year labels using
-
-<<yearText-geom, tidy=FALSE>>=
-yearText <- geom_text(
-  aes(label=sprintf("year = %d", year),
-      showSelected=year),
-  x=5, y=80,
-  data=years)
-@
-
-Note that \texttt{data=years} specifies another data table, with 1 row
-for each year. The multi-layer ggplot2 system allows a new data set
-for each layer/geom, and the \texttt{clickSelects} and
-\texttt{showSelected} aesthetics will work as long as the different
-data sets have common variable names (e.g. the \texttt{year} variable
-is present in both \texttt{WorldBank} and \texttt{years}). The
-\texttt{label} aesthetic is used to define the text from the year
-variable, and only the selected year is shown due to the
-\texttt{showSelected=year} aesthetic. Finally, note that since the
-label \texttt{x} and \texttt{y} positions are constant, they are not
-defined as aesthetics.
-
-%% As the pairing of text geom with a corresponding \mbox{showSelected}
-%% aesthetic is frequently useful in linked plots, animint also includes
-%% a shorthand function to make defining this combination more efficient.
-
-%% <<yearText-make>>=
-%% yearText <- make_text(data=years,
-%%   x=5, y=80, showSelected="year")
-%% @
-
-We can also add another label to show the selected country:
-
-<<countryText>>=
-countryText <- geom_text(
-    aes(x=fertility.rate, y=life.expectancy,
-        label=country,
-        key=country,
-        showSelected=country,
-        showSelected2=year),
-    data=WorldBank)
-@
-
-A geom/layer may contain any number of \mbox{showSelected}
-aesthetics. In this example, \texttt{showSelected=country} combined
-with \texttt{showSelected2=year} means to only show the subset of
-labels corresponding to both the selected year and country.  Since
-there is only 1 row for each (country, year) combination in the
-WorldBank data, this has the effect of drawing the selected country's
-label at the location of the selected year.
-
-Having defined these 3 geometric elements, we combine them in a single
-ggplot:
-
-<<scatterPlot>>=
-scatterPlot <- ggplot()+
-  countryPoints+
-  yearText+
-  countryText
-@
-
-This completes the definition of the scatterplot. Now, we discuss the
-time series on the left of Figure~1. First, the tallrects in the
-background are used to select the year:
+The World Bank data visualization consists of five geometric elements,
+each with different interactive aesthetics (top of Figure~1). The time
+series on the left of Figure~1 contains two geometric elements:
+tallrect and line. We define the tallrects in the background based on
+the \texttt{years} data set, which has one row for every year between
+1960 and 2010:
 
 <<yearRects-geom>>=
 yearRects <- geom_tallrect(
-  aes(xmin=year-1/2, xmax=year+1/2,
+  aes(xmin=year-0.5, xmax=year+0.5,
       clickSelects=year),
-  data=years, alpha=1/2)
+  data=years)
 @
 
-%Animint is designed for
-%interactivity via direct manipulation of the plot elements.
-%To facilitate this goal,
-The tallrect is geom which is useful for selecting the variable which
-is plotted on the x axis, such as \texttt{year} in this example. The
-tallrect plots a rectangle for every row of the \texttt{years} data
-table. The rectangle spans the entire y region, and the \texttt{xmin}
-and \texttt{xmax} aesthetics define the left and right limits. Since
-the designer specified \texttt{clickSelects=year}, users can click on
-a tallrect to select a year.
+The tallrect plots a rectangle that spans the entire vertical range,
+for each row of the \texttt{years} data set. The horizontal range of
+each rectangle is specified by the \texttt{xmin} and \texttt{xmax}
+aesthetics. The \texttt{clickSelects=year} aesthetic means that
+clicking on a tallrect should change the selected year. For example,
+if the rectangle for 1980 is clicked, the selected year should change
+to 1980.
 %% Finally,
 %% \texttt{alpha=1/2} specifies that the selected tallrect should have an
 %% opacity of 50\%. Since color is black by default, this results in a
@@ -567,9 +448,8 @@ a tallrect to select a year.
 %% of graphics approach allows for fewer lines of code and simpler
 %% debugging.
 
-To create the time series plot, we combine the tallrects above with
-lines. To declare that clicking a line should change the selected
-country, we use the \texttt{clickSelects=country} aesthetic:
+To create the time series plot, we create a ggplot that combines the
+tallrects above with lines based on the entire World Bank data set:
 
 <<timeSeries, tidy=FALSE>>=
 timeSeries <- ggplot()+
@@ -577,18 +457,104 @@ timeSeries <- ggplot()+
   geom_line(
     aes(x=year, y=life.expectancy,
         group=country, color=region,
-        clickSelects=country),
-    data=WorldBank, size=3, alpha=3/5)
+        clickSelects=country,
+        showSelected=region),
+    data=WorldBank)
 @
 
-Note that both the \texttt{timeSeries} and \texttt{scatterPlot}
-objects are valid ggplots. However, plotting them using the standard
-ggplot2 library will render a non-interactive plot will all geometric
-elements, including data for all years and countries. In this next
-section we explain the Animint R package which implements an
-interactive renderer for ggplots with the clickSelects and
-showSelected aesthetics.
+To define the lines we used both interactive aesthetics. The
+\texttt{clickSelects=country} definition means that clicking a line
+should change the selected country. The \texttt{showSelected=region}
+definition means to only plot the subset of data that corresponds to
+the current selection of the \texttt{region} variable.
 
+Note that the tallrect used \texttt{data=years} whereas the line used
+\texttt{data=WorldBank}. The multi-layer ggplot2 system allows a
+different data set for each layer/geom. Interactivity is accomplished
+by defining interactive aesthetics using common variable names in the
+different data sets. For example, the \texttt{year} variable is common
+to both the \texttt{WorldBank} and \texttt{years} data sets.
+
+Having completed the definition of the time series plot on the left of
+Figure~1, now let us consider the scatterplot on the right. The
+following R code defines the points in the scatterplot:
+
+<<countryPoints>>=
+countryPoints <- geom_point(
+    aes(x=fertility.rate, y=life.expectancy,
+        color=region, size=population,
+        clickSelects=country,
+        showSelected=year,
+        showSelected2=region),
+    data=WorldBank)
+@
+
+The code creates a point for every row in the World Bank data
+table. The visual characteristics of each point are defined by the
+values of the corresponding data: the (x,y) position encodes fertility
+rate and life expectancy, point color encodes the region, and point
+size encodes the population. Note that scales are automatically
+constructed for the x and y axes, and legends are automatically
+constructed for color and size. The \texttt{clickSelects=country}
+aesthetic means that clicking a point should change the selected
+country. The \texttt{showSelected=year} and
+\texttt{showSelected2=region} aesthetics mean to only plot the points
+that match both the selected year and region.
+
+In order to remind the plot user which subset of data are selected, we
+will draw text labels for the selected year and countries. First, we
+create the year labels using
+
+<<yearText-geom, tidy=FALSE>>=
+yearText <- geom_text(
+  aes(label=sprintf("year = %d", year),
+      showSelected=year),
+  x=5, y=80,
+  data=years)
+@
+
+The \texttt{label} aesthetic is used to define the text from the year
+variable, and only the selected year is shown due to the
+\texttt{showSelected=year} aesthetic. Note that since the label
+\texttt{x} and \texttt{y} positions are constant, they are not defined
+as aesthetics.
+
+We can also add another label to show the selected countries:
+
+<<countryText>>=
+countryText <- geom_text(
+    aes(x=fertility.rate, y=life.expectancy,
+        label=country,
+        showSelected=country,
+        showSelected2=year,
+        showSelected3=region),
+    data=WorldBank)
+@
+
+A geom/layer may contain any number of \mbox{showSelected}
+aesthetics. In this example, the three \texttt{showSelected}
+aesthetics mean to only show the subset of labels corresponding to the
+selected country, year, and region.
+
+Having defined these three geometric elements, we combine them in a
+single ggplot:
+
+<<scatterPlot>>=
+scatterPlot <- ggplot()+
+  countryPoints+
+  yearText+
+  countryText
+@
+
+This completes the definition of the scatterplot. Note that both the
+\texttt{timeSeries} and \texttt{scatterPlot} objects are valid
+ggplots, even though they use the new \texttt{clickSelects} and
+\texttt{showSelected} aesthetics. However, plotting these objects
+using ggplot2 will render non-interactive plots with all geometric
+elements, including data for all years and countries. In the next
+section, we propose the Animint R package, which implements a new
+interactive renderer for ggplots with the \texttt{clickSelects} and
+\texttt{showSelected} aesthetics.
 
 %% \begin{figure*}[b!]
 %%   \centering
@@ -667,101 +633,107 @@ showSelected aesthetics.
 %% a JSON object as it's 'input', but it doesn't have the equivalent
 %% of Animint's compiler.
 
-\section{Current implementation in the Animint R package}
+\section{Current implementation in the \texttt{animint} R package}
 
-The Animint library includes a compiler that converts a list of
-ggplots to an interactive web visualization rendered using the
-Data-Driven Documents (D3) library for JavaScript \citep{d3}. 
+Since 2013 we have been developing the \texttt{animint} R
+package,\footnote{freely available at
+  \url{https://github.com/tdhock/animint}} which provides an
+interactive renderer for ggplots with \texttt{clickSelects} and
+\texttt{showSelected} aesthetics. We first explain how a graphic
+designer can use animint to render a set of ggplots, then explain the
+graphical user interface for selecting data subsets. Finally, we
+discuss some implementation details of the compiler and renderer,
+which only the animint package developers need to be concerned about.
 
-Finally, another key strength of ggplot2 and D3 for visualization
-design are the libraries' declarative syntax, which allows a
-visualization designer to specify \emph{what} they want to render
-rather than \emph{how} to render it. \citet{declarative} proposed a
-declarative syntax for animated transanitions, and studied the
-benefits of declarative languages for data visualization. Animint is
-another declarative DSL, but defined at a higher level of abstraction
-than D3. It enables designers to focus on data visualization, while
-the Animint library developers can work on improving the lower-level
-rendering details.
+\subsection{Animint renders a list of ggplots}
 
-In this section we explain the main ideas of how Animint can be used
-for interactive animations. We first explain the DSL that a designer
-uses to specify an interactive plot, then explain the user interface
-for selecting data subsets. Finally, we discuss some implementation
-details of the compiler and renderer, which only the Animint
-developers need to be concerned about.
+We will again use the World Bank data visualization of Figure~1 as an
+example. Recall that in Section~3 we defined two ggplot objects,
+\texttt{scatterPlot} and \texttt{timeSeries}. To plot them with
+animint, we first put them in a named list:
 
-\subsection{The Animint grammar for interactive animations}
-
-The main idea of Animint is that a large class of interactive plots
-can be specified using just two interactive keywords:
-\texttt{clickSelects} and \texttt{showSelected}. For example, after
-clicking a \texttt{clickSelects=year} element, the plot
-is updated to show only the \texttt{showSelected=year} elements
-corresponding to the selected year. These two simple keywords
-form the basis of the Animint DSL which makes it easy for designers
-to translate ideas into code and then visualizations.
-
-The first step in the design of any data visualization
-is usually to make a sketch
-of the desired interactive plot on paper or a whiteboard.
-In any plot a designer would sketch
-the axes, legends, a few geometric elements, and note which variables
-will be shown in the linked plots. An Animint designer needs only add
-the \texttt{clickSelects} and
-\mbox{\texttt{showSelected}} mappings for each geometric element, as shown in
-Figures~1, 3, and 4. These notes can be directly translated to
-ggplot2 aesthetics in R code, as explained below.
-
-\begin{figure*}[b!]
-  \centering
-  \includegraphics[width=\textwidth]{figure-chip-seq}
-  \caption{Visualization with 4 selection variables used to navigate
-    through 1,292,464 rows of data in 5 linked interactive plots. The
-    bottom plot shows a facets plot with aligned x axes, used to
-    emphasize that the blue probability function is defined at the
-    same positions as the black signals below. It also contains an
-    href tag (web link), which opens a new genome browser web page
-    zoomed to the same region as the selected data.}
-  \label{fig:ChIPseq}
-\end{figure*}
-
-To
-plot them with Animint, we define a list of ggplots and options, then
-call the \texttt{animint2dir} compiler:
-
-<<animint2dir,fig.pos='htbp'>>=
+<<viz,fig.pos='htbp'>>=
 viz <-
   list(scatterPlot=scatterPlot,
        timeSeries=timeSeries,
        time=list(variable="year", ms=3000),
-       duration=list(year=1000))
-animint2dir(viz, out.dir="WorldBank")
+       duration=list(year=1000),
+       selector.types=list(
+         year="single",
+         country="multiple",
+         region="multiple"))
 @
 
-The \texttt{time} option specifies that in absence of user
-interaction, we want the plots to animate over time, progressing at a
-rate of one year every 3 seconds. We also use the \texttt{duration}
-option to specify a smooth transition over 1 second for the year
-variable. The \texttt{animint2dir} compiler saves some data files and a
-web page in the \texttt{WorldBank} directory, then it opens the
+The \texttt{viz} list contains two ggplots and three options:
+\texttt{time}, \texttt{duration}, and \texttt{selector.types}. The
+\texttt{time} option specifies that in absence of user interaction, we
+want the plots to animate over time, progressing at a rate of one year
+every 3 seconds (3000 milliseconds = ms). The \texttt{duration} option
+specifies that when updating the selected year, there should be a
+smooth transition with a duration of 1 second. Smooth transitions are
+useful to emphasize continuity between objects before and after the
+transition \citep{animated-transitions}. Finally, the
+\texttt{selector.types} option is used to define either single or
+multiple selection for each variable. For single selection, only one
+value is selected at any time (e.g. year=1990). For multiple
+selection, a set of values is selected (e.g. country=$\{\textrm{United
+  States}, \textrm{Vietnam}\}$).
+
+The \texttt{viz} list contains all of the information that we need to
+create the linked plots of Figure~1. To render the plots, we call the
+\texttt{animint2dir} function:
+
+<<animint2dir,fig.pos='htbp'>>=
+animint2dir(viz, out.dir="figure-WorldBank")
+@
+
+The \texttt{animint2dir} function saves some data files and a web page
+in the \texttt{figure-WorldBank} directory, then it opens the
 interactive plot in a web browser.
 
 \subsection{User interaction}
 
-\citet{instrumental-interaction} discussed the advantages of direct
-manipulation in graphical user interfaces, and our Animint system
-follows principle 2 ``Physical actions on objects vs. complex syntax''
-such as dialog boxes. In particular, the user can update the selection
-by clicking on the data objects themselves. This contrasts other
-systems which use menus and widgets, and thus suffer from less
-articulatory directness \citep{Hutchins:1985}.
+In this section we explain how a user can view and interact with a
+data visualization produced by the animint system. As explained in the
+previous section, the animint system outputs a set of data files along
+with a web page. Opening the web page in a web browser will render the
+data visualization and allow the user select different subsets of data
+to plot.
+
+When viewing an animint data visualization in a web browser,
+interactions are accomplished mainly via direct
+manipulation. \citet{instrumental-interaction} discussed the
+advantages of direct manipulation in graphical user
+interfaces. Animint data visualizations are inspired by principle 2,
+``Physical actions on objects vs. complex syntax.'' In particular, the
+user can update the selection by directly clicking on the geoms with
+\texttt{clickSelects} aesthetics. Also, Animint creates a multiple
+selection variable for each discrete legend (e.g. region in
+Figure~1). Clicking on an entry in a discrete legend will update the
+corresponding selection variable. This use of direct manipulation
+contrasts other systems which use menus and widgets, and thus suffer
+from less articulatory directness \citep{Hutchins:1985}.
 
 For single selection variables such as year, clicking sets the value
 of the corresponding selection variable. For multiple selection
 variables such as country, clicking adds or removes values from the
 set of selected values.
 
+Animint also provides methods for altering the selection via indirect
+manipulation, which can be useful in certain situations. For example,
+say that you want to add Thailand to the selected set of countries in
+Figure~1. Animint provides a selection menu which shows the full list
+of countries, and allows entering text to search for a particular
+country (Figure~\ref{fig:widgets}).
+
+\begin{figure}[b!]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{Screenshot-toggle-selected-value}
+  \caption{Animint provides a menu to update each selection
+    variable. In this example, after typing ``th'' the country menu
+    shows the subset of matching countries.}
+  \label{fig:widgets}
+\end{figure}
 
 \subsection{Implementation details}
 \label{sec:implementation}
@@ -787,6 +759,50 @@ in 2 parts: the compiler and the renderer.
   \label{fig:design}
 \end{figure}
 
+\begin{figure*}[p]
+  \centering
+  \includegraphics[width=\textwidth]{figure-tornado}
+  \caption{Interactive animation of tornadoes recorded from 1950 to
+    2012 in the United States. \textbf{Left}:
+    map of the lower 48 United States with tornado paths in 1982. The
+    text shows the selected year, and clicking the map changes the
+    selected state, currently Texas. \textbf{Right}: time series of
+    tornado counts in Texas. Clicking a bar changes the selected year,
+    and the text shows selected state and the number of tornadoes
+    recorded there in that year (119 tornadoes in Texas in 1982).}
+  \label{fig:tornado}
+\end{figure*}
+
+\begin{figure*}[p]
+  \centering
+  \includegraphics[width=\textwidth]{figure-climate}
+  \caption{Visualization containing 6 linked, interactive, animated
+    plots of Central American climate data. \textbf{Top}: for the selected time
+    (December 1997), maps displaying the spatial distribution of two
+    temperature variables, and a scatterplot of these two
+    variables. The selected region is displayed with a black outline,
+    and can be changed by clicking a rect on the map or a point on the
+    scatterplot. \textbf{Bottom}: time series of the two temperature
+    variables with the selected region shown in violet, and a
+    scatterplot of all times for that region. The selected time can be
+    changed by clicking a background tallrect on a time series or a
+    point on the scatterplot. The selected region can be changed by
+    clicking a line on a time series.}
+  \label{fig:climate}
+\end{figure*}
+
+\begin{figure*}[b!]
+  \centering
+  \includegraphics[width=\textwidth]{figure-chip-seq}
+  \caption{Visualization with 4 selection variables used to navigate
+    through 1,292,464 rows of data in 5 linked interactive plots. The
+    bottom plot shows a facets plot with aligned x axes, used to
+    emphasize that the blue probability function is defined at the
+    same positions as the black signals below. It also contains an
+    href tag (web link), which opens a new genome browser web page
+    zoomed to the same region as the selected data.}
+  \label{fig:ChIPseq}
+\end{figure*}
 The compiler is implemented in about 1500 lines of R code that
 converts a list of ggplots and options to a tab-separated values
 (TSV) file database and a JSON plot meta-data file. The compiler scans
@@ -1211,6 +1227,31 @@ to show in publications: ``...  the web interface is simple and easy
 to use.  It also enables us to publish more detailed interactive
 results on our website to accompany the results presented in
 publications.''
+
+\section{Discussion}
+
+Finally, another key strength of ggplot2 and D3 for visualization
+design are the libraries' declarative syntax, which allows a
+visualization designer to specify \emph{what} they want to render
+rather than \emph{how} to render it. \citet{declarative} proposed a
+declarative syntax for animated transanitions, and studied the
+benefits of declarative languages for data visualization. Animint is
+another declarative DSL, but defined at a higher level of abstraction
+than D3. It enables designers to focus on data visualization, while
+the Animint library developers can work on improving the lower-level
+rendering details.
+
+\subsection{Value of sketching}
+
+The first step in the design of any data visualization is usually to
+make a sketch of the desired interactive plot on paper or a
+whiteboard.  In any plot a designer would sketch the axes, legends, a
+few geometric elements, and note which variables will be shown in the
+linked plots. An Animint designer needs only add the
+\texttt{clickSelects} and \mbox{\texttt{showSelected}} mappings for
+each geometric element, as shown in Figures~1, 3, and 4. These notes
+can be directly translated to ggplot2 aesthetics in R code, as
+explained below.
 
 \section{Limitations and future work}
 
