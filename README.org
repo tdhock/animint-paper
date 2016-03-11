@@ -1,4 +1,12 @@
-Plan: submit to JCGS before Xmas 2015.
+** TODOs 
+
+- expand introduction and related work (without mentioning too much
+  about what we propose).
+- proof-read sections 1-4.2 (I have mostly finished these).
+- re-evaluate example Figures. Should we include all of these?
+- submit to JCGS.
+
+** Overview
 
 Section 1, Introduction: needs a bigger discussion about the motivation for
 interactive/animated/multi-layer/grammared graphics. (without going
