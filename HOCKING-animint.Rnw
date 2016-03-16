@@ -668,10 +668,10 @@ The \texttt{viz} list contains two ggplots and three options:
 \texttt{time}, \texttt{duration}, and \texttt{selector.types}. The
 \texttt{time} option specifies that in absence of user interaction, we
 want the plots to animate over time, progressing at a rate of one year
-every 3 seconds (ms = 3000 milliseconds). The \texttt{duration} option
+every 3 seconds (ms = milliseconds). The \texttt{duration} option
 specifies that when updating the selected year, there should be a
 smooth transition with a duration of 1 second. Smooth transitions are
-useful to emphasize continuity between objects before and after the
+useful to emphasize continuity between plotted objects before and after the
 transition \citep{animated-transitions}. Finally, the
 \texttt{selector.types} option is used to define either single or
 multiple selection for each variable. For single selection, only one
@@ -714,24 +714,21 @@ corresponding selection variable. This use of direct manipulation
 contrasts other systems which use menus and widgets, and thus suffer
 from less articulatory directness \citep{Hutchins:1985}.
 
-While it is typically preferable to click on the plot, there are
-situations where menus or widgets are necessary.  When there are many
-different elements that could be selected, for example, it can be
-convenient to have widgets that contain all the possible selected
-values.  \texttt{Animint} conveniently implements widgets to toggle the
-selected values.
-
 For single selection variables such as year, clicking sets the value
 of the corresponding selection variable. For multiple selection
 variables such as country, clicking adds or removes values from the
 set of selected values.
 
-\texttt{Animint} also provides methods for altering the selection via indirect
-manipulation, which can be useful in certain situations. For example,
-say that you want to add Thailand to the selected set of countries in
-Figure~1. \texttt{Animint} provides a selection menu which shows the full list
-of countries, and allows entering text to search for a particular
-country (Figure~\ref{fig:widgets}).
+While it is often best to interact by directly clicking on the plotted
+data, there are situations where indirect manipulation is
+preferable. For example, when there are many different values that
+could be selected, it is convenient to have a menu that contains all
+possible values. More concretely, suppose that we would like to add
+Thailand to the selected set of countries in Figure~1. The
+\texttt{animint} renderer provides a selection menu which shows the
+full list of countries, and allows entering text to search for a
+particular country (Figure~\ref{fig:widgets}).
+
 
 \begin{figure}[b!]
   \centering
@@ -812,36 +809,42 @@ in 2 parts: the compiler and the renderer.
 \end{figure*}
 
 The compiler is implemented in about 2000 lines of R code that
-converts a list of ggplots and options to a tab-separated values
-(TSV) file database and a JSON plot meta-data file. The compiler scans
-the aesthetics in all of the ggplots to determine how many selection
-variables are present, and which plots to update after a selection
-variable is clicked. It uses ggplot2 to automatically calculate
-the axes scales, legends, labels, backgrounds, and borders. It outputs
-this information to the JSON plot meta-data file. It also uses ggplot2 to convert data
-variables (e.g. life expectancy and region) to visual properties
-(e.g. y position and color). The data are separated into several TSV
-files, so for large data sets the web browser only needs to download
-the subset of data required to render the current selection
-\citep{2013-immens}. 
-When common columns appear across the separated TSV files, an extra common TSV is created to save them and the separated TSV files only keep varied columns to avoid redundancy. In such a case, the render firstly downloads the common TSV only once and recovers the selected subset of data based on key columns before drawing. This TSV storing strategy can optimize the disk usage of \texttt{animint}, particularly efficient for ggplots of spatial maps as in Figure~\ref{fig:tornado}.
-Finally, the rendering engine
-(\texttt{index.html}, \texttt{d3.v3.js}, and \texttt{animint.js}
-files) is copied to the plot directory. Since the compiled plot is
-just a directory of files, the designer can easily upload interactive
-plots to any web server.% for sharing with users.
+converts a list of ggplots and options to a JSON plot meta-data file
+and a tab-separated values (TSV) file database
+(Figure~\ref{fig:design}).
 
-The \texttt{animint.js} renderer is implemented in about 2200 lines of
-JavaScript/D3 code that renders the TSV and JSON plot meta-data files as
-SVG in a web browser.
-%% The main idea for implementing interactivity is
-%% that clicking a \texttt{clickSelects=year} geom calls the
-%% \verb|update_selector| function, which stores the newly selected value
-%% of year, then calls \verb|update_geom| to redraw every geom with
-%% \texttt{clickSelects=year} or \texttt{showSelected=year}.
-Importantly, animation is achieved by using the JavaScript
-\texttt{setInterval} function, which updates the \texttt{time}
-selection variable every few seconds.
+The compiler scans the aesthetics in the ggplots to determine
+how many selection variables are present, and which geoms to update
+after a selection variable is updated. It uses ggplot2 to
+automatically calculate the axes scales, legends, labels, backgrounds,
+and borders. It outputs this information to the JSON plot meta-data
+file. 
+
+The compiler also uses ggplot2 to convert data variables (e.g. life
+expectancy and region) to visual properties (e.g. y position and
+color). The data for each layer/geom are saved in several TSV files,
+one for each combination showSelected values. Thus for large data
+sets, the web browser only needs to download the subset of data
+required to render the current selection \citep{2013-immens}.
+
+When repeated data would be saved in each of the TSV files, an extra
+common TSV file is created so that the repeated data only need to be
+stored and downloaded once. In that case, the other TSV files do not
+store the common data, but are merged with the common data after
+downloading. This method for constructing the TSV file database was
+developed to minimize the disk usage of \texttt{animint}, particularly
+for ggplots of spatial maps as in Figure~\ref{fig:tornado}.
+
+Finally, the rendering engine (\texttt{index.html}, \texttt{d3.v3.js},
+and \texttt{animint.js} files) is copied to the plot directory. The
+\texttt{animint.js} renderer is implemented in about 2200 lines of
+JavaScript/D3 code that renders the TSV and JSON data files as SVG in
+a web browser. Importantly, animation is achieved by using the
+JavaScript \texttt{setInterval} function, which updates the
+\texttt{time} selection variable every few seconds. Since the compiled
+plot is just a directory of files, the interactive plots can be hosted
+on any web server. The interactive plots can be viewed by opening the
+\texttt{index.html} page in any modern web browser.
 
 \section{Results and comparison study on World Bank data}
 \label{sec:compare}
