@@ -100,9 +100,26 @@ Jun Cai is with the Center for Earth System Science at Tsinghua University. E-ma
 %\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
 
 %% Abstract section.
-\abstract{
-The web is the most popular medium for sharing interactive data visualizations thanks to the portability of the web browser and the accessibility of the internet. Unfortunately, creating interactive web graphics often requires a working knowledge of numerous web technologies that are foreign to many people working with data. As a result, web graphics are rarely used for exploratory data analysis where quick iteration between different visualizations is of utmost importance. This is the core strength of ggplot2 (Wickham, 2009), a popular data visualization package for the world's leading open-source statistical programming language, R (R Core Team, 2016). The conceptual framework behind ggplot2 is based on the grammar of graphics (Wilkinson, 2005), which lays a foundation for describing any static graphic as a small set of independent components. Perhaps the most fundamental component is the mapping from abstract data to the visual space, sometimes referred to as the aesthetic mapping. We propose adding two new aesthetics to the grammar, which together are sufficient for elegantly describing both animations and certain classes of coordinated linked views. We implement this extension in the open-source R package animint \url{https://github.com/tdhock/animint}, which converts ggplot2 objects to interactive SVG visualizations via D3js (Bostock, Ogievetsky, Heer, 2011).
-} % end of abstract
+\abstract{ The web is the most popular medium for sharing interactive
+  data visualizations thanks to the portability of the web browser and
+  the accessibility of the internet. Unfortunately, creating
+  interactive web graphics often requires a working knowledge of
+  numerous web technologies that are foreign to many people working
+  with data. As a result, web graphics are rarely used for exploratory
+  data analysis where quick iteration between different visualizations
+  is of utmost importance. This is the core strength of ggplot2, a
+  popular data visualization package for the world's leading
+  open-source statistical programming language, R. The conceptual
+  framework behind ggplot2 is based on the grammar of graphics, which
+  lays a foundation for describing any static graphic as a small set
+  of independent components. Perhaps the most fundamental component is
+  the mapping from abstract data to the visual space, sometimes
+  referred to as the aesthetic mapping. We propose adding two new
+  aesthetics to the grammar, which together are sufficient for
+  elegantly describing both animations and certain classes of
+  coordinated linked views. We implement this extension in the
+  open-source R package animint, which converts ggplot2 objects to
+  interactive web visualizations via D3.  } % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
@@ -165,8 +182,6 @@ knitr::knit_theme$set("edit-matlab")
 %%The clickSelects/showSelected paradigm is fundamentally a tool for show and hiding subsets of a dataset. For this reason, interactions used to change chart types or select parameters values, turn out to be inefficient, if not impossible.
 
 %%The R package \texttt{ggplot2} is a popular tool for data visualization due in part to its elegant design inspired by the grammar of graphics. The fundamental concept in the grammar of graphics is that any graphic can be described through a set of mappings from data variables to visual space, referred to commonly as \texttt{aesthetic} mappings. The grammar of graphics and ggplot2 were designed for static graphics
-
-
 
 Interactive, animated data visualization is a useful tool for
 obtaining an intuitive understanding of patterns in multivariate data
@@ -1138,11 +1153,12 @@ It was impossible to implement all features of the multiple time
 series plot of the data visualization, since it includes multiple
 layers with different data sources and variable mappings (a line for
 each country and a tallrect for each year). Since each mark in a
-Tableau plot is limited to a single data source, it was impossible to
+Tableau plot must use the same data source, it was impossible to
 control the clickable multiple time series and the clickable tallrects
 in different ways based on the two different selection variables. In
 conclusion, although Tableau is useful for many simple interactive
-data visualizations, it is inherently limited in ways that \texttt{animint} is not.
+data visualizations, it is inherently limited in ways that
+\texttt{animint} is not.
 
 Tableau's GUI and visual query approach
 make it easy to design several kinds of linked plots, but it does not
