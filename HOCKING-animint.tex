@@ -1,4 +1,53 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0, 0, 0}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.502,0,0}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0,0,1}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0,1}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
 
 \usepackage{amsmath}
 \usepackage{stmaryrd}%\rightarrowtriangle
@@ -17,8 +66,7 @@
 \addtolength{\textwidth}{1in}%
 \addtolength{\textheight}{1.3in}%
 \addtolength{\topmargin}{-.8in}%
-
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 %\bibliographystyle{natbib}
@@ -31,7 +79,8 @@
 
 \if0\blind
 {
-  \title{\bf Extending the grammar of graphics for exploratory web graphics}
+  \title{\bf Two new keywords for interactive, animated plot design:
+  clickSelects and showSelected}
   \author{Toby Dylan Hocking%\thanks{The authors gratefully acknowledge \textit{please remember to list all relevant funding sources in the unblinded version}}
   \hspace{.2cm}\\
     Department of Human Genetics, McGill University\\
@@ -63,7 +112,6 @@
 
 \bigskip
 \begin{abstract}
-
   To facilitate the design of linked, interactive, animated
   statistical plots, we propose adding two new keywords to the grammar
   of graphics: \texttt{clickSelects} designates an element that
@@ -91,27 +139,6 @@
 %% Graphics (SVG) elements in a web browser. The Animint library
 %% developer is responsible for the plot rendering details, which allows
 %% the others to focus on designing and consuming visualizations.
-
-<<opts, echo=FALSE, message=FALSE, cache=FALSE>>=
-library(animint)
-data(WorldBank)
-write.csv(WorldBank, "WorldBank.csv")
-knitr::opts_chunk$set(tidy = FALSE, eval = FALSE)
-knitr::opts_knit$set(out.format = "latex")
-knitr::knit_theme$set("edit-matlab")
-@
-
-Interactive and dynamic statistical graphics toolkits play an important role in the exploratory phase of a data analysis cycle. The web is an attractive platform for interactive graphics thanks to its portability and accessibility, but due to a lack of tools for quick iteration, web graphics are not a practical tool for exploring data. Instead, they are mostly used for the presentation of findings (i.e., when the 'correct' visualization is already known). This is a source of conflict, as one often needs different tools depending on whether the work is exploratory or intended for public consumption, which results in wasted effort. 
-
-
-The clickSelects/showSelected paradigm is fundamentally a tool for show and hiding subsets of a dataset. For this reason, interactions used to change chart types or select parameters values, turn out to be inefficient, if not impossible. 
-
-
-
-%% TODO: talk about bootstrapping on existing knowledge?
-
-
-The R package \texttt{ggplot2} is a popular tool for data visualization due in part to its elegant design inspired by the grammar of graphics. The fundamental concept in the grammar of graphics is that any graphic can be described through a set of mappings from data variables to visual space, referred to commonly as \texttt{aesthetic} mappings. The grammar of graphics and ggplot2 were designed for static graphics
 
 
 
@@ -210,14 +237,9 @@ current implementation in the animint R package in Section~4.
 
 \section{Related Work}
 
-In this section we discuss several similar efforts 
+In this section we discuss the limitations of several existing systems
 for interactive data graphic design, focusing on libraries with
 free/open-source software implementations in JavaScript and R.
-
-\subsection{gridSVG}
-
-
-
 
 \subsection{D3 and other JavaScript libraries}
 
@@ -430,12 +452,16 @@ tallrect and line. We define the tallrects in the background based on
 the \texttt{years} data set, which has one row for every year between
 1960 and 2010:
 
-<<yearRects-geom>>=
-yearRects <- geom_tallrect(
-  aes(xmin=year-0.5, xmax=year+0.5,
-      clickSelects=year),
-  data=years)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{yearRects} \hlkwb{<-} \hlkwd{geom_tallrect}\hlstd{(}
+  \hlkwd{aes}\hlstd{(}\hlkwc{xmin}\hlstd{=year}\hlopt{-}\hlnum{0.5}\hlstd{,} \hlkwc{xmax}\hlstd{=year}\hlopt{+}\hlnum{0.5}\hlstd{,}
+      \hlkwc{clickSelects}\hlstd{=year),}
+  \hlkwc{data}\hlstd{=years)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The tallrect plots a rectangle that spans the entire vertical range,
 for each row of the \texttt{years} data set. The horizontal range of
@@ -470,16 +496,20 @@ to 1980.
 To create the time series plot, we create a ggplot that combines the
 tallrects above with lines based on the entire World Bank data set:
 
-<<timeSeries, tidy=FALSE>>=
-timeSeries <- ggplot()+
-  yearRects+
-  geom_line(
-    aes(x=year, y=life.expectancy,
-        group=country, color=region,
-        clickSelects=country,
-        showSelected=region),
-    data=WorldBank)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{timeSeries} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
+  \hlstd{yearRects}\hlopt{+}
+  \hlkwd{geom_line}\hlstd{(}
+    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=year,} \hlkwc{y}\hlstd{=life.expectancy,}
+        \hlkwc{group}\hlstd{=country,} \hlkwc{color}\hlstd{=region,}
+        \hlkwc{clickSelects}\hlstd{=country,}
+        \hlkwc{showSelected}\hlstd{=region),}
+    \hlkwc{data}\hlstd{=WorldBank)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 To define the lines we used both interactive aesthetics. The
 \texttt{clickSelects=country} definition means that clicking a line
@@ -498,15 +528,19 @@ Having completed the definition of the time series plot on the left of
 Figure~1, now let us consider the scatterplot on the right. The
 following R code defines the points in the scatterplot:
 
-<<countryPoints>>=
-countryPoints <- geom_point(
-    aes(x=fertility.rate, y=life.expectancy,
-        color=region, size=population,
-        clickSelects=country,
-        showSelected=year,
-        showSelected2=region),
-    data=WorldBank)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{countryPoints} \hlkwb{<-} \hlkwd{geom_point}\hlstd{(}
+    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=fertility.rate,} \hlkwc{y}\hlstd{=life.expectancy,}
+        \hlkwc{color}\hlstd{=region,} \hlkwc{size}\hlstd{=population,}
+        \hlkwc{clickSelects}\hlstd{=country,}
+        \hlkwc{showSelected}\hlstd{=year,}
+        \hlkwc{showSelected2}\hlstd{=region),}
+    \hlkwc{data}\hlstd{=WorldBank)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The code creates a point for every row in the World Bank data
 table. The visual characteristics of each point are defined by the
@@ -524,13 +558,17 @@ In order to remind the plot user which subset of data are selected, we
 will draw text labels for the selected year and countries. First, we
 create the year labels using
 
-<<yearText-geom, tidy=FALSE>>=
-yearText <- geom_text(
-  aes(label=sprintf("year = %d", year),
-      showSelected=year),
-  x=5, y=80,
-  data=years)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{yearText} \hlkwb{<-} \hlkwd{geom_text}\hlstd{(}
+  \hlkwd{aes}\hlstd{(}\hlkwc{label}\hlstd{=}\hlkwd{sprintf}\hlstd{(}\hlstr{"year = %d"}\hlstd{, year),}
+      \hlkwc{showSelected}\hlstd{=year),}
+  \hlkwc{x}\hlstd{=}\hlnum{5}\hlstd{,} \hlkwc{y}\hlstd{=}\hlnum{80}\hlstd{,}
+  \hlkwc{data}\hlstd{=years)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The \texttt{label} aesthetic is used to define the text from the year
 variable, and only the selected year is shown due to the
@@ -540,15 +578,19 @@ as aesthetics.
 
 We can also add another label to show the selected countries:
 
-<<countryText>>=
-countryText <- geom_text(
-    aes(x=fertility.rate, y=life.expectancy,
-        label=country,
-        showSelected=country,
-        showSelected2=year,
-        showSelected3=region),
-    data=WorldBank)
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{countryText} \hlkwb{<-} \hlkwd{geom_text}\hlstd{(}
+    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=fertility.rate,} \hlkwc{y}\hlstd{=life.expectancy,}
+        \hlkwc{label}\hlstd{=country,}
+        \hlkwc{showSelected}\hlstd{=country,}
+        \hlkwc{showSelected2}\hlstd{=year,}
+        \hlkwc{showSelected3}\hlstd{=region),}
+    \hlkwc{data}\hlstd{=WorldBank)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 A geom/layer may contain any number of \mbox{showSelected}
 aesthetics. In this example, the three \texttt{showSelected}
@@ -558,12 +600,16 @@ selected country, year, and region.
 Having defined these three geometric elements, we combine them in a
 single ggplot:
 
-<<scatterPlot>>=
-scatterPlot <- ggplot()+
-  countryPoints+
-  yearText+
-  countryText
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{scatterPlot} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
+  \hlstd{countryPoints}\hlopt{+}
+  \hlstd{yearText}\hlopt{+}
+  \hlstd{countryText}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 This completes the definition of the scatterplot. Note that both the
 \texttt{timeSeries} and \texttt{scatterPlot} objects are valid
@@ -671,17 +717,21 @@ example. Recall that in Section~3 we defined two ggplot objects,
 \texttt{scatterPlot} and \texttt{timeSeries}. To plot them with
 \texttt{animint}, we first put them in a named list:
 
-<<viz,fig.pos='htbp'>>=
-viz <-
-  list(scatterPlot=scatterPlot,
-       timeSeries=timeSeries,
-       time=list(variable="year", ms=3000),
-       duration=list(year=1000),
-       selector.types=list(
-         year="single",
-         country="multiple",
-         region="multiple"))
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{viz} \hlkwb{<-}
+  \hlkwd{list}\hlstd{(}\hlkwc{scatterPlot}\hlstd{=scatterPlot,}
+       \hlkwc{timeSeries}\hlstd{=timeSeries,}
+       \hlkwc{time}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{variable}\hlstd{=}\hlstr{"year"}\hlstd{,} \hlkwc{ms}\hlstd{=}\hlnum{3000}\hlstd{),}
+       \hlkwc{duration}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{year}\hlstd{=}\hlnum{1000}\hlstd{),}
+       \hlkwc{selector.types}\hlstd{=}\hlkwd{list}\hlstd{(}
+         \hlkwc{year}\hlstd{=}\hlstr{"single"}\hlstd{,}
+         \hlkwc{country}\hlstd{=}\hlstr{"multiple"}\hlstd{,}
+         \hlkwc{region}\hlstd{=}\hlstr{"multiple"}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The \texttt{viz} list contains two ggplots and three options:
 \texttt{time}, \texttt{duration}, and \texttt{selector.types}. The
@@ -702,9 +752,13 @@ The \texttt{viz} list contains all of the information that we need to
 create the linked plots of Figure~1. To render the plots, we call the
 \texttt{animint2dir} function:
 
-<<animint2dir,fig.pos='htbp'>>=
-animint2dir(viz, out.dir="figure-WorldBank")
-@
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{animint2dir}\hlstd{(viz,} \hlkwc{out.dir}\hlstd{=}\hlstr{"figure-WorldBank"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 The \texttt{animint2dir} function saves some data files and a web page
 in the \texttt{figure-WorldBank} directory, then it opens the

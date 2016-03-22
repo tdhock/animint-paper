@@ -1,0 +1,174 @@
+\begin{thebibliography}{26}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Beaudouin-Lafon(2000)]{instrumental-interaction}
+M.~Beaudouin-Lafon.
+\newblock Instrumental interaction: An interaction model for designing
+  post-wimp user interfaces.
+\newblock In \emph{Proceedings of the SIGCHI Conference on Human Factors in
+  Computing Systems}, CHI '00, pages 446--453, New York, NY, USA, 2000. ACM.
+\newblock ISBN 1-58113-216-6.
+\newblock \doi{10.1145/332040.332473}.
+\newblock URL \url{http://doi.acm.org/10.1145/332040.332473}.
+
+\bibitem[Becker and Cleveland(1987)]{brushing-scatterplots}
+R.~Becker and W.~Cleveland.
+\newblock Brushing scatterplots.
+\newblock \emph{Technometrics}, 29\penalty0 (2):\penalty0 127--142, May 1987.
+
+\bibitem[Bostock et~al.(2011)Bostock, Oglevetsky, and Heer]{d3}
+M.~Bostock, V.~Oglevetsky, and J.~Heer.
+\newblock D3 data-driven documents.
+\newblock \emph{IEEE Transactions on Visualization and Computer Graphics},
+  17\penalty0 (12):\penalty0 2301--2309, December 2011.
+
+\bibitem[Cleveland(1993)]{cleveland}
+W.~S. Cleveland.
+\newblock \emph{Visualizing Data}.
+\newblock Hobart Press, New Jersey, 1993.
+
+\bibitem[{DC.js Team}(2014)]{dc}
+{DC.js Team}.
+\newblock {Dimensional charting JavaScript library}, 2014.
+\newblock URL \url{http://dc-js.github.io/dc.js/}.
+
+\bibitem[Gesmann and de~Castillo(2011)]{googleVis}
+M.~Gesmann and D.~de~Castillo.
+\newblock {googleVis: Interface between R and the Google Visualisation API}.
+\newblock \emph{The R Journal}, 3\penalty0 (2):\penalty0 40--44, December 2011.
+
+\bibitem[Heer and Bostock(2010)]{declarative}
+J.~Heer and M.~Bostock.
+\newblock Declarative language design for interactive visualization.
+\newblock \emph{IEEE Transactions on Visualization and Computer Graphics},
+  16\penalty0 (6):\penalty0 1149--1156, 2010.
+
+\bibitem[Heer and Robertson(2007)]{animated-transitions}
+J.~Heer and G.~Robertson.
+\newblock Animated transitions in statistical data graphics.
+\newblock \emph{IEEE Transaction on Visualization and Computer Graphics},
+  13\penalty0 (6):\penalty0 1240--1247, 2007.
+
+\bibitem[Heer et~al.(2008)Heer, Agrawala, and Willett]{heer2008generalized}
+J.~Heer, M.~Agrawala, and W.~Willett.
+\newblock Generalized selection via interactive query relaxation.
+\newblock In \emph{Proceedings of the SIGCHI Conference on Human Factors in
+  Computing Systems}, pages 959--968. ACM, 2008.
+
+\bibitem[Hutchins et~al.(1985)Hutchins, Hollan, and Norman]{Hutchins:1985}
+E.~L. Hutchins, J.~D. Hollan, and D.~A. Norman.
+\newblock Direct manipulation interfaces.
+\newblock \emph{Hum.-Comput. Interact.}, 1\penalty0 (4):\penalty0 311--338,
+  Dec. 1985.
+\newblock ISSN 0737-0024.
+\newblock \doi{10.1207/s15327051hci0104_2}.
+\newblock URL \url{http://dx.doi.org/10.1207/s15327051hci0104_2}.
+
+\bibitem[Konyha et~al.(2012)Konyha, Le{\v{z}}, Matkovi{\'c}, Jelovi{\'c}, and
+  Hauser]{iva}
+Z.~Konyha, A.~Le{\v{z}}, K.~Matkovi{\'c}, M.~Jelovi{\'c}, and H.~Hauser.
+\newblock Interactive visual analysis of families of curves using data
+  aggregation and derivation.
+\newblock In \emph{Proceedings of the 12th International Conference on
+  Knowledge Management and Knowledge Technologies}, page~24. ACM, 2012.
+
+\bibitem[Liu et~al.(2013)Liu, Jiang, and Heer]{2013-immens}
+Z.~Liu, B.~Jiang, and J.~Heer.
+\newblock immens: Real-time visual querying of big data.
+\newblock \emph{Computer Graphics Forum (Proc. EuroVis)}, 32, 2013.
+\newblock URL \url{http://vis.stanford.edu/papers/immens}.
+
+\bibitem[{RStudio}(2013)]{shiny}
+{RStudio}.
+\newblock shiny: easy web applications in {R}, 2013.
+\newblock URL \url{http://www.rstudio.com/shiny/}.
+
+\bibitem[RStudio(2014)]{ggvis}
+RStudio.
+\newblock ggvis: interactive grammar of graphics for {R}, Mar 2014.
+\newblock URL \url{http://ggvis.rstudio.com}.
+
+\bibitem[Satyanarayan et~al.(2014)Satyanarayan, Wongsuphasawat, and
+  Heer]{2014-reactive-vega}
+A.~Satyanarayan, K.~Wongsuphasawat, and J.~Heer.
+\newblock Declarative interaction design for data visualization.
+\newblock In \emph{ACM User Interface Software \& Technology (UIST)}, 2014.
+\newblock URL \url{http://idl.cs.washington.edu/papers/reactive-vega}.
+
+\bibitem[Shneiderman(1982)]{shneiderman82}
+B.~Shneiderman.
+\newblock The future of interactive systems and the emergence of direct
+  manipulation.
+\newblock \emph{Behaviour \& Information Technology}, 1\penalty0 (3):\penalty0
+  237--256, 1982.
+
+\bibitem[Stolte and Hanrahan(2002)]{polaris}
+C.~Stolte and P.~Hanrahan.
+\newblock Polaris: A system for query, analysis and visualization of
+  multi-dimensional relational databases.
+\newblock \emph{IEEE Transactions on Visualization and Computer Graphics},
+  8:\penalty0 52--65, 2002.
+
+\bibitem[Tableau(2014)]{tableau}
+Tableau.
+\newblock {VizQL: Visualization Query Language}, 2014.
+\newblock URL \url{http://www.tableausoftware.com/}.
+
+\bibitem[Trifacta(2014)]{vega}
+Trifacta.
+\newblock Vega: a declarative visualization grammar, Mar 2014.
+\newblock URL \url{http://trifacta.github.io/vega/}.
+
+\bibitem[Vaidyanathan(2013)]{rcharts}
+R.~Vaidyanathan.
+\newblock {rCharts: Interactive JS Charts from R}, 2013.
+\newblock URL \url{https://github.com/ramnathv/rCharts}.
+
+\bibitem[Wickham(2009)]{ggplot2-book}
+H.~Wickham.
+\newblock \emph{ggplot2: elegant graphics for data analysis}.
+\newblock Springer New York, 2009.
+\newblock ISBN 978-0-387-98140-6.
+\newblock URL \url{http://had.co.nz/ggplot2/book}.
+
+\bibitem[Wickham et~al.(2011)Wickham, Cook, Hofmann, and Buja]{tourr}
+H.~Wickham, D.~Cook, H.~Hofmann, and A.~Buja.
+\newblock {tourr: An R Package for Exploring Multivariate Data with Projections
+  }.
+\newblock pages 1--18, Apr. 2011.
+
+\bibitem[Wilkinson et~al.(2006)Wilkinson, Wills, Rope, Norton, and
+  Dubbs]{wilkinson}
+L.~Wilkinson, D.~Wills, D.~Rope, A.~Norton, and R.~Dubbs.
+\newblock \emph{The grammar of graphics}.
+\newblock Springer, 2006.
+
+\bibitem[Willett et~al.(2007)Willett, Heer, and Agrawala]{scented-widgets}
+W.~Willett, J.~Heer, and M.~Agrawala.
+\newblock Scented widgets: Improving navigation cues with embedded
+  visualizations.
+\newblock \emph{IEEE Transactions on Visualization and Computer Graphics},
+  13\penalty0 (6):\penalty0 1129--1136, Nov. 2007.
+\newblock ISSN 1077-2626.
+\newblock \doi{10.1109/TVCG.2007.70589}.
+\newblock URL \url{http://dx.doi.org/10.1109/TVCG.2007.70589}.
+
+\bibitem[{World Bank}(2012)]{WorldBank}
+{World Bank}.
+\newblock World development indicators, 2012.
+\newblock URL
+  \url{http://data.worldbank.org/data-catalog/world-development-indicators}.
+
+\bibitem[Xie(2013)]{animation}
+Y.~Xie.
+\newblock {animation}: An {R} package for creating animations and demonstrating
+  statistical methods.
+\newblock \emph{Journal of Statistical Software}, 53\penalty0 (1):\penalty0
+  1--27, 2013.
+\newblock URL \url{http://www.jstatsoft.org/v53/i01/}.
+
+\end{thebibliography}

@@ -1,0 +1,109 @@
+\relax 
+\citation{shneiderman82}
+\citation{Hutchins:1985,brushing-scatterplots,cleveland}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
+\citation{d3}
+\citation{dc}
+\citation{rcharts}
+\citation{animation}
+\citation{googleVis}
+\citation{wilkinson}
+\citation{ggplot2-book}
+\citation{ggvis}
+\citation{shiny}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}D3 and other JavaScript libraries}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Animated graphics in R}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Libraries based on the grammar of graphics}{2}}
+\citation{wilkinson}
+\citation{vega}
+\citation{2014-reactive-vega}
+\citation{scented-widgets,heer2008generalized}
+\citation{cleveland,brushing-scatterplots}
+\citation{tableau}
+\citation{polaris}
+\citation{ggplot2-book}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Other systems with interactive selection}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}The \texttt  {clickSelects} and \texttt  {showSelected} keywords for interactive plot design}{3}}
+\newlabel{sec:design}{{3}{3}}
+\citation{WorldBank}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces An interactive animation of World Bank demographic data of several countries, designed using \texttt  {clickSelects} and \texttt  {showSelected} keywords (top). \textbf  {Left}: a multiple time series from 1960 to 2010 of life expectancy, with bold lines showing the selected countries and a vertical grey tallrect showing the selected year. \textbf  {Right}: a scatterplot of life expectancy versus fertility rate of all countries. The legend and text elements show the current selection: year=1979, country=$\{\textrm  {United States}, \textrm  {Vietnam}\}$, and region=$\{\textrm  {East Asia \& Pacific}, \textrm  {North America}\}$}}{4}}
+\newlabel{fig:1}{{1}{4}}
+\citation{animated-transitions}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Current implementation in the \texttt  {animint} R package}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Animint renderer for a list of ggplots}{7}}
+\citation{instrumental-interaction}
+\citation{Hutchins:1985}
+\citation{2013-immens}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}User interaction}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Implementation details}{8}}
+\newlabel{sec:implementation}{{4.3}{8}}
+\citation{Hutchins:1985}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results and comparison study on World Bank data}{9}}
+\newlabel{sec:compare}{{5}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Animint provides a menu to update each selection variable. In this example, after typing ``th'' the country menu shows the subset of matching countries.}}{9}}
+\newlabel{fig:widgets}{{2}{9}}
+\citation{shiny,ggvis}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}R package animation}{10}}
+\newlabel{sec:compare-animation}{{5.1}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Client-server systems like ggvis/shiny}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Schematic explanation of compilation and rendering the World Bank visualization shown in Figure\nobreakspace  {}1. \textbf  {Top}: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. \textbf  {Center}: \texttt  {animint} R code compiles data in ggplot geoms to a database of TSV files (\leavevmode {\color  {red}$\rightarrowtriangle $}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\rightarrowtriangle $). \textbf  {Bottom}: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\leavevmode {\color  {blue}$\rightarrowtriangle $}).}}{10}}
+\newlabel{fig:design}{{3}{10}}
+\citation{Hutchins:1985}
+\citation{instrumental-interaction}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Implementation complexity and features of the World Bank data visualization using several libraries that can create interactive animations. For each library we show the number of lines of code (LOC), the on-screen objects that can be clicked, the number of interaction variables, and URL of the interactive version. }}{11}}
+\newlabel{tab:packages}{{1}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Characteristics of 11 interactive visualizations designed with \texttt  {animint}. From left to right, we show the data set name, the lines of R code (LOC) including data processing but not including comments (80 characters max per line), the amount of time it takes to compile the visualization (seconds), the total size of the uncompressed TSV files in megabytes (MB), the total number of data points (rows), the median number of data points shown at once (onscreen), the number of data columns visualized (variables), the number of \texttt  {clickSelects}/\texttt  {showSelected} variables (interactive), the number of linked panels (plots), if the plot is animated, and the corresponding Figure number in this paper (Fig). }}{12}}
+\newlabel{tab:examples}{{2}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Tableau}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Example applications}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Animated examples}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Non-animated examples}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}User feedback and observations}{14}}
+\citation{declarative}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Designer perspective}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}User perspective}{15}}
+\citation{iva}
+\citation{shiny}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Value of sketching}{16}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Limitations and future work}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Limitations of current implementation}{16}}
+\citation{vega}
+\citation{tourr}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Limitations of \texttt  {clickSelects}/\texttt  {showSelected} keywords}{17}}
+\citation{declarative}
+\bibstyle{abbrvnat}
+\bibdata{refs}
+\bibcite{instrumental-interaction}{{1}{2000}{{Beaudouin-Lafon}}{{}}}
+\bibcite{brushing-scatterplots}{{2}{1987}{{Becker and Cleveland}}{{}}}
+\bibcite{d3}{{3}{2011}{{Bostock et~al.}}{{Bostock, Oglevetsky, and Heer}}}
+\bibcite{cleveland}{{4}{1993}{{Cleveland}}{{}}}
+\bibcite{dc}{{5}{2014}{{DC.js Team}}{{}}}
+\bibcite{googleVis}{{6}{2011}{{Gesmann and de~Castillo}}{{}}}
+\bibcite{declarative}{{7}{2010}{{Heer and Bostock}}{{}}}
+\bibcite{animated-transitions}{{8}{2007}{{Heer and Robertson}}{{}}}
+\bibcite{heer2008generalized}{{9}{2008}{{Heer et~al.}}{{Heer, Agrawala, and Willett}}}
+\bibcite{Hutchins:1985}{{10}{1985}{{Hutchins et~al.}}{{Hutchins, Hollan, and Norman}}}
+\bibcite{iva}{{11}{2012}{{Konyha et~al.}}{{Konyha, Le{\v {z}}, Matkovi{\'c}, Jelovi{\'c}, and Hauser}}}
+\bibcite{2013-immens}{{12}{2013}{{Liu et~al.}}{{Liu, Jiang, and Heer}}}
+\bibcite{shiny}{{13}{2013}{{RStudio}}{{}}}
+\bibcite{ggvis}{{14}{2014}{{RStudio}}{{}}}
+\bibcite{2014-reactive-vega}{{15}{2014}{{Satyanarayan et~al.}}{{Satyanarayan, Wongsuphasawat, and Heer}}}
+\bibcite{shneiderman82}{{16}{1982}{{Shneiderman}}{{}}}
+\bibcite{polaris}{{17}{2002}{{Stolte and Hanrahan}}{{}}}
+\bibcite{tableau}{{18}{2014}{{Tableau}}{{}}}
+\bibcite{vega}{{19}{2014}{{Trifacta}}{{}}}
+\bibcite{rcharts}{{20}{2013}{{Vaidyanathan}}{{}}}
+\bibcite{ggplot2-book}{{21}{2009}{{Wickham}}{{}}}
+\bibcite{tourr}{{22}{2011}{{Wickham et~al.}}{{Wickham, Cook, Hofmann, and Buja}}}
+\bibcite{wilkinson}{{23}{2006}{{Wilkinson et~al.}}{{Wilkinson, Wills, Rope, Norton, and Dubbs}}}
+\bibcite{scented-widgets}{{24}{2007}{{Willett et~al.}}{{Willett, Heer, and Agrawala}}}
+\bibcite{WorldBank}{{25}{2012}{{World Bank}}{{}}}
+\bibcite{animation}{{26}{2013}{{Xie}}{{}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Interactive animation of tornadoes recorded from 1950 to 2012 in the United States. \textbf  {Left}: map of the lower 48 United States with tornado paths in 1982. The text shows the selected year, and clicking the map changes the selected state, currently Texas. \textbf  {Right}: time series of tornado counts in Texas. Clicking a bar changes the selected year, and the text shows selected state and the number of tornadoes recorded there in that year (119 tornadoes in Texas in 1982).}}{21}}
+\newlabel{fig:tornado}{{4}{21}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Visualization containing 6 linked, interactive, animated plots of Central American climate data. \textbf  {Top}: for the selected time (December 1997), maps displaying the spatial distribution of two temperature variables, and a scatterplot of these two variables. The selected region is displayed with a black outline, and can be changed by clicking a rect on the map or a point on the scatterplot. \textbf  {Bottom}: time series of the two temperature variables with the selected region shown in violet, and a scatterplot of all times for that region. The selected time can be changed by clicking a background tallrect on a time series or a point on the scatterplot. The selected region can be changed by clicking a line on a time series.}}{22}}
+\newlabel{fig:climate}{{5}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Visualization with 4 selection variables used to navigate through 1,292,464 rows of data in 5 linked interactive plots. The bottom plot shows a facets plot with aligned x axes, used to emphasize that the blue probability function is defined at the same positions as the black signals below. It also contains an href tag (web link), which opens a new genome browser web page zoomed to the same region as the selected data.}}{23}}
+\newlabel{fig:ChIPseq}{{6}{23}}
