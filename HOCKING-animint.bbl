@@ -1,4 +1,4 @@
-\begin{thebibliography}{26}
+\begin{thebibliography}{31}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -35,6 +35,18 @@ W.~S. Cleveland.
 {DC.js Team}.
 \newblock {Dimensional charting JavaScript library}, 2014.
 \newblock URL \url{http://dc-js.github.io/dc.js/}.
+
+\bibitem[Donoho(2015)]{Donoho:2015tu}
+D.~Donoho.
+\newblock {50 years of Data Science}.
+\newblock Oct. 2015.
+\newblock URL
+  \url{https://dl.dropboxusercontent.com/u/23421017/50YearsDataScience.pdf}.
+
+\bibitem[Gentleman and Lang(2004)]{Gentleman:Lang}
+R.~Gentleman and D.~T. Lang.
+\newblock {Statistical Analyses and Reproducible Research }.
+\newblock \emph{Bioconductor Project Working Papers}, pages 1--38, Nov. 2004.
 
 \bibitem[Gesmann and de~Castillo(2011)]{googleVis}
 M.~Gesmann and D.~de~Castillo.
@@ -82,6 +94,12 @@ Z.~Liu, B.~Jiang, and J.~Heer.
 \newblock \emph{Computer Graphics Forum (Proc. EuroVis)}, 32, 2013.
 \newblock URL \url{http://vis.stanford.edu/papers/immens}.
 
+\bibitem[{R Core Team}(2015)]{RCore}
+{R Core Team}.
+\newblock \emph{R: A Language and Environment for Statistical Computing}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria, 2015.
+\newblock URL \url{http://www.R-project.org/}.
+
 \bibitem[{RStudio}(2013)]{shiny}
 {RStudio}.
 \newblock shiny: easy web applications in {R}, 2013.
@@ -98,13 +116,6 @@ A.~Satyanarayan, K.~Wongsuphasawat, and J.~Heer.
 \newblock Declarative interaction design for data visualization.
 \newblock In \emph{ACM User Interface Software \& Technology (UIST)}, 2014.
 \newblock URL \url{http://idl.cs.washington.edu/papers/reactive-vega}.
-
-\bibitem[Shneiderman(1982)]{shneiderman82}
-B.~Shneiderman.
-\newblock The future of interactive systems and the emergence of direct
-  manipulation.
-\newblock \emph{Behaviour \& Information Technology}, 1\penalty0 (3):\penalty0
-  237--256, 1982.
 
 \bibitem[Stolte and Hanrahan(2002)]{polaris}
 C.~Stolte and P.~Hanrahan.
@@ -123,6 +134,12 @@ Trifacta.
 \newblock Vega: a declarative visualization grammar, Mar 2014.
 \newblock URL \url{http://trifacta.github.io/vega/}.
 
+\bibitem[Urbanek(2011)]{iplots}
+S.~Urbanek.
+\newblock \emph{Acinonyx: iPlots eXtreme}, 2011.
+\newblock URL \url{http://www.rforge.net/Acinonyx/}.
+\newblock R package version 3.0-0.
+
 \bibitem[Vaidyanathan(2013)]{rcharts}
 R.~Vaidyanathan.
 \newblock {rCharts: Interactive JS Charts from R}, 2013.
@@ -134,6 +151,13 @@ H.~Wickham.
 \newblock Springer New York, 2009.
 \newblock ISBN 978-0-387-98140-6.
 \newblock URL \url{http://had.co.nz/ggplot2/book}.
+
+\bibitem[Wickham et~al.(2008)Wickham, Lawrence, Temple~Lang, and
+  Swayne]{rggobi}
+H.~Wickham, M.~Lawrence, D.~Temple~Lang, and D.~F. Swayne.
+\newblock An introduction to rggobi.
+\newblock \emph{R-news}, 8\penalty0 (2):\penalty0 3–7, October 2008.
+\newblock URL \url{http://CRAN.R-project.org/doc/Rnews/Rnews_2008-2.pdf}.
 
 \bibitem[Wickham et~al.(2011)Wickham, Cook, Hofmann, and Buja]{tourr}
 H.~Wickham, D.~Cook, H.~Hofmann, and A.~Buja.
@@ -170,5 +194,12 @@ Y.~Xie.
 \newblock \emph{Journal of Statistical Software}, 53\penalty0 (1):\penalty0
   1--27, 2013.
 \newblock URL \url{http://www.jstatsoft.org/v53/i01/}.
+
+\bibitem[Xie et~al.(2013)Xie, Hofmann, Cook, Cheng, Schloerke, Vendettuoli,
+  Yin, Wickham, and Lawrence]{cranvas}
+Y.~Xie, H.~Hofmann, D.~Cook, X.~Cheng, B.~Schloerke, M.~Vendettuoli, T.~Yin,
+  H.~Wickham, and M.~Lawrence.
+\newblock \emph{Interactive statistical graphics based on Qt}, 2013.
+\newblock R package version 0.8.5.
 
 \end{thebibliography}

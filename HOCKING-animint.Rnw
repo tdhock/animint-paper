@@ -84,15 +84,14 @@
 %% indicate IEEE Member or Student Member in form indicated below
 \author{Toby Dylan Hocking, Carson Sievert, Susan VanderPlas}
 \authorfooter{
-%% insert punctuation at end of each item
+\item
+ Toby Dylan Hocking is with the McGill University department of Human Genetics. E-mail: toby.hocking@mail.mcgill.ca
 \item
  Carson Sievert is with the Department of Statistics at Iowa State University. E-mail: sievert@iastate.edu
 \item
- Toby Dylan Hocking is with the McGill University department of Human Genetics. E-mail: toby.hocking@mail.mcgill.ca.
-\item
  Susan VanderPlas is with the Department of Statistics at Iowa State University. E-mail: srvanderplas@gmail.com
 \item
-Jun Cai is with the Center for Earth System Scienceat Tsinghua University. E-mail: tony.tsai.2046@gmail.com
+  Jun Cai is with the Center for Earth System Science at Tsinghua University. E-mail: tony.tsai.2046@gmail.com
 }
 
 %other entries to be set up for journal
@@ -101,12 +100,12 @@ Jun Cai is with the Center for Earth System Scienceat Tsinghua University. E-mai
 
 %% Abstract section.
 \abstract{
-The web is the most popular medium for sharing interactive data visualizations thanks to the portability of the web browser and the accessibility of the internet. Unfortunately, creating interactive web graphics often requires a working knowledge of numerous web technologies that are foreign to many people working with data. As a result, web graphics are rarely used for exploratory data analysis where quick iteration between different visualizations is of utmost importance. This is the core strength of ggplot2 (Wickham, 2009), a popular data visualization package for the world's leading open-source statistical programming language, R (R Core Team, 2016). The conceptual framework behind ggplot2 is based on the grammar of graphics (Wilkinson, 2005), which lays a foundation for describing any static graphic as a small set of independent components. Perhaps the most fundamental component is the mapping from abstract data to the visual space, sometimes referred to as the aesthetic mapping. We propose adding two new aesthetics to the grammar, which together are sufficient for elegantly describing both animations and certain classes of coordinated linked views. We implement this extension in the open-source R package animint \url{https://github.com/tdhock/animint}, which converts ggplot2 objects to interactive SVG visualizations via D3js (Bostock, Ogievetsky, Heer, 2011).
+The web is the most popular medium for sharing interactive data visualizations thanks to the portability of the web browser and the accessibility of the internet. Unfortunately, creating interactive web graphics often requires a working knowledge of numerous web technologies that are foreign to many people working with data. As a result, web graphics are rarely used for exploratory data analysis where quick iteration between different visualizations is of utmost importance. This is the core strength of ggplot2, a popular data visualization package for the world's leading open-source statistical programming language, R. The conceptual framework behind ggplot2 is based on the grammar of graphics, which lays a foundation for describing any static graphic as a small set of independent components. Perhaps the most fundamental component is the set of functions for mapping abstract data to visual attributes, sometimes referred to as the aesthetic mapping. We explore new aesthetics which helps ggplot2 users create interactive and dynamic graphics using a familiar conceptual framework. We implement this extension in the open-source R package animint, which converts ggplot2 objects to interactive SVG visualizations via D3js (Bostock, Ogievetsky, Heer, 2011).
 } % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
-\keywords{interactive visualization, domain specific languages, declarative languages}
+\keywords{Interactive graphics, Declarative design.}
 
 %% Uncomment below to include a teaser figure.
 %    \teaser{
@@ -152,9 +151,6 @@ The web is the most popular medium for sharing interactive data visualizations t
 %% the others to focus on designing and consuming visualizations.
 
 <<opts, echo=FALSE, message=FALSE, cache=FALSE>>=
-library(animint)
-data(WorldBank)
-write.csv(WorldBank, "WorldBank.csv")
 knitr::opts_chunk$set(tidy = FALSE, eval = FALSE)
 knitr::opts_knit$set(out.format = "latex")
 knitr::knit_theme$set("edit-matlab")
@@ -162,112 +158,24 @@ knitr::knit_theme$set("edit-matlab")
 
 %%Interactive and dynamic statistical graphics toolkits play an important role in the exploratory phase of a data analysis cycle. The web is an attractive platform for interactive graphics thanks to its portability and accessibility, but due to a lack of tools for quick iteration, web graphics are not a practical tool for exploring data. Instead, they are mostly used for the presentation of findings (i.e., when the 'correct' visualization is already known). This is a source of conflict, as one often needs different tools depending on whether the work is exploratory or intended for public consumption, which results in wasted effort.
 
-%%The clickSelects/showSelected paradigm is fundamentally a tool for show and hiding subsets of a dataset. For this reason, interactions used to change chart types or select parameters values, turn out to be inefficient, if not impossible.
-
 %%The R package \texttt{ggplot2} is a popular tool for data visualization due in part to its elegant design inspired by the grammar of graphics. The fundamental concept in the grammar of graphics is that any graphic can be described through a set of mappings from data variables to visual space, referred to commonly as \texttt{aesthetic} mappings. The grammar of graphics and ggplot2 were designed for static graphics
 
 
+The world's leading open source statistical programming language, R, has a rich history of interfacing with computational tools for the use of people doing data analysis and statistics research \citep{RCore}. Understanding R's core audience is important, as they typically want to maximize their time working on data analysis problems, and minimize time spent learning computational tools. R excels in this regard, as it is designed specifically for interactive use, where users can quickly explore their data using highly expressive interfaces. Another key player in R's success story is its packaging infrastructure, which provides tools for distributing entire research conpendium(s) (code, data, documentation, auxiliary documents, etc) \citep{Gentleman:Lang}. 
 
-Interactive, animated data visualization is a useful tool for
-obtaining an intuitive understanding of patterns in multivariate data
-sets. In this paper, we propose a system for the design of data
-graphics which can be both interactive and animated. For the purposes
-of this paper, we define ``interactive'' to mean that graphical
-elements such as data points or legend entries may be clicked to update the data that is
-shown in related plots. This is closely related to the concept of
-``direct manipulation,'' which was introduced by \citet{shneiderman82}
-and later applied to statistical data visualization
-\citep{Hutchins:1985, brushing-scatterplots, cleveland}. Our
-definition of an ``animated'' visualization is one that can be watched
-like a video, automatically updating over time.
+One of the most widely used R packages is ggplot2 \citep{ggplot2-book}, a data visualization package inspired by the grammar of graphics \citep{wilkinson}. In fact, \citet{Donoho:2015tu} writes: "This effort may have more impact on today’s practice of data analysis than many highly-regarded theoretical statistics papers".
+In our experience, ggplot2 has made an impact thanks to its foundation in the grammar of graphics, carefully chosen defaults, and overall usability. This helps data analysts rapidly iterate and discover informative visualizations -- an essential task in exploratory data analysis (EDA). When dealing with high-dimensional data, however, it is often useful to produce interactive and/or dynamic graphics, which ggplot2 does not inherently support. 
 
-%% There is also a very nice discussion about Semantic and
-%% Articulatory distance which we could use. Our DSL lowers the
-%% semantic distance of the designer, and our renderer lowers the
-%% articulatory distance of the user. Mapping the time variable in a
-%% data set to the time variable in an animated plot is justified via
-%% articulatory directness. Quoting:
+%%Since the design space of interactive and dynamic graphics is so large, however, it is extremely difficult to design an fully featured interface that is useful in a EDA setting.
 
-%% Semantic distance concerns the relation of the meaning of an
-%% expression in the interface language to what the user wants to
-%% say. Two important questions about semantic distance are (1) Is it
-%% possible to say what one wants to say in this language? That is,
-%% does the language support the user's conception of the task do-
-%% main? Does it encode the concepts and distinctions in the domain in
-%% the same way that the user thinks about them? (2) Can the things
-%% of interest be said concisely?  Can the user say what is wanted in a
-%% straightforward fashion, or must the user construct a complicated
-%% expression to do what appears in the user's thoughts as a
-%% conceptually simple piece of work?  ... Where semantic distance has
-%% to do with the relationship between user's intentions and meanings
-%% of expressions, articulatory distance has to do with the
-%% relationship between the meanings of expressions and their
-%% physical form. ...  Take the simple, commonplace activity of moving
-%% a cursor on the screen. If we do this by moving a mouse, pointing
-%% with a finger or a light pen at the screen, or otherwise mimicking
-%% the desired motion, then at the level of action execution, these
-%% interactions all exhibit articulatory directness. The meaning of
-%% the intention is cursor movement and the action is specified by
-%% means of a similar movement. One way to achieve articulatory
-%% directness at the input side is to provide an interface that
-%% permits specification of an action by mimicking it, thus supporting
-%% an articulatory similarity between the vocabulary item and its
-%% meaning. Any nonarbitrary relationship between the form of an item
-%% and its meaning can be a basis for articulatory directness. ...
-%% Articulatory directness on the output side is similar. If the user
-%% is following the changes in some variable, a moving graphical
-%% display can provide articulatory directness. A table of numbers,
-%% although containing the same semantic information, does not
-%% provide articulatory directness. Thus, the graphical display and
-%% the table of numbers might be equal in semantic directness, but
-%% unequal in articulatory directness.
+Interactive graphics toolkits in R have been used for decades to enhance the EDA workflow \citep{cranvas}; \citep{iplots}; \citep{rggobi}, but these approaches are often not easy to reproduce or distribute to a larger audience. It is true that most graphics generated during EDA are ultimately not useful, but sometimes, understanding gained during this phase is most easily shared via the interactive graphics themselves. Thus, there is value is being able to easily share, and embed interactive graphics inside a larger report. Unfortunately, this is typically hard, if not impossible, using traditional interactive graphics toolkits. As a result, there is a large disconnect between the visualization tools that we use for exploration versus presentation. 
 
-%% Spatial vs temporal indirection:
+We aim to narrow this gap in visualization tools by extending ggplot2's grammar of graphics implementation for interactive and dynamic web graphics. By adding two new aesthetics to the grammar, \texttt{clickSelects} and \texttt{showSelected}, we are able to express animations and dynamically linked filter operations across multiple plots. Other aesthetics, such as \texttt{tooltip} and \texttt{href}, can be used to identify data values and link to web pages. To rest of the paper will proceed as follows: Section~3 discusses the \texttt{clickSelects} and \texttt{showSelected} aesthetics in detail, Section~4 discusses our current implementation in the R package animint, Section~5 compares our implementation to similar work, Section~6 provides a handful of examples, ...
 
-%% These two types of activation are quite different. The activation
-%% of the scrollbar is spatial because it is caused by moving the
-%% mouse (and cursor) inside the area of the scrollbar. The activation
-%% of the rectangle creation instrument is temporal because it is
-%% caused by a former action and remains in effect until the
-%% activation of another instrument. (This is traditionally called a
-%% mode). Each type of activation has an associated cost: Spatial
-%% activation requires the instrument to be visible on the screen,
-%% taking up screen real-estate and requiring the user to point at it
-%% and potentially dividing the user's attention. Temporal activation
-%% requires an explicit action to trigger the activation, making it
-%% slower and less direct.  Interface designers often face a design
-%% trade-off between temporal and spatial multiplexing of instruments
-%% because the activation costs become significant when the user must
-%% frequently change instruments. Using extra input devices can reduce
-%% these costs. For example, the thumbwheel on Microsoft's
-%% Intellimouse is a scrolling instrument that is always active. An
-%% extreme example is an audio mixing console, which may contain
-%% several hundred potentiometers and switches, each corresponding to
-%% a single function. This permits very fast access to all functions,
-%% which is crucial for sound engineers working in real-time and
-%% cannot afford the cost of activating each function indirectly. A
-%% large design space lies between a single mouse and hundreds of
-%% potentiometers, posing design challenges to maximally exploit
-%% physical devices and reduce activation costs.
-
-
-%TODO: examples of animated and interactive, World
-%Bank and Fig 9 of \citet{d3}.
-
-The rest of this paper is organized as follows: we discuss related
-work in Section~2, and the usage of the \texttt{clickSelects} and
-\texttt{showSelected} keywords in Section~3. Then we discuss our
-current implementation in the animint R package in Section~4.
-
-%% \section{Introduction} %for journal use above \firstsection{..} instead
 
 \section{Related Work}
 
-In this section we discuss several similar efforts
-for interactive data graphic design, focusing on libraries with
-free/open-source software implementations in JavaScript and R.
-
-\subsection{gridSVG}
+%% TODO: compare to gridSVG
 
 
 
@@ -1341,6 +1249,8 @@ explained below.
 % More paragraphs are needed in this subsection.
 
 \section{Limitations and future work}
+
+%%The clickSelects/showSelected paradigm is fundamentally a tool for show and hiding subsets of a dataset. For this reason, interactions used to change chart types or select parameters values, turn out to be inefficient, if not impossible.
 
 There are several limitations to the \texttt{animint} system, which suggest
 avenues for future work. Some limitations are specific to the current
