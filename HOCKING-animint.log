@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  23 MAR 2016 18:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  23 MAR 2016 18:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -414,29 +414,29 @@ Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 (./HOCKING-animint.aux)
 \openout1 = `HOCKING-animint.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 177.
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 177.
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 177.
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 177.
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 177.
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 177.
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 177.
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 177.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 177.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 196.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 196.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 196.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 196.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 196.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 196.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 196.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 196.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 196.
 
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 177.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 177.
+LaTeX Font Info:    ... okay on input line 196.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 196.
 
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1ptm.fd
@@ -471,7 +471,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box29
-Package hyperref Info: Link coloring ON on input line 177.
+Package hyperref Info: Link coloring ON on input line 196.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -481,71 +481,71 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count117
 )
-LaTeX Info: Redefining \ref on input line 177.
-LaTeX Info: Redefining \pageref on input line 177.
-LaTeX Info: Redefining \nameref on input line 177.
+LaTeX Info: Redefining \ref on input line 196.
+LaTeX Info: Redefining \pageref on input line 196.
+LaTeX Info: Redefining \nameref on input line 196.
 
 (./HOCKING-animint.out) (./HOCKING-animint.out)
 \@outlinefile=\write3
 \openout3 = `HOCKING-animint.out'.
 
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 186.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 205.
 
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
-LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 18
-6.
+LaTeX Font Info:    Try loading font information for OT1+ztmcm on input line 20
+5.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1ztmcm.fd
 File: ot1ztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 18
-6.
+LaTeX Font Info:    Try loading font information for OML+ztmcm on input line 20
+5.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omlztmcm.fd
 File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 18
-6.
+LaTeX Font Info:    Try loading font information for OMS+ztmcm on input line 20
+5.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omsztmcm.fd
 File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
 )
-LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 18
-6.
+LaTeX Font Info:    Try loading font information for OMX+ztmcm on input line 20
+5.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omxztmcm.fd
 File: omxztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/ztmcm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 186.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 205.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 186.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 205.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 186.
-LaTeX Font Info:    Try loading font information for U+stmry on input line 186.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 205.
+LaTeX Font Info:    Try loading font information for U+stmry on input line 205.
 
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <8> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 186.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 205.
 
 <diamondrule.pdf, id=108, 213.79875pt x 12.045pt>
 File: diamondrule.pdf Graphic file (type pdf)
  <use diamondrule.pdf>
-Package pdftex.def Info: diamondrule.pdf used on input line 186.
+Package pdftex.def Info: diamondrule.pdf used on input line 205.
 (pdftex.def)             Requested size: 213.79822pt x 12.04495pt.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 186.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 205.
 LaTeX Font Info:    Font shape `OT1/phv/bx/sc' in size <9> not available
-(Font)              Font shape `OT1/phv/b/sc' tried instead on input line 186.
+(Font)              Font shape `OT1/phv/b/sc' tried instead on input line 205.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 186.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 205.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 186.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 186.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 205.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 205.
 
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ts1ptm.fd
@@ -554,7 +554,7 @@ File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no ™ in font ptmr7t!
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 218.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 237.
 
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ot1pcr.fd
@@ -564,55 +564,55 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 
  <./diamondrule.pdf>]
 LaTeX Font Info:    Font shape `OT1/pcr/bx/sc' in size <9> not available
-(Font)              Font shape `OT1/pcr/b/sc' tried instead on input line 352.
+(Font)              Font shape `OT1/pcr/b/sc' tried instead on input line 371.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 390.
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 409.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 428.
 
-Underfull \hbox (badness 10000) in paragraph at lines 409--409
+Underfull \hbox (badness 10000) in paragraph at lines 428--428
 [][][][][]$\OT1/pcr/m/n/8 http : / / bl . ocks . org / tdhock / raw /
  []
 
 <figure-1.pdf, id=193, 461.725pt x 209.78375pt>
 File: figure-1.pdf Graphic file (type pdf)
  <use figure-1.pdf>
-Package pdftex.def Info: figure-1.pdf used on input line 417.
+Package pdftex.def Info: figure-1.pdf used on input line 436.
 (pdftex.def)             Requested size: 514.92374pt x 233.97025pt.
-Package color Info: Redefining color shadecolor on input line 440.
-Package color Info: Redefining color shadecolor on input line 484.
-Package color Info: Redefining color shadecolor on input line 516.
+Package color Info: Redefining color shadecolor on input line 459.
+Package color Info: Redefining color shadecolor on input line 503.
+Package color Info: Redefining color shadecolor on input line 535.
  [2]
-Package color Info: Redefining color shadecolor on input line 546.
+Package color Info: Redefining color shadecolor on input line 565.
 
-Underfull \hbox (badness 3000) in paragraph at lines 557--562
+Underfull \hbox (badness 3000) in paragraph at lines 576--581
 []\OT1/ptm/m/n/9 The \OT1/pcr/m/n/9 label \OT1/ptm/m/n/9 aes-thetic is used to 
 de-fine the text from the
  []
 
 
-Underfull \hbox (badness 1253) in paragraph at lines 557--562
+Underfull \hbox (badness 1253) in paragraph at lines 576--581
 \OT1/ptm/m/n/9 year vari-able, and only the se-lected year is shown due to the
  []
 
-Package color Info: Redefining color shadecolor on input line 566.
-Package color Info: Redefining color shadecolor on input line 588.
+Package color Info: Redefining color shadecolor on input line 585.
+Package color Info: Redefining color shadecolor on input line 607.
 
-Underfull \hbox (badness 2285) in paragraph at lines 687--696
+Underfull \hbox (badness 2285) in paragraph at lines 706--715
 \OT1/ptm/m/n/9 Since 2013 we have been de-vel-op-ing the \OT1/pcr/m/n/9 animint
  \OT1/ptm/m/n/9 R pack-
  []
 
 
-Underfull \hbox (badness 2503) in paragraph at lines 687--696
+Underfull \hbox (badness 2503) in paragraph at lines 706--715
 \OT1/ptm/m/n/9 age,[][][][][] which pro-vides an in-ter-ac-tive ren-derer for g
 g-plots with
  []
 
-Package color Info: Redefining color shadecolor on input line 705.
-Package color Info: Redefining color shadecolor on input line 740.
+Package color Info: Redefining color shadecolor on input line 724.
+Package color Info: Redefining color shadecolor on input line 759.
 
-Underfull \hbox (badness 4634) in paragraph at lines 760--773
+Underfull \hbox (badness 4634) in paragraph at lines 779--792
 \OT1/ptm/m/n/9 in-ter-ac-tions are ac-com-plished mainly via di-rect ma-nip-u-l
 a-tion.
  []
@@ -622,97 +622,97 @@ File: Screenshot-toggle-selected-value.png Graphic file (type png)
 
 <use Screenshot-toggle-selected-value.png>
 Package pdftex.def Info: Screenshot-toggle-selected-value.png used on input lin
-e 792.
+e 811.
 (pdftex.def)             Requested size: 125.65948pt x 126.74939pt.
 
 <figure-design.pdf, id=227, 397.485pt x 202.356pt>
 File: figure-design.pdf Graphic file (type pdf)
  <use figure-design.pdf>
-Package pdftex.def Info: figure-design.pdf used on input line 807.
+Package pdftex.def Info: figure-design.pdf used on input line 826.
 (pdftex.def)             Requested size: 251.31898pt x 127.9481pt.
 
 <figure-tornado.pdf, id=228, 466.74374pt x 207.77625pt>
 File: figure-tornado.pdf Graphic file (type pdf)
 
 <use figure-tornado.pdf>
-Package pdftex.def Info: figure-tornado.pdf used on input line 825.
+Package pdftex.def Info: figure-tornado.pdf used on input line 844.
 (pdftex.def)             Requested size: 514.92374pt x 229.24887pt.
 
 <figure-climate.pdf, id=229, 597.51233pt x 371.3875pt>
 File: figure-climate.pdf Graphic file (type pdf)
 
 <use figure-climate.pdf>
-Package pdftex.def Info: figure-climate.pdf used on input line 839.
+Package pdftex.def Info: figure-climate.pdf used on input line 858.
 (pdftex.def)             Requested size: 514.92374pt x 320.05571pt.
 
 <figure-chip-seq.pdf, id=230, 616.3025pt x 231.86626pt>
 File: figure-chip-seq.pdf Graphic file (type pdf)
 
 <use figure-chip-seq.pdf>
-Package pdftex.def Info: figure-chip-seq.pdf used on input line 857.
+Package pdftex.def Info: figure-chip-seq.pdf used on input line 876.
 (pdftex.def)             Requested size: 514.92374pt x 193.7403pt.
  [3]
-Underfull \hbox (badness 5260) in paragraph at lines 895--905
+Underfull \hbox (badness 5260) in paragraph at lines 914--924
 \OT1/pcr/m/n/9 animint.js \OT1/ptm/m/n/9 files) is copied to the plot di-rec-to
 ry. The
  []
 
 
-Underfull \hbox (badness 1533) in paragraph at lines 895--905
+Underfull \hbox (badness 1533) in paragraph at lines 914--924
 \OT1/pcr/m/n/9 animint.js \OT1/ptm/m/n/9 ren-derer is im-ple-mented in about 22
 00 lines of
  []
 
 
-LaTeX Warning: Reference `fig:code' on page 4 undefined on input line 915.
+LaTeX Warning: Reference `fig:code' on page 4 undefined on input line 934.
 
 
-Overfull \hbox (25.96547pt too wide) in paragraph at lines 952--996
+Overfull \hbox (25.96547pt too wide) in paragraph at lines 971--1015
  [] 
  []
 
 
-Underfull \hbox (badness 3386) in paragraph at lines 1034--1044
+Underfull \hbox (badness 3386) in paragraph at lines 1053--1063
 []\OT1/ptm/m/n/9 There are also in-her-ent speed trade-offs to us-ing a client-
 
  []
 
 (./table-examples.tex) [4] [5]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 1342
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 1362
 .
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1342.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1362.
 
 LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 1395.
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 1415.
 
-Underfull \hbox (badness 4391) in paragraph at lines 1395--1395
+Underfull \hbox (badness 4391) in paragraph at lines 1415--1415
 []\OT1/phv/b/n/9 Limitations of \OT1/pcr/b/n/9 clickSelects\OT1/phv/b/n/9 /\OT1
 /pcr/b/n/9 showSelected \OT1/phv/b/n/9 key-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1414--1418
+Underfull \hbox (badness 10000) in paragraph at lines 1434--1438
 []\OT1/ptm/m/n/9 TODO: dis-tinc-tion be-tween the
  []
 
 
-Underfull \hbox (badness 1648) in paragraph at lines 1414--1418
+Underfull \hbox (badness 1648) in paragraph at lines 1434--1438
 \OT1/pcr/m/n/9 clickSelects\OT1/ptm/m/n/9 /\OT1/pcr/m/n/9 showSelected \OT1/ptm
 /m/n/9 key-words and the \OT1/pcr/m/n/9 animint
  []
 
 
-Underfull \hbox (badness 4886) in paragraph at lines 1414--1418
+Underfull \hbox (badness 4886) in paragraph at lines 1434--1438
 \OT1/ptm/m/n/9 sys-tem which pre-computes ev-ery-thing? Could there be a
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1414--1418
+Underfull \hbox (badness 10000) in paragraph at lines 1434--1438
 \OT1/pcr/m/n/9 clickSelects\OT1/ptm/m/n/9 /\OT1/pcr/m/n/9 showSelected \OT1/ptm
 /m/n/9 sys-tem which does NOT
  []
@@ -747,7 +747,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 185--189
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1477.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1497.
  [7] [8 <./figure-1.pdf>] [9
 
 
@@ -757,10 +757,10 @@ tornado.pdf> <./figure-climate.pdf
 pdfTeX warning: pdflatex (file ./figure-climate.pdf): PDF inclusion: multiple p
 dfs with page group included in a single page
 >] [11 <./figure-chip-seq.pdf>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1477.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1497.
  (./HOCKING-animint.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1477.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1477.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1497.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1497.
 
 Package rerunfilecheck Info: File `HOCKING-animint.out' has not changed.
 (rerunfilecheck)             Checksum: F41D2D0B44834967F52AF3B72378DC69;1895.
@@ -768,16 +768,16 @@ Package rerunfilecheck Info: File `HOCKING-animint.out' has not changed.
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1477.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1497.
  ) 
 Here is how much of TeX's memory you used:
  7384 strings out of 493089
  107587 string characters out of 6134842
- 227700 words of memory out of 5000000
+ 227718 words of memory out of 5000000
  10630 multiletter control sequences out of 15000+600000
  53187 words of font info for 112 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,8n,29p,1286b,381s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,8n,29p,887b,381s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2015/texmf-dist/fonts/type1/bitstrea/charter/bchb8a.pfb></usr/local/texl
 ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texli
@@ -790,7 +790,7 @@ ts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type
 1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/t
 imes/utmb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmr8
 a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on HOCKING-animint.pdf (11 pages, 1278934 bytes).
+Output written on HOCKING-animint.pdf (11 pages, 1278665 bytes).
 PDF statistics:
  577 PDF objects out of 1000 (max. 8388607)
  455 compressed objects within 5 object streams
