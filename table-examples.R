@@ -90,7 +90,7 @@ for(sub.dir.i in seq_along(sub.dirs)){
     animated[[sub.dir.i]] <- "yes"
   }
 }
-tab <- data.frame("lines of R code"=code.lines,
+tab <- data.frame("lines of R code"=code.lines, ##"lines of R code" can be replaced by "LOC"
                   seconds=round(seconds, 1),
                   MB=round(total.size/1000, 1),
                   rows=as.integer(n.rows),
