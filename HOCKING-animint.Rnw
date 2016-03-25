@@ -865,10 +865,14 @@ and y axes, and legends are automatically constructed for color and
 size. The interactivity is also defined as a simple variable mapping:
 \texttt{clickSelects=country} means that clicking a point changes the
 selected country, and \texttt{showSelected=year} means to only plot
-the points for the selected year.
+the points for the selected year.  \texttt{clickSelects} and 
+\texttt{showSelected} aesthetics are automatically added for all 
+discrete variables that are associated with a legend, such as 
+\texttt{region}.  The selected regions can be changed by clicking on 
+the legend.
 
 In order to remind the plot user which subset of data are selected, we
-will draw a text label with the selected year and country. First, we
+will draw a text label with the selected year, country, and region. First, we
 create the year labels using
 
 <<yearText-geom, tidy=FALSE>>=
@@ -1017,9 +1021,10 @@ interactive plot in a web browser.
 manipulation in graphical user interfaces, and our Animint system
 follows principle 2 ``Physical actions on objects vs. complex syntax''
 such as dialog boxes. In particular, the user can update the selection
-by clicking on the data objects themselves. This contrasts other
-systems which use menus and widgets, and thus suffer from less
-articulatory directness \citep{Hutchins:1985}.
+by clicking on the data objects themselves or the legend entry which 
+corresponds to that data object. This contrasts other systems which 
+use menus and widgets, and thus suffer from less articulatory 
+directness \citep{Hutchins:1985}.
 
 For single selection variables such as year, clicking sets the value
 of the corresponding selection variable. For multiple selection
@@ -1057,7 +1062,7 @@ converts a list of ggplots and options to a tab-separated values
 the aesthetics in all of the ggplots to determine how many selection
 variables are present, and which plots to update after a selection
 variable is clicked. It uses ggplot2 to automatically calculate
-the axes scales, legends, and labels. It outputs this information to
+the axes, scales, legends, labels, and backgrounds. It outputs this information to
 the JSON plot meta-data file. It also uses ggplot2 to convert data
 variables (e.g. life expectancy and region) to visual properties
 (e.g. y position and color). The data are separated into several TSV
@@ -1069,7 +1074,7 @@ files) is copied to the plot directory. Since the compiled plot is
 just a directory of files, the designer can easily upload interactive
 plots to any web server.% for sharing with users.
 
-The \texttt{animint.js} renderer is implemented in about 1500 lines of
+The \texttt{animint.js} renderer is implemented in about 2000 lines of
 JavaScript/D3 code that renders the TSV and JSON plot data files as
 SVG in a web browser.
 %% The main idea for implementing interactivity is
