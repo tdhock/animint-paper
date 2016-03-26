@@ -131,7 +131,7 @@
 %% This is how authors are specified in the journal style
 
 %% indicate IEEE Member or Student Member in form indicated below
-\author{Toby Dylan Hocking, Carson Sievert, Susan VanderPlas}
+\author{Carson Sievert, Toby Dylan Hocking, Susan VanderPlas, Jun Cai, Kevin Ferris}
 \authorfooter{
 \item
  Toby Dylan Hocking is with the McGill University department of Human Genetics. E-mail: toby.hocking@mail.mcgill.ca
@@ -141,6 +141,8 @@
  Susan VanderPlas is with the Department of Statistics at Iowa State University. E-mail: srvanderplas@gmail.com
 \item
   Jun Cai is with the Center for Earth System Science at Tsinghua University. E-mail: cai-j12@mails.tsinghua.edu.cn
+\item
+  Kevin Ferris is with the Department of Statistics at Montana State University. E-mail: kevin.ferris10@gmail.com
 }
 
 %other entries to be set up for journal
@@ -173,7 +175,7 @@
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
 %% please capitalize first letter and insert punctuation after last keyword
-\keywords{Interactive graphics, Exploratory data analysis, Web technologies}
+\keywords{Interactive graphics, Statistical graphics, Exploratory data analysis, Web technologies}
 
 %% Uncomment below to include a teaser figure.
 %    \teaser{
@@ -227,145 +229,25 @@
 
 The world's leading open source statistical programming language, R, has a rich history of interfacing with computational tools for the use of people doing data analysis and statistics research \citep{RCore}. Understanding R's core audience is important, as they typically want to maximize their time working on data analysis problems, and minimize time spent learning computational tools. R excels in this regard, as it is designed specifically for interactive use, where users can quickly explore their data using highly expressive interfaces. Another key player in R's success story is its packaging infrastructure, which provides tools for distributing entire research conpendium(s) (code, data, documentation, auxiliary documents, etc) \citep{Gentleman:Lang}. 
 
-One of the most widely used R packages is ggplot2 \citep{ggplot2-book}, a data visualization package inspired by the grammar of graphics \citep{wilkinson}. In fact, \citet{Donoho:2015tu} writes: "This effort may have more impact on today’s practice of data analysis than many highly-regarded theoretical statistics papers".
+One of the most widely used R packages is ggplot2 \citep{ggplot2-book}, a data visualization package inspired by the grammar of graphics \citep{wilkinson}. In fact, \citet{Donoho:2015tu} writes: ``This effort may have more impact on today’s practice of data analysis than many highly-regarded theoretical statistics papers".
 In our experience, ggplot2 has made an impact thanks to its foundation in the grammar of graphics, carefully chosen defaults, and overall usability. This helps data analysts rapidly iterate and discover informative visualizations -- an essential task in exploratory data analysis (EDA). When dealing with high-dimensional data, however, it is often useful to produce interactive and/or dynamic graphics, which ggplot2 does not inherently support. 
 
 %%Since the design space of interactive and dynamic graphics is so large, however, it is extremely difficult to design an fully featured interface that is useful in a EDA setting.
 
-Interactive graphics toolkits in R have been used for decades to enhance the EDA workflow \citep{cranvas}; \citep{iplots}; \citep{rggobi}, but these approaches are often not easy to reproduce or distribute to a larger audience. It is true that most graphics generated during EDA are ultimately not useful, but sometimes, understanding gained during this phase is most easily shared via the interactive graphics themselves. Thus, there is value is being able to easily share, and embed interactive graphics inside a larger report. Unfortunately, this is typically hard, if not impossible, using traditional interactive graphics toolkits. As a result, there is a large disconnect between the visualization tools that we use for exploration versus presentation. 
+Interactive graphics toolkits in R have been used for decades to enhance the EDA workflow, but these approaches are often not easy to reproduce or distribute to a larger audience. It is true that most graphics generated during EDA are ultimately not useful, but sometimes, understanding gained during this phase is most easily shared via the interactive graphics themselves. Thus, there is value is being able to easily share, and embed interactive graphics inside a larger report. Unfortunately, this is typically hard, if not impossible, using traditional interactive graphics toolkits. As a result, there is a large disconnect between the visualization tools that we use for exploration versus presentation. 
 
-We aim to narrow this gap in visualization tools by extending ggplot2's grammar of graphics implementation for interactive and dynamic web graphics. By adding two new aesthetics to the grammar, \texttt{clickSelects} and \texttt{showSelected}, we are able to express animations and dynamically linked filter operations across multiple plots. Other aesthetics, such as \texttt{tooltip} and \texttt{href}, can be used to identify data values and link to web pages. To rest of the paper will proceed as follows: Section~3 discusses the \texttt{clickSelects} and \texttt{showSelected} aesthetics in detail, Section~4 discusses our current implementation in the R package animint, Section~5 compares our implementation to similar work, Section~6 provides a handful of examples, ...
+We aim to narrow this gap in visualization tools by extending ggplot2's grammar of graphics implementation for interactive and dynamic web graphics. By adding two new aesthetics to the grammar, \texttt{clickSelects} and \texttt{showSelected}, we are able to express animated transitions and perform linked queries on graphical elements like those described in \citep{Ahlberg:1991} and \citep{Buja:1991vh}. Other aesthetics, such as \texttt{tooltip} and \texttt{href}, can be used to identify data values and link to web pages. The rest of the paper will proceed as follows: Section~3 discusses the \texttt{clickSelects} and \texttt{showSelected} aesthetics in detail, Section~4 discusses our current implementation in the R package animint, Section~5 compares our implementation to similar work, Section~6 provides a handful of examples, ...
 
 
 \section{Related Work}
 
-%% TODO: compare to gridSVG
+We aim to provide a system which empowers ggplot2 users to go beyond the confines of static graphics with minimal friction introduced into their current workflow. We acknowledge that numerous systems which support similar visualization techniques exist outside of the R ecosystem, but we intentionally focus on R interfaces since the statistical computing environment it provides is essential for many exploratory data analysis tasks.
 
+In terms of the user interface, the R package gganimate is very similar to our system \citep{gganimate}. It directly extends ggplot2 by adding a new aesthetic, named \texttt{frame}, which splits the data into subsets (one for each unique value of the frame variable), produces a static plot for each subset, and uses the animation package to combine the images into a key frame animation \citep{animation}. The concept is quite similar, but not as powerful, as using the \texttt{showSelected} aesthetic and \texttt{time} option in our system. Either system has the ability to control the amount of time that a given frame is displayed, but our system can also animate the transition between frames. Smooth transitions are generally useful for tracking positions between frames, which is crucial in many scenarios, such as the touring example discussed in Section~6.
 
+Tours are a useful visualization technique for exploring high-dimensional data which requires interactive and dynamic graphics. The open source software ggobi is currently the most fully-featured tool for touring data, but also provides the ability to produce more standard statistical graphics, and general interactive techniques such as linking, zooming, panning, and identifying \citep{ggobi:2007}. The R package rggobi \citep{rggobi} provides an R interface to ggobi's graphical interface, but unfortunately, the software requirements for installation and use of this toolchain are heavy and stringent. Furthermore, sharing the interactive versions of these graphics are not possible. The R package cranvas aims to be the successor to ggobi, with support for similar interactive techniques, but with a more flexible interface for describing plots inspired by the grammar of graphics \citep{cranvas}. Cranvas also has heavy and stringent software requirements which limits the portability and accessibility of the software.
 
-
-\subsection{D3 and other JavaScript libraries}
-
-Data-Driven Documents (D3) is a JavaScript library that can render
-interactive, animated data graphics in a web browser \citep{d3}. One
-of the main reasons for the success and popularity of D3 is that it
-allows visualizations to be specified using the terminology of the
-Document Object Model (DOM), which makes learning D3 easy for web
-designers. Interactivity in D3 is specified by writing JavaScript
-functions that can perform arbitrary DOM manipulations in response to
-user events.
-
-Dimensional Charting (DC) is another JavaScript library which can
-produce interactive visualizations consisting of several linked plots
-\citep{dc}. DC allows data graphics to consist of one or more
-pre-defined chart types, which are linked and rendered in a web
-browser using D3. In this system it is not easy to create multi-layer
-graphics (e.g. a map with points for each city).
-% http://dc-js.github.io/dc.js/crime/index.html
-
-There are many other libraries which can generate web plots with
-limited interactivity, but are currently unable to produce interactive
-animations. For example, the rCharts R package is a wrapper around
-several JavaScript libraries \citep{rcharts}, but does not include a
-method for describing interactions between multiple linked
-plots.
-%% Thus, rCharts can easily produce graphics with simple
-%% interactive features (such as tooltips), but it can not produce
-%% multi-plot interactive animations.
-
-\subsection{Animated graphics in R}
-
-The main idea of the animation R package is to iteratively show a
-sequence of pre-rendered images \citep{animation}. In this system the
-only interaction possible with animation is rewinding and
-fast-forwarding through the animation frames.
-
-Another R package that can produce animated graphics is googleVis
-\citep{googleVis}. The main limitation of this system is that it can
-only produce single-layer graphics using a few pre-defined plot types,
-only one of which can be viewed at any time.
-
-\subsection{Libraries based on the grammar of graphics}
-
-An implementation of the grammar of graphics \citep{wilkinson} is
-provided by the R package ggplot2 \citep{ggplot2-book}, which makes it
-easy to design multi-layer non-interactive plots. Another R package
-that uses the grammar of graphics to define interactive graphics is
-ggvis \citep{ggvis}. It does not directly extend ggplot2, but provides
-a new implementation of some of the same ideas about the grammar of
-graphics. It relies on the shiny web server package to acheive
-interactivity \citep{shiny}.
-
-Implementations of the grammar of graphics system of
-\citet{wilkinson} exist as the Visualization Markup Language (ViZml)
-and the Graphics Production Language (GPL) in IBM SPSS Statistics
-software, but do not support interactive animations.
-
-Vega is a JavaScript visualization library that implements some
-concepts from the grammar of graphics \citep{vega}. Vega reads plots
-defined in a JSON file format, and renders them using D3. It is
-capable of defining a wide variety of multi-layer plots, but is unable
-to express all plots that can be made using pure D3. The main
-limitation of Vega is that it does not directly support
-interactions and animation. However, the recent work of
-\citet{2014-reactive-vega} adds some declarative Vega extensions
-``critical for developing interactive data visualizations.''
-%% Those extensions are defined at a lower level of
-%% abstraction than the \texttt{clickSelects} and \texttt{showSelected}
-%% keywords of Animint.
-
-\subsection{Other systems with interactive selection}
-
-There are many different methods for interactively specifying a set of
-selected data points \citep{scented-widgets, heer2008generalized}. A
-common interaction involves a rectangular brush that can select
-several data points in a single data table \citep{cleveland,
-  brushing-scatterplots}, and highlights the selected data points
-across several plots.
-%% The type of interactivity that we propose is closely related to the
-%% system described by \citet{cleveland}. In that system, the user's
-%% mouse creates a single rectangular brush which either defines the
-%% selection, or defines data points to add to or remove from the
-%% selection. Cleveland also defines several operations on the selection,
-%% such as labeling, deleting, and enhanced linking. For example, in a
-%% scatter plot matrix, Cleveland uses enhanced linking to highlight
-%% which points are selected in each plot.
-%% Importantly, Animint supports selecting and
-%% highlighting several different variables (e.g. year and
-%% country), each of which supports either single or multiple
-%% selection. However, the current implementation of Animint does not
-%% support selection using a rectangular brush (users must click each
-%% data point to add/remove it from the set of selected values).
-This type of interactive selection is implemented in
-\citet{tableau}, which is built on top of VizQL, a visual query
-language which took influence from Polaris \citep{polaris}.
-%% Visual
-%% query languages automatically and dynamically execute (and, in some
-%% cases, cache) database queries required to render various properties
-%% of the user defined visualization.
-Another implementation is provided by the R packages cranvas and
-iplots. The main limitation of each of these systems is that the
-selection operates on only one data set.
-
-
-%% TDH 20 Nov 2014 I feel like the next paragraph is unfair to Tableau
-%% in particular and GUIs in general. Yes the GUI is a limitation, but
-%% so is the learning curve of the R language and REPL. Can you
-%% re-word that to say that GUIs are better for some people and REPLs
-%% are better for others? Also if you really want to use REPL I think
-%% you should explain what the acronym stands for.
-
-%% Another fundamental limitation to a visual query language is the
-%% restriction to database primitives. For instance, suppose
-%% we want to visualize the residuals of different models
-%% fit to different subsets of the data. This would require us
-%% to precompute the residuals using a different language
-%% (such as R) and write tables back to the database. This can
-%% lead to an inefficient workflow if we aren't interested in
-%% keeping certain models/tables. Starting with version 8.1,
-%% Tableau does offer R integration, but the types of objects
-%% that can be transferred are limited and it removes the REPL
-%% environment that R users enjoy.
+Another R package for interactive graphics which draws design inspiration from the grammar of graphics is ggvis \citep{ggvis}. It does not directly extend ggplot2, but instead provides a brand new purely functional interface which is designed with interactive graphics in mind. It currently relies on Vega to render the SVG graphics from JSON \citep{vega}, and the R package shiny to enable many of its interactive capabilities \citep{shiny}. The interface gives tremendous power to R users, as it allows one to write R functions to handle user events. This power does come with a cost, though, as sharing and hosting ggvis graphics may require special web server software, even when the interaction logic could be handled entirely client-side. As we outline in Section~4, our system does not require a web server, but can be used inside shiny web applications, when desired.
 
 \section{The \texttt{clickSelects} and \texttt{showSelected} keywords for interactive
   plot design}
