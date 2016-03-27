@@ -34,6 +34,8 @@
 \usepackage{enumerate}
 \usepackage{natbib}
 \usepackage{url}
+% for gifs -- http://tex.stackexchange.com/questions/7602/how-to-add-a-gif-file-to-my-latex-file
+\usepackage{movie15}
 
 %% We encourage the use of mathptmx for consistent usage of times font
 %% throughout the proceedings. However, if you encounter conflicts
@@ -198,14 +200,88 @@ We aim to narrow this gap in visualization tools by extending ggplot2's grammar 
 
 We aim to provide a system which empowers ggplot2 users to go beyond the confines of static graphics with minimal friction introduced into their current workflow. We acknowledge that numerous systems which support similar visualization techniques exist outside of the R ecosystem, but we intentionally focus on R interfaces since the statistical computing environment it provides is essential for many exploratory data analysis tasks.
 
+It is important to recognize that ggplot2 is built on top of the R package grid, a low-level graphics system, which is now bundled with R itself \citep{RCore}. The grid system does have some support for interaction, but its currently only possible to obtain the location of mouse clicks. This restriction has motivated efforts such as the R packages gridSVG \citep{gridSVG} and SVGAnnotation \citep{SVGAnnotation}, which provide tools for translating grid and base R graphics to Scale Vector Graphics (SVG), and adding simple interactive features. In the case of gridSVG, adding interactivity requires referencing grid objects by name. From a user perspective, this is inelegant, as the naming scheme imposed by the plotting system (e.g., ggplot2) may not have a sensible structure and could easily change without warning. Instead, we'd prefer a user interface where interactivity can be expressed by referencing the data to be visualized, rather than the building blocks of the graphics system, since the latter requires much more domain knowledge in order to use.
+
+%% TODO: maybe draw a comparison to D3js versus DC ^^^
+
 In terms of the user interface, the R package gganimate is very similar to our system \citep{gganimate}. It directly extends ggplot2 by adding a new aesthetic, named \texttt{frame}, which splits the data into subsets (one for each unique value of the frame variable), produces a static plot for each subset, and uses the animation package to combine the images into a key frame animation \citep{animation}. The concept is quite similar, but not as powerful, as using the \texttt{showSelected} aesthetic and \texttt{time} option in our system. Either system has the ability to control the amount of time that a given frame is displayed, but our system can also animate the transition between frames. Smooth transitions are generally useful for tracking positions between frames, which is crucial in many scenarios, such as the touring example discussed in Section~6.
 
 Tours are a useful visualization technique for exploring high-dimensional data which requires interactive and dynamic graphics. The open source software ggobi is currently the most fully-featured tool for touring data, but also provides the ability to produce more standard statistical graphics, and general interactive techniques such as linking, zooming, panning, and identifying \citep{ggobi:2007}. The R package rggobi \citep{rggobi} provides an R interface to ggobi's graphical interface, but unfortunately, the software requirements for installation and use of this toolchain are heavy and stringent. Furthermore, sharing the interactive versions of these graphics are not possible. The R package cranvas aims to be the successor to ggobi, with support for similar interactive techniques, but with a more flexible interface for describing plots inspired by the grammar of graphics \citep{cranvas}. Cranvas also has heavy and stringent software requirements which limits the portability and accessibility of the software.
 
 Another R package for interactive graphics which draws design inspiration from the grammar of graphics is ggvis \citep{ggvis}. It does not directly extend ggplot2, but instead provides a brand new purely functional interface which is designed with interactive graphics in mind. It currently relies on Vega to render the SVG graphics from JSON \citep{vega}, and the R package shiny to enable many of its interactive capabilities \citep{shiny}. The interface gives tremendous power to R users, as it allows one to write R functions to handle user events. This power does come with a cost, though, as sharing and hosting ggvis graphics may require special web server software, even when the interaction logic could be handled entirely client-side. As we outline in Section~4, our system does not require a web server, but can be used inside shiny web applications, when desired.
 
-\section{The \texttt{clickSelects} and \texttt{showSelected} keywords for interactive
-  plot design}
+
+\section{Extending the layered grammar of graphics}
+
+In this section, we propose an extension to the layered grammar of graphics \citep{ggplot2-paper} which enables declarative expression of animated transitions and linked queries on graphical layers. In the ggplot2 system, there are five essential components that define a layer of graphical markings: data, mappings (i.e., aesthetics), geometry, statistic, and position. These simple components are easily understood in isolation, but can be combined to express a wide array of graphics. For a simple example, here is one way to create a scatterplot in ggplot2 of variables named \texttt{<X>} and \texttt{<Y>} in \texttt{<DATA>}:
+
+<<gg>>=
+ggplot() + layer(
+  data = <DATA>, 
+  mapping = aes(x = <X>, y = <Y>), 
+  geom = "point", 
+  stat = "identity",
+  position = "identity"
+)
+@
+
+For every geometry, ggplot2 provides a convenient wrapper around \texttt{layer()}, which provides sensible defaults for the statistic and position (in this case, both are "identity"):
+
+<<gg2>>=
+ggplot() + geom_point(
+  data = <DATA>, 
+  aes(x = <X>, y = <Y>)
+)
+@
+
+A single ggplot2 plot can be comprised of multiple layers, and different layers can correspond to different data. Since each graphical mark within a ggplot2 layer corresponds to one (or more) observations in \texttt{<DATA>}, aesthetic mappings provide a mechanism for mapping graphical selections to the original data (and vice-versa) which is essential to any interactive graphics system \citep{viewing-pipeline, plumbing}. Thus, given a way to combine multiple ggplot2 plots into a single view, this design can be extended to support a notion of multiple linked views, as those discussed in \citep{Ahlberg:1991} and \citep{Buja:1991vh}.
+
+\subsection{Direct Manipulation of Database Queries}
+
+\citet{ggobi:2007} use SQL queries to formalize the direct manipulation methods discussed in \citet{Ahlberg:1991} and \citet{Buja:1991vh}. As it turns out, we can embed this framework inside the layered grammar of graphics with two classes of new aesthetics: one class to define a selection source and one to define a target. This is most easily seen using our animint implementation, which has a \texttt{clickSelects} aesthetic for defining the selection source (and modifying the selection via mouse click) and a \texttt{showSelected} aesthetic for defining the target. Here we use animint to create a linked view between a bar chart and a scatter plot, where the user can click on bars to control the points shown in the scatterplot, as shown in the video in Figure~\ref{fig:tips}.
+
+<<gg3>>=
+library(animint)
+p1 <- ggplot() + geom_bar(
+  data = reshape2::tips, 
+  aes(x = smoker, clickSelects = smoker),
+)
+p2 <- ggplot() + geom_point(
+  data = reshape2::tips, 
+  aes(x = total_bill, y = tip, 
+      showSelected = smoker)
+)
+animint2dir(list(p1 = p1, p2 = p2))
+@
+
+\begin{figure}[htp]
+	\centerline{\includemovie[poster={tips.png}, text={}]{250pt}{120pt}{tips.mov}}
+	\label{fig:tips}
+	\caption{Video demonstrating linked database querying via direct manipulation using animint. You can view this movie by opening the pdf document with Adobe Reader and clicking on the figure above, or view it online at \url{https://vimeo.com/160496419}}
+\end{figure}
+
+In essense, the R code above allows us to use direct manipulation to dynamically perform SQL queries of the form:
+
+\texttt{SELECT total\_bill, tip FROM tips} \\
+\hspace*{1cm} \texttt{WHERE smoker IN clickSelects}
+
+In this example, \texttt{clickSelects} is either "Yes" or "No", but as we show in later examples, \texttt{clickSelects} can also be an array of values. Although \texttt{clickSelects} is tied to a mouseclick event, this same framework supports other selection events, such as hover or click+drag. Statistically speaking, this is useful for visualizing and navigating through joint distributions conditional upon discrete values. In this sense, the same basis which enabled trellis displays \citep{trellis} and linked scatterplot brushing \citep{brushing-scatterplots} exists inside this framework. Since the conditioning mechansim is tied only to the aesthetic mapping, however, we are not tied to a particular geometry and different subsets can be defined per layer. As we'll see in later examples, this ability is particular useful for showing/hiding supporting annotations.
+
+
+%% TODO: make connections to scagnostics? trelliscope?
+
+As a result, we can quickly see how the relationship among tip amount and total bill amount depends on whether the customer is smoker.
+
+
+%% TODO: do a simple animation example?
+% \subsection{Creating animations with \texttt{showSelected}}
+% \subsection{Interactive animinations with \texttt{showSelected} and \texttt{clickSelects}}
+
+
+
+
+
+\section{The \texttt{clickSelects} and \texttt{showSelected} keywords for interactive plot design}
 \label{sec:design}
 
 %% In the system we propose, the central concept of interactivity is a
@@ -234,6 +310,10 @@ Another R package for interactive graphics which draws design inspiration from t
 %% transitions in data-driven animations \citep{animated-transitions}, a
 %% designer may also declare a \texttt{duration} list of selection
 %% variables which should have smooth transitions.
+
+
+
+
 
 In this section we explain the meaning of the new
 \texttt{clickSelects} and \texttt{showSelected} keywords that we
