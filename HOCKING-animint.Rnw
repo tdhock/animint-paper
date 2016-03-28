@@ -95,7 +95,7 @@
 \item
   Jun Cai is with the Center for Earth System Science at Tsinghua University. E-mail: cai-j12@mails.tsinghua.edu.cn
 \item
-  Kevin Ferris is with the Department of Statistics at Montana State University. E-mail: kevin.ferris10@gmail.com
+  Kevin Ferris is with the Baseball Operations Department of the Tampa Bay Rays. E-mail: kevin.ferris10@gmail.com
 }
 
 %other entries to be set up for journal
