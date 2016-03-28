@@ -247,13 +247,12 @@ We aim to provide a system which empowers ggplot2 users to go beyond the confine
 
 It is important to acknowledge that ggplot2 is built on top of the R package grid, a low-level graphics system, which is now bundled with R itself \citep{RCore}. Neither grid, nor base R graphics, have strong support for handling user interaction creating a need for add-on packages. There are a number of approaches these packages take to render graphics, each with their own benefits and drawbacks. These packages traditionally build on low-level R interfaces to graphical systems such as GTK+ \citep{RGtk2}, Qt \citep{qtbase, qtpaint}, or Java GUI frameworks \citep{rJava}. In general, the resulting system can be very fast and flexible, but sharing and reproducing output is difficult due to the heavy software requirements. Although there may be sacrifice in performance, using the modern web browser as a canvas is more portable, accessible, and composable (graphics can be embedded within larger frameworks/documents).
 
-Base R does provide a Scalable Vector Graphics (SVG) device, \texttt{svg()}, via the Cairo graphics API \citep{cairo}. The R package \citep{SVGAnnotation} provides functionality to post-process \texttt{svg()} output in order to add interactive and dynamic features. This is a powerful approach, since in theory it can work with any R graphic, but the package is self described as a proof-of-concept which reverse engineers poorly structured \texttt{svg()} output. As a result, anyone wishing to extend or alter the features that SVGAnnotation provides needs a deep understanding of base graphics and SVG. 
+Base R does provide a Scalable Vector Graphics (SVG) device, \texttt{svg()}, via the Cairo graphics API \citep{cairo}. The R package SVGAnnotation \citep{SVGAnnotation} provides functionality to post-process \texttt{svg()} output in order to add interactive and dynamic features. This is a powerful approach, since in theory it can work with any R graphic, but the package is self described as a proof-of-concept which reverse engineers poorly structured \texttt{svg()} output. As a result, anyone wishing to extend or alter the core functionality needs a deep understanding of base graphics and SVG. 
 
-The lack of well-structured SVG for R graphics motivated the gridSVG package which provides sensible structuring of SVG output for grid graphics \citep{gridSVG}. This package also provides some low-level tools for animating or adding interactive features where grid objects must be referenced by name. As a result, if one wanted to use this interface to add interactivity to a ggplot2 plot, they must know and understand the naming scheme ggplot2 uses internally and hope it does not change down the road. Users should prefer an interface where interactivity can be expressed by referencing the data to be visualized, rather than the building blocks of the graphics system, since the former interface is decoupled from the implementation and the latter requires much more domain knowledge in order to use.
+The lack of well-structured SVG for R graphics motivated the gridSVG package which provides sensible structuring of SVG output for grid graphics \citep{gridSVG}. This package also provides some low-level tools for animating or adding interactive features, where grid objects must be referenced by name. As a result, if one wanted to use this interface to add interactivity to a ggplot2 plot, they must know and understand the naming scheme ggplot2 uses internally and hope it does not change down the road. An interface where interactivity can be expressed by referencing the data to be visualized, rather than the building blocks of the graphics system, would be preferable since the former interface is decoupled from the implementation and does not require knowledge of grid.
+%% TODO: maybe draw a comparison to D3js vs DC? ^^^
 
-%% TODO: maybe draw a comparison to D3js versus DC? ^^^
-
-In terms of the user interface, the R package gganimate is very similar to our system \citep{gganimate}. It directly extends ggplot2 by adding a new aesthetic, named \texttt{frame}, which splits the data into subsets (one for each unique value of the frame variable), produces a static plot for each subset, and uses the animation package to combine the images into a key frame animation \citep{animation}. The concept is quite similar, but not as powerful, as using the \texttt{showSelected} aesthetic and \texttt{time} option in our system. Either system has the ability to control the amount of time that a given frame is displayed, but our system can also animate the transition between frames. Smooth transitions are generally useful for tracking positions between frames, which is crucial in many scenarios, such as the touring example discussed in Section~6.
+In terms of the user interface, the R package gganimate is very similar to our system \citep{gganimate}. It directly extends ggplot2 by adding a new aesthetic, named \texttt{frame}, which splits the data into subsets (one for each unique value of the frame variable), produces a static plot for each subset, and uses the animation package to combine the images into a key frame animation \citep{animation}. This is quite similar, but not as flexible as our system's support for animation, which we fully describe in Section~\ref{sec:animation}. Either system has the ability to control the amount of time that a given frame is displayed, but our system can also animate the transition between frames via the \texttt{d3.transition()} API \citep{d3}. Smooth transitions help us track positions between frames, which is useful in many scenarios, such as the touring example discussed in Section~6.
 
 Tours are a useful visualization technique for exploring high-dimensional data which requires interactive and dynamic graphics. The open source software ggobi is currently the most fully-featured tool for touring data, but also provides the ability to produce more standard statistical graphics, and general interactive techniques such as linking, zooming, panning, and identifying \citep{ggobi:2007}. The R package rggobi \citep{rggobi} provides an R interface to ggobi's graphical interface, but unfortunately, the software requirements for installation and use of this toolchain are heavy and stringent. Furthermore, sharing the interactive versions of these graphics are not possible. The R package cranvas aims to be the successor to ggobi, with support for similar interactive techniques, but with a more flexible interface for describing plots inspired by the grammar of graphics \citep{cranvas}. Cranvas also has heavy and stringent software requirements which limits the portability and accessibility of the software.
 
@@ -261,7 +260,7 @@ Another R package for interactive graphics which draws design inspiration from t
 
 \section{Extending the layered grammar of graphics}
 
-In this section, we propose an extension to the layered grammar of graphics \citep{ggplot2-paper} which enables declarative expression of animated transitions and linked queries on graphical layers. In the ggplot2 system, there are five essential components that define a layer of graphical markings: data, mappings (i.e., aesthetics), geometry, statistic, and position. These simple components are easily understood in isolation, but can be combined to express a wide array of graphics. For a simple example, here is one way to create a scatterplot in ggplot2 of variables named \texttt{<X>} and \texttt{<Y>} in \texttt{<DATA>}:
+In this section, we propose an extension to the layered grammar of graphics \citep{ggplot2-paper} which enables declarative expression of animations and database queries via direct manipulation. In the ggplot2 system, there are five essential components that define a layer of graphical markings: data, mappings (i.e., aesthetics), geometry, statistic, and position. These simple components are easily understood in isolation and can be combined in many ways to express a wide array of graphics. For a simple example, here is one way to create a scatterplot in ggplot2 of variables named \texttt{<X>} and \texttt{<Y>} in \texttt{<DATA>}:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
@@ -277,7 +276,7 @@ In this section, we propose an extension to the layered grammar of graphics \cit
 \end{kframe}
 \end{knitrout}
 
-For every geometry, ggplot2 provides a convenient wrapper around \texttt{layer()}, which provides sensible defaults for the statistic and position (in this case, both are "identity"):
+For every geometry, ggplot2 provides a convenient wrapper around \texttt{layer()} which provides sensible defaults for the statistic and position (in this case, both are "identity"):
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
@@ -322,23 +321,26 @@ A single ggplot2 plot can be comprised of multiple layers, and different layers 
 
 In essense, the R code above allows us to use direct manipulation to dynamically perform SQL queries of the form:
 
+\vspace{0.3cm}
 \texttt{SELECT total\_bill, tip FROM tips} \\
 \hspace*{1cm} \texttt{WHERE smoker IN clickSelects}
+\vspace{0.3cm}
 
-In this example, \texttt{clickSelects} is either "Yes" or "No", but as we show in later examples, \texttt{clickSelects} can also be an array of values. Although \texttt{clickSelects} is tied to a mouseclick event, this same framework supports other selection events, such as hover or click+drag. Statistically speaking, this is useful for visualizing and navigating through joint distributions conditional upon discrete values. In this sense, this extension forms a basis which also exists trellis displays \citep{trellis} and linked scatterplot brushing \citep{brushing-scatterplots}. The major difference is that conditioning is layer specific, and not tied to a particular geometry, which allows designers to be creative when showing/hiding graphical marks. 
+In this example, \texttt{clickSelects} is either "Yes" or "No", but as we show in later examples, \texttt{clickSelects} can also be an array of values. Although \texttt{clickSelects} is tied to a mouseclick event, this same framework supports other selection events, such as hover or click+drag. Statistically speaking, this is useful for visualizing and navigating through joint distributions conditional upon discrete values. In this sense, our extension is closely related to the same a basis which leads to trellis displays \citep{trellis} and linked scatterplot brushing \citep{brushing-scatterplots}. The major difference are that conditioning: is layer (i.e., not plot) specific, is not tied to a particular geometry, and can be controlled through direct manipulation or animation controls.
 %% TODO: make connections to scagnostics? trelliscope?
 
 \subsection{Adding animation}
+\label{sec:animation}
 
 In some sense, the \texttt{showSelected} aesthetic splits the layer into subsets -- one for every unique value of the \texttt{showSelected} variable. The \texttt{clickSelects} aesthetics provides a mechanism to alter the visibility of those subset(s) via direct manipulation, but our animint implementation can also loop through selections to produce animation(s). We acheive this by reserving the name \texttt{time} to specify which variable to select as well as the amount of time to wait before changing the selection (in milliseconds). We also reserve the name \texttt{duration} to specify the amount of time used to smoothly transition between frames (with linear easing). The code below was used to generate Figure~\ref{fig:animation} which demonstrates a simple animation with smooth transitions between 10 frames of a single point. Note that the resulting web page has controls for interactively altering the \texttt{time} and \texttt{duration} parameters. 
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{d} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{x} \hlstd{=} \hlnum{1}\hlopt{:}\hlnum{10}\hlstd{)}
+\hlstd{d} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{v} \hlstd{=} \hlnum{1}\hlopt{:}\hlnum{10}\hlstd{)}
 \hlstd{plotList} \hlkwb{<-} \hlkwd{list}\hlstd{(}
   \hlkwc{plot} \hlstd{=} \hlkwd{ggplot}\hlstd{()} \hlopt{+} \hlkwd{geom_point}\hlstd{(}
-    \hlkwc{data} \hlstd{= d,} \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= x,} \hlkwc{y} \hlstd{= x,} \hlkwc{showSelected} \hlstd{= x)}
+    \hlkwc{data} \hlstd{= d,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=v,} \hlkwc{y}\hlstd{=v,} \hlkwc{showSelected}\hlstd{=v)}
   \hlstd{),}
   \hlkwc{time} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{variable} \hlstd{=} \hlstr{"x"}\hlstd{,} \hlkwc{ms} \hlstd{=} \hlnum{1000}\hlstd{),}
   \hlkwc{duration} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{x} \hlstd{=} \hlnum{1000}\hlstd{)}
@@ -356,15 +358,7 @@ In some sense, the \texttt{showSelected} aesthetic splits the layer into subsets
 \end{figure}
 
 
-%% TODO: do a simple animation example?
-% \subsection{Creating animations with \texttt{showSelected}}
-% \subsection{Interactive animinations with \texttt{showSelected} and \texttt{clickSelects}}
-
-
-
-
-
-\section{The \texttt{clickSelects} and \texttt{showSelected} keywords for interactive plot design}
+\subsection{World Bank Example}
 \label{sec:design}
 
 %% In the system we propose, the central concept of interactivity is a
@@ -394,44 +388,20 @@ In some sense, the \texttt{showSelected} aesthetic splits the layer into subsets
 %% designer may also declare a \texttt{duration} list of selection
 %% variables which should have smooth transitions.
 
-
-
-
-
-In this section we explain the meaning of the new
-\texttt{clickSelects} and \texttt{showSelected} keywords that we
-propose to use for interactive graphic design. We
-propose using these keywords as new aesthetics in the ggplot2 system
-\citep{ggplot2-book}. An aesthetic is a declarative mapping from a
-data variable to a property of a geometric plot element. Some standard
-ggplot2 aesthetics are
-\begin{description}
-\item[x] horizontal position,
-\item[y] vertical position,
-\item[color] color or fill,
-\item[size] point or line thickness.
-\end{description}
-We propose adding two new aesthetics to define interactions:
-\begin{description}
-\item[clickSelects] clicking changes the current selection,
-\item[showSelected] show only data for the current selection.
-\end{description}
-
-We use a visualization based on the World Bank data set to explain
-the usage of these new aesthetics. The World Bank data consist of
-several economic variables measured for 205 countries from 1960 to
-2012 \citep{WorldBank}. Figure~1 shows a visualization consisting of
-two linked plots based on these data. In the static PDF version of
-this figure, the year 1979 and the countries United States and Vietnam
-are selected, but readers are encouraged to interactively select other
-values using a web
+Figure~\ref{fig:worldbank} shows an interactive animation of the World Bank
+data set \citep{WorldBank} created with our animint implementation. The 
+visualization helps us explore the change in the relationship between life 
+expectancy and fertility over time for 205 countries. By default, the year 
+1979 and the countries United States and Vietnam are
+selected, but readers are encouraged to watch the video of the animation 
+and/or interact the visualization using a web 
 browser.\footnote{\url{http://bl.ocks.org/tdhock/raw/8ce47eebb3039263878f/}}
 In the interactive version, the selected value of the year variable is
 automatically incremented every few seconds, using animation to
 visualize yearly changes in the relationship between life expectancy
 and fertility rate.
 
-\begin{figure*}[b!]
+\begin{figure*}[htp]
   \centering
   \includegraphics[width=\textwidth]{figure-1}
   \caption{An interactive animation of World Bank demographic data of
@@ -445,368 +415,153 @@ and fertility rate.
     country=$\{\textrm{United States}, \textrm{Vietnam}\}$, and
     region=$\{\textrm{East Asia \& Pacific}, \textrm{North
       America}\}$}
-  \label{fig:1}
+  \label{fig:worldbank}
 \end{figure*}
 
-The World Bank data visualization consists of five geometric elements,
-each with different interactive aesthetics (top of Figure~1). The time
-series on the left of Figure~1 contains two geometric elements:
-tallrect and line. We define the tallrects in the background based on
-the \texttt{years} data set, which has one row for every year between
-1960 and 2010:
+We anticipate that some ggplot2 users will be able to reverse engineer the
+animint code which creates Figure~\ref{fig:worldbank}, simply by looking at it.
+In fact, this is one of the wonderful things about ggplot2, it helps minimize 
+the amount of time required to translate a figure in your head into code 
+(TODO: more on this in section X). In the left hand plot, 
+we have a time series of the life expectancy where
+each line (\texttt{group}) is a country and lines are \texttt{color}ed by 
+region. By clicking on a line, we want the country label to appear
+in the right hand plot, so we also need to set \texttt{clickSelects=country}. 
+Lastly, by setting \text{showSelected=region} we can hide/show lines
+by clicking on the color legend entries.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{yearRects} \hlkwb{<-} \hlkwd{geom_tallrect}\hlstd{(}
-  \hlkwd{aes}\hlstd{(}\hlkwc{xmin}\hlstd{=year}\hlopt{-}\hlnum{0.5}\hlstd{,} \hlkwc{xmax}\hlstd{=year}\hlopt{+}\hlnum{0.5}\hlstd{,}
-      \hlkwc{clickSelects}\hlstd{=year),}
-  \hlkwc{data}\hlstd{=years)}
+\hlstd{timeSeries} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()} \hlopt{+} \hlkwd{geom_line}\hlstd{(}
+  \hlkwc{data} \hlstd{= WorldBank,}
+  \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= year,} \hlkwc{y} \hlstd{= life.expectancy,}
+      \hlkwc{group} \hlstd{= country,} \hlkwc{color} \hlstd{= region,}
+      \hlkwc{clickSelects} \hlstd{= country,}
+      \hlkwc{showSelected} \hlstd{= region)}
+\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-The tallrect plots a rectangle that spans the entire vertical range,
-for each row of the \texttt{years} data set. The horizontal range of
-each rectangle is specified by the \texttt{xmin} and \texttt{xmax}
-aesthetics. The \texttt{clickSelects=year} aesthetic means that
-clicking on a tallrect should change the selected year. For example,
-if the rectangle for 1980 is clicked, the selected year should change
-to 1980.
-%% Finally,
-%% \texttt{alpha=1/2} specifies that the selected tallrect should have an
-%% opacity of 50\%. Since color is black by default, this results in a
-%% selected semi-transparent tallrect which appears grey. Since
-%% non-selected \texttt{clickSelects} plot elements have 1/2 less opacity
-%% by default, this results in non-selected rectangles which are
-%% completely transparent, blending in with the white background.
-
-
-%% Animint also provides a shorthand syntax for tallrects, as they are a
-%% common geom/aesthetic pairing in linked plots.
-
-%% <<yearRects-make>>=
-%% yearRects <- make_tallrect(WorldBank, "year")
-%% @
-
-%% This approach allows us to utilize both plots to display meaningful
-%% information: we can overlay the tallrects in the first plot with time
-%% series data while still using the tallrects to modify the second
-%% plot. Similar linked graphs could be produced with D3, but the grammar
-%% of graphics approach allows for fewer lines of code and simpler
-%% debugging.
-
-To create the time series plot, we create a ggplot that combines the
-tallrects above with lines based on the entire World Bank data set:
+We want to provide a visual clue for the selected year in the 
+time series, so we also layer some ``tall rectangles" onto the time series.
+These tall rectangles will also serve as a way to directly modify the 
+selected year. The tallrect geometry is a special case of a rectangle
+that automatically spans the entire vertical range, so we just have to 
+specify the horizontal range via \texttt{xmin} and \texttt{xmax}. Also, 
+since the layered grammar of graphics allows for different data in 
+each layer, we supply a data frame with just the unique years in the 
+entire data for this layer.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{timeSeries} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
-  \hlstd{yearRects}\hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}
-    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=year,} \hlkwc{y}\hlstd{=life.expectancy,}
-        \hlkwc{group}\hlstd{=country,} \hlkwc{color}\hlstd{=region,}
-        \hlkwc{clickSelects}\hlstd{=country,}
-        \hlkwc{showSelected}\hlstd{=region),}
-    \hlkwc{data}\hlstd{=WorldBank)}
+\hlstd{years} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwc{year} \hlstd{=} \hlkwd{unique}\hlstd{(WorldBank}\hlopt{$}\hlstd{year))}
+\hlstd{timeSeries} \hlkwb{<-} \hlstd{timeSeries} \hlopt{+} \hlkwd{geom_tallrect}\hlstd{(}
+  \hlkwc{data} \hlstd{= years,}
+  \hlkwd{aes}\hlstd{(}\hlkwc{xmin} \hlstd{= year} \hlopt{-} \hlnum{0.5}\hlstd{,} \hlkwc{xmax} \hlstd{= year} \hlopt{+} \hlnum{0.5}\hlstd{,}
+      \hlkwc{clickSelects} \hlstd{= year)}
+\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-To define the lines we used both interactive aesthetics. The
-\texttt{clickSelects=country} definition means that clicking a line
-should change the selected country. The \texttt{showSelected=region}
-definition means to only plot the subset of data that corresponds to
-the current selection of the \texttt{region} variable.
-
-Note that the tallrect used \texttt{data=years} whereas the line used
-\texttt{data=WorldBank}. The multi-layer ggplot2 system allows a
-different data set for each layer/geom. Interactivity is accomplished
-by defining interactive aesthetics using common variable names in the
-different data sets. For example, the \texttt{year} variable is common
-to both the \texttt{WorldBank} and \texttt{years} data sets.
-
-Having completed the definition of the time series plot on the left of
-Figure~1, now let us consider the scatterplot on the right. The
-following R code defines the points in the scatterplot:
+As for the right hand plot in Figure~\ref{fig:worldbank}, there are 
+three layers: a point layer for countries, a text layer for countries, 
+and a text layer to display the selected year. By clicking on a point,
+we want to display the country text label and highlight the corresponding
+time series on the right hand plot, so we set \texttt{clickSelects=country}
+in this layer. Furthermore, we only want to show the points for the 
+selected year and region, so we also need \texttt{showSelected=year} and 
+\texttt{showSelected2=region}.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{countryPoints} \hlkwb{<-} \hlkwd{geom_point}\hlstd{(}
-    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=fertility.rate,} \hlkwc{y}\hlstd{=life.expectancy,}
-        \hlkwc{color}\hlstd{=region,} \hlkwc{size}\hlstd{=population,}
-        \hlkwc{clickSelects}\hlstd{=country,}
-        \hlkwc{showSelected}\hlstd{=year,}
-        \hlkwc{showSelected2}\hlstd{=region),}
-    \hlkwc{data}\hlstd{=WorldBank)}
+\hlstd{scatterPlot} \hlkwb{<-} \hlstd{ggplot} \hlopt{+} \hlkwd{geom_point}\hlstd{(}
+  \hlkwc{data} \hlstd{= WorldBank,}
+  \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= fertility.rate,} \hlkwc{y} \hlstd{= life.expectancy,}
+      \hlkwc{color} \hlstd{= region,} \hlkwc{size} \hlstd{= population,}
+      \hlkwc{clickSelects} \hlstd{= country,}
+      \hlkwc{showSelected} \hlstd{= year,}
+      \hlkwc{showSelected2} \hlstd{= region)}
+\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-The code creates a point for every row in the World Bank data
-table. The visual characteristics of each point are defined by the
-values of the corresponding data: the (x,y) position encodes fertility
-rate and life expectancy, point color encodes the region, and point
-size encodes the population. Note that scales are automatically
-constructed for the x and y axes, and legends are automatically
-constructed for color and size. The \texttt{clickSelects=country}
-aesthetic means that clicking a point should change the selected
-country. The \texttt{showSelected=year} and
-\texttt{showSelected2=region} aesthetics mean to only plot the points
-that match both the selected year and region.
-
-In order to remind the plot user which subset of data are selected, we
-will draw text labels for the selected year and countries. First, we
-create the year labels using
+The text layer for annotating selected countries looks quite similar to the 
+point layer with a few important differences:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{yearText} \hlkwb{<-} \hlkwd{geom_text}\hlstd{(}
-  \hlkwd{aes}\hlstd{(}\hlkwc{label}\hlstd{=}\hlkwd{sprintf}\hlstd{(}\hlstr{"year = %d"}\hlstd{, year),}
-      \hlkwc{showSelected}\hlstd{=year),}
-  \hlkwc{x}\hlstd{=}\hlnum{5}\hlstd{,} \hlkwc{y}\hlstd{=}\hlnum{80}\hlstd{,}
-  \hlkwc{data}\hlstd{=years)}
+\hlstd{scatterPlot} \hlkwb{<-} \hlstd{scatterPlot} \hlopt{+} \hlkwd{geom_text}\hlstd{(}
+  \hlkwc{data} \hlstd{= WorldBank,}
+  \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= fertility.rate,} \hlkwc{y} \hlstd{= life.expectancy,}
+      \hlkwc{label} \hlstd{= country,}
+      \hlkwc{showSelected} \hlstd{= country,}
+      \hlkwc{showSelected2} \hlstd{= year,}
+      \hlkwc{showSelected3} \hlstd{= region)}
+\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-The \texttt{label} aesthetic is used to define the text from the year
-variable, and only the selected year is shown due to the
-\texttt{showSelected=year} aesthetic. Note that since the label
-\texttt{x} and \texttt{y} positions are constant, they are not defined
-as aesthetics.
-
-We can also add another label to show the selected countries:
+Lastly, to help identify the selected year when viewing the scatterplot, 
+we add another layer of text at a fixed location.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{countryText} \hlkwb{<-} \hlkwd{geom_text}\hlstd{(}
-    \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=fertility.rate,} \hlkwc{y}\hlstd{=life.expectancy,}
-        \hlkwc{label}\hlstd{=country,}
-        \hlkwc{showSelected}\hlstd{=country,}
-        \hlkwc{showSelected2}\hlstd{=year,}
-        \hlkwc{showSelected3}\hlstd{=region),}
-    \hlkwc{data}\hlstd{=WorldBank)}
+\hlstd{scatterPlot} \hlkwb{<-} \hlstd{scatterPlot} \hlopt{+} \hlkwd{geom_text}\hlstd{(}
+  \hlkwc{data} \hlstd{= years,} \hlkwc{x} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{y} \hlstd{=} \hlnum{80}\hlstd{,}
+  \hlkwd{aes}\hlstd{(}\hlkwc{label} \hlstd{=} \hlkwd{paste}\hlstd{(}\hlstr{"year ="}\hlstd{, year),}
+      \hlkwc{showSelected} \hlstd{= year)}
+\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-A geom/layer may contain any number of \mbox{showSelected}
-aesthetics. In this example, the three \texttt{showSelected}
-aesthetics mean to only show the subset of labels corresponding to the
-selected country, year, and region.
-
-Having defined these three geometric elements, we combine them in a
-single ggplot:
+Now that we have defined the plots in Figure~\ref{fig:worldbank}, we can set
+the \texttt{time} and \texttt{duration} options (introduced in Section~\ref{sec:animation}) to control the animation parameters. Our animint implementation also respects a \texttt{selector.types} option which controls whether or not selections for a given variable can accumulate.\footnote{We maintain a complete list of options here -- \url{https://github.com/tdhock/animint/wiki/Advanced-features-present-animint-but-not-in-ggplot2}} By default, supplying the list of 
+plots and additional options to 
+\texttt{animint2dir()} will write all the files necessary to render 
+the visualization to a temporary directory and prompt the browser to 
+open the relevant HTML file.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{scatterPlot} \hlkwb{<-} \hlkwd{ggplot}\hlstd{()}\hlopt{+}
-  \hlstd{countryPoints}\hlopt{+}
-  \hlstd{yearText}\hlopt{+}
-  \hlstd{countryText}
+\hlstd{viz} \hlkwb{<-} \hlkwd{list}\hlstd{(}
+  \hlkwc{timeSeries} \hlstd{= timeSeries,}
+  \hlkwc{scatterPlot} \hlstd{= scatterPlot,}
+  \hlkwc{time} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{variable} \hlstd{=} \hlstr{"year"}\hlstd{,} \hlkwc{ms} \hlstd{=} \hlnum{3000}\hlstd{),}
+  \hlkwc{duration} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{year} \hlstd{=} \hlnum{1000}\hlstd{),}
+  \hlkwc{selector.types} \hlstd{=} \hlkwd{list}\hlstd{(}
+    \hlkwc{year} \hlstd{=} \hlstr{"single"}\hlstd{,}
+    \hlkwc{country} \hlstd{=} \hlstr{"multiple"}\hlstd{,}
+    \hlkwc{region} \hlstd{=} \hlstr{"multiple"}
+  \hlstd{)}
+\hlstd{)}
+\hlkwd{animint2dir}\hlstd{(viz)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-This completes the definition of the scatterplot. Note that both the
-\texttt{timeSeries} and \texttt{scatterPlot} objects are valid
-ggplots, even though they use the new \texttt{clickSelects} and
-\texttt{showSelected} aesthetics. However, plotting these objects
-using ggplot2 will render non-interactive plots with all geometric
-elements, including data for all years and countries. In the next
-section, we propose the \texttt{animint} R package, which implements a new
-interactive renderer for ggplots with the \texttt{clickSelects} and
-\texttt{showSelected} aesthetics.
 
-%% \begin{figure*}[b!]
-%%   \centering
-%%   \begin{tabular}{ccc}
-%%   \begin{minipage}{2.5in}
-%%     \centering
-%%     \textbf{D3 (Javascript code)}
-%%     \small
-%% \begin{verbatim}
-%% svg.selectAll("circle")
-%%   .data(one_year)
-%%   .enter().append("circle")
-%% .attr("cx", function(d){
-%%   return x_scale(d.fertility_rate);
-%% }).attr("cy", function(d){
-%%   return y_scale(d.life_expectancy);
-%% }).attr("r", function(d){
-%%   return size_scale(d.population);
-%% }.style("fill", function(d){
-%%   return color_scale(d.region);
-%% })
-%% \end{verbatim}
-%%   \end{minipage}
-%%   &
-%%   \begin{minipage}{2.6in}
-%%     \centering
-%%     \textbf{Vega (JSON file)}
-%%     \small
-%% \begin{verbatim}
-%% { "marks": [{
-%%   "type":"symbol",
-%%   "from": {"data":"this_year"},
-%%   "properties":{ "enter":{
-%%     "x": {"field": "fertility_rate"},
-%%     "y": {"field": "life_expectancy"},
-%%     "size": {"field": "population"},
-%%     "fill": {"field": "region"}
-%% }}}]}
-%% \end{verbatim}
-%%   \end{minipage}
-%%   &
-%%   \begin{minipage}{2in}
-%%     \centering
-%%     \textbf{Animint (R code)}
-%%     \small
-%% \begin{verbatim}
-%% geom_point(aes(
-%%   x=fertility.rate,
-%%   y=life.expectancy,
-%%   color=region,
-%%   size=population,
-%% \end{verbatim}
-%%     {\color{red}
-%% \begin{verbatim}
-%%   clickSelects=country,
-%%   showSelected=year),
-%% \end{verbatim}
-%%       }
-%% \begin{verbatim}
-%%   data=WorldBank)
-%% \end{verbatim}
-%%     \end{minipage}
-%%   \end{tabular}
-%%   \caption{Comparison of code used to define points on a scatterplot.
-%%     Note that the Animint code is shorter and simpler than the D3 and
-%%     Vega code. Animint and Vega provide nice defaults for plot elements such
-%%     as the axes and labels, but these elements still need to be expressed
-%%     in the D3 code. Also, Animint implements the proposed
-%%     \texttt{clickSelects} and \texttt{showSelected} aesthetics (red),
-%%     but D3 and Vega do not.}
-%%   \label{fig:code}
-%% \end{figure*}
+%% TODO: this bit down here seems a bit out of place. Add to it and put in it's own section?
+Direct manipulation is useful when it is easy to identify and select 
+a graphical marks on a plot, but that is not always easy. In these cases,
+it is convenient to have a dropdown menu to aid the selection process.
+For this reason, the animint system automatically provides selection 
+menu(s) for each \texttt{showSelected} variable. 
+For an example, suppose that we would like select a country by name in
+Figure~\ref{fig:worldbank}. Figure~\ref{fig:widgets} shows what the user
+sees after typing ``th'' in the search box. 
 
-%% Carson: This seems like an opportunity to compare to Vega.
-%% Animint is similar in the respect that the renderer takes
-%% a JSON object as it's 'input', but it doesn't have the equivalent
-%% of Animint's compiler.
-
-\section{Current implementation in the \texttt{animint} R package}
-
-Since 2013 we have been developing the \texttt{animint} R
-package,\footnote{freely available at
-  \url{https://github.com/tdhock/animint}} which provides an
-interactive renderer for ggplots with \texttt{clickSelects} and
-\texttt{showSelected} aesthetics. We first explain how a graphic
-designer can use \texttt{animint} to render a set of ggplots, then explain the
-graphical user interface (GUI) for selecting data subsets. Finally, we
-discuss some implementation details of the compiler and renderer,
-which only the \texttt{animint} package developers need to be concerned about.
-
-\subsection{Animint renderer for a list of ggplots}
-
-We will again use the World Bank data visualization of Figure~1 as an
-example. Recall that in Section~3 we defined two ggplot objects,
-\texttt{scatterPlot} and \texttt{timeSeries}. To plot them with
-\texttt{animint}, we first put them in a named list:
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{viz} \hlkwb{<-}
-  \hlkwd{list}\hlstd{(}\hlkwc{scatterPlot}\hlstd{=scatterPlot,}
-       \hlkwc{timeSeries}\hlstd{=timeSeries,}
-       \hlkwc{time}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{variable}\hlstd{=}\hlstr{"year"}\hlstd{,} \hlkwc{ms}\hlstd{=}\hlnum{3000}\hlstd{),}
-       \hlkwc{duration}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{year}\hlstd{=}\hlnum{1000}\hlstd{),}
-       \hlkwc{selector.types}\hlstd{=}\hlkwd{list}\hlstd{(}
-         \hlkwc{year}\hlstd{=}\hlstr{"single"}\hlstd{,}
-         \hlkwc{country}\hlstd{=}\hlstr{"multiple"}\hlstd{,}
-         \hlkwc{region}\hlstd{=}\hlstr{"multiple"}\hlstd{))}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-The \texttt{viz} list contains two ggplots and three options:
-\texttt{time}, \texttt{duration}, and \texttt{selector.types}. The
-\texttt{time} option specifies that in absence of user interaction, we
-want the plots to animate over time, progressing at a rate of one year
-every 3 seconds (ms = milliseconds). The \texttt{duration} option
-specifies that when updating the selected year, there should be a
-smooth transition with a duration of 1 second. Smooth transitions are
-useful to emphasize continuity between plotted objects before and after the
-transition \citep{animated-transitions}. Finally, the
-\texttt{selector.types} option is used to define either single or
-multiple selection for each variable. For single selection, only one
-value is selected at any time (e.g. year=1990). For multiple
-selection, a set of values is selected (e.g. country=$\{\textrm{United
-  States}, \textrm{Vietnam}\}$).
-
-The \texttt{viz} list contains all of the information that we need to
-create the linked plots of Figure~1. To render the plots, we call the
-\texttt{animint2dir} function:
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{animint2dir}\hlstd{(viz,} \hlkwc{out.dir}\hlstd{=}\hlstr{"figure-WorldBank"}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-The \texttt{animint2dir} function saves some data files and a web page
-in the \texttt{figure-WorldBank} directory, then it opens the
-interactive plot in a web browser.
-
-\subsection{User interaction}
-
-In this section we explain how a user can view and interact with a
-data visualization produced by the \texttt{animint} system. As explained in the
-previous section, the \texttt{animint} system outputs a set of data files along
-with a web page. Opening the web page in a web browser will render the
-data visualization and allow the user to select different subsets of data
-to plot.
-
-When viewing an \texttt{animint} data visualization in a web browser,
-interactions are accomplished mainly via direct
-manipulation. \citet{instrumental-interaction} discussed the
-advantages of direct manipulation in graphical user
-interfaces. \texttt{Animint} data visualizations are inspired by principle 2,
-``Physical actions on objects vs. complex syntax.'' In particular, the
-user can update the selection by directly clicking on the geoms with
-\texttt{clickSelects} aesthetics. Also, \texttt{animint} creates a multiple
-selection variable for each discrete legend (e.g. region in
-Figure~1). Clicking on an entry in a discrete legend will update the
-corresponding selection variable. This use of direct manipulation
-contrasts other systems which use menus and widgets, and thus suffer
-from less articulatory directness \citep{Hutchins:1985}.
-
-For single selection variables such as year, clicking sets the value
-of the corresponding selection variable. For multiple selection
-variables such as country, clicking adds or removes values from the
-set of selected values.
-
-While it is often best to interact by directly clicking on the plotted
-data, there are situations where indirect manipulation is
-preferable. For example, when there are many different values that
-could be selected, it is convenient to have a menu that contains all
-possible values. More concretely, suppose that we would like to add
-Thailand to the selected set of countries in Figure~1. The
-\texttt{animint} renderer provides a selection menu which shows the
-full list of countries, and allows entering text to search for a
-particular country (Figure~\ref{fig:widgets}).
-
-
-\begin{figure}[b!]
+\begin{figure}[htp]
   \centering
   \includegraphics[width=0.5\columnwidth]{Screenshot-toggle-selected-value}
   \caption{Animint provides a menu to update each selection
@@ -819,9 +574,12 @@ particular country (Figure~\ref{fig:widgets}).
 \label{sec:implementation}
 
 As shown in Figure~\ref{fig:design}, the \texttt{animint} system is implemented
-in 2 parts: the compiler and the renderer.
+in 2 parts: the compiler and the renderer. The compiler is implemented in about 
+2000 lines of R code that converts a list of ggplots and options to a JSON 
+plot meta-data file and a tab-separated values (TSV) file database
+(Figure~\ref{fig:design}).
 
-\begin{figure}[b!]
+\begin{figure}[htp]
   \centering
   \includegraphics[width=\columnwidth]{figure-design}
   \caption{Schematic explanation of compilation and rendering the
@@ -839,7 +597,7 @@ in 2 parts: the compiler and the renderer.
   \label{fig:design}
 \end{figure}
 
-\begin{figure*}[p]
+\begin{figure*}[htp]
   \centering
   \includegraphics[width=\textwidth]{figure-tornado}
   \caption{Interactive animation of tornadoes recorded from 1950 to
@@ -853,7 +611,7 @@ in 2 parts: the compiler and the renderer.
   \label{fig:tornado}
 \end{figure*}
 
-\begin{figure*}[p]
+\begin{figure*}[htp]
   \centering
   \includegraphics[width=\textwidth]{figure-climate}
   \caption{Visualization containing 6 linked, interactive, animated
@@ -871,23 +629,6 @@ in 2 parts: the compiler and the renderer.
   \label{fig:climate}
 \end{figure*}
 
-\begin{figure*}[b!]
-  \centering
-  \includegraphics[width=\textwidth]{figure-chip-seq}
-  \caption{Visualization with 4 selection variables used to navigate
-    through 1,292,464 rows of data in 5 linked interactive plots. The
-    bottom plot shows a facets plot with aligned x axes, used to
-    emphasize that the blue probability function is defined at the
-    same positions as the black signals below. It also contains an
-    href tag (web link), which opens a new genome browser web page
-    zoomed to the same region as the selected data.}
-  \label{fig:ChIPseq}
-\end{figure*}
-
-The compiler is implemented in about 2000 lines of R code that
-converts a list of ggplots and options to a JSON plot meta-data file
-and a tab-separated values (TSV) file database
-(Figure~\ref{fig:design}).
 
 The compiler scans the aesthetics in the ggplots to determine
 how many selection variables are present, and which geoms to update
@@ -974,8 +715,7 @@ respect to both year and country variables.
     click on &
     %language &
     %years &
-    interaction vars &
-    http://bit.ly/
+    interaction vars
     \\
     \hline
     \texttt{animint} &
