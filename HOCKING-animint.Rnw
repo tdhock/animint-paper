@@ -581,16 +581,22 @@ on any web server. The interactive plots can be viewed by opening the
 \section{Comparison study}
 \label{sec:compare}
 
-To compare our animint implementation with similar systems, we 
+To compare our animint implementation with similar leading systems, we 
 reimplemented Figure~\ref{fig:worldbank} using Tableau as well as
-the R packages animation and ggvis. As shown in Table~\ref{tab:packages}),
+the R packages animation and ggvis. We also walk through examples of
+the grand tour with both animint and ggvis which helps point out 
+important consequences of each design approach.
+
+\subsection{World Bank Example}
+
+% TODO: condense this section
+
+As shown in Table~\ref{tab:packages}),
 animint requires significantly fewer lines of code and produces
 interactive plots with more articulatory directness
 \citep{Hutchins:1985}. Note that it is possible to implement the World
 Bank visualization in pure D3, but would require significantly more code.
 
-\subsection{R package animation}
-\label{sec:compare-animation}
 
 We designed a version of the WorldBank visualization with limited
 interactivity, using 38 lines of R code and the animation
@@ -624,55 +630,18 @@ respect to both year and country variables.
 % \scriptsize
  \begin{center}
   \begin{tabular}{cccccc}
-    library &
-    LOC &
-    click on &
-    %language &
-    %years &
-    interaction vars
-    \\
+    library & LOC & click on & interaction vars \\
     \hline
-    animint &
-    20 &
-    plotted data &
-    %R &
-    %2013- &
-    several &
-    \\
-    \texttt{animation} &
-    38 &
-    play/pause &
-    %R  &
-    %2007- &
-    1 = time &
-    \\
-    %% D3 &
-    %% TODO &
-    %% JavaScript &
-    %% %2011- &
-    %% several &
-    %% %declarative &
-    %% \\
-    \texttt{ggvis}/\texttt{shiny} &
-    84 &
-    widgets &
-    %R  &
-    %2012- &
-    several &
-    \\
-    Tableau &
-      &
-    widgets/plot &
-    several &
-    \\
+    animint     & 20 & plotted data & several \\
+    animation   & 38 & play/pause & 1 = time \\
+    ggvis/shiny & 84 & widgets & several \\
+    Tableau    &    & widgets/plot & several \\
   \end{tabular}
  \end{center}
 \end{table}
 
-\subsection{Recreating the World Bank example with ggvis}
-
 We designed another version of the World Bank data visualization in 115
-lines of R code (\url{http://bit.ly/1diUYsg}), using the ggvis
+lines of R code (\url{http://bit.ly/1SsJKlN}), using the ggvis
 graphics library combined with the recommended shiny web server
 package \citep{shiny, ggvis}. Showing and hiding data subsets was
 accomplished by clicking on a slider for year and a menu for country,
@@ -780,8 +749,6 @@ system would certainly be preferable when there are many more data
 subsets than could ever be precomputed. In that case, the web server
 would only compute the subsets that the user interactively specifies.
 
-\subsection{Tableau}
-
 We implemented a version of the WorldBank data visualization using
 Tableau's GUI (\url{http://bit.ly/worldBank-tableau}).
 %% TDH 20 Nov 2014: When I click on a country on the scatterplot it
@@ -808,8 +775,14 @@ selection set for each selection variable, each of which has
 geom-specific effects based on the geom's \texttt{clickSelects}/\texttt{showSelected}
 variables.
 
+\subsection{The Grand Tour}
 
-\section{Example applications}
+\begin{figure}[htp]
+	\centerline{\includemovie[poster={tour.png}, text={}]{250pt}{120pt}{tour.mov}}
+	\label{fig:tour}
+	\caption{Video demonstrating a grand tour with linked selection. You can view this movie by opening the pdf document with Adobe Reader and clicking on the figure above, or view it online at \url{https://vimeo.com/160720834}}
+\end{figure}
+
 
 In this section we discuss the range of examples that we have designed
 with animint. Table~\ref{tab:examples} shows several characteristics
