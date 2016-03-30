@@ -666,11 +666,75 @@ on any web server. The interactive plots can be viewed by opening the
 \section{Comparison study}
 \label{sec:compare}
 
-To compare our animint implementation with similar leading systems, we 
-reimplemented Figure~\ref{fig:worldbank} using Tableau as well as
-the R packages animation and ggvis. We also walk through examples of
-the grand tour with both animint and ggvis which helps point out 
-important consequences of each design approach.
+In this section we compare our animint implementation with other similar
+leading systems by creating a given visualization in each system and
+discussing the pros and cons of the different approaches.
+
+\subsection{The Grand Tour}
+
+The Grand Tour is a well-known method for viewing high dimensional data which
+requires interactive and dynamic graphics \citep{grand-tour}. 
+Figure~\ref{fig:tour} shows a grand tour of 300 observations sampled
+from a correlated tri-variate normal distribution. The left hand view
+shows the marginal density of each point while the right hand view "tours"
+through 2D projections of the 3D data. There are many ways to
+choose projections in a tour, and many ways to implement interpolate 
+between projections. In this case, we used the R package tourr,
+which uses the geodesic random walk (i.e., random 2D projection with geodesic
+interpolation) in the grand tour algorithm \citep{tourr}.
+
+\begin{figure}[htp]
+	\centerline{\includemovie[poster={tour.png}, text={}]{250pt}{120pt}{tour.mov}}
+	\label{fig:tour}
+	\caption{Video demonstrating linked selection in a grand tour with animint. You can view this movie by opening the pdf document with Adobe Reader and clicking on the figure above, or view it online at \url{https://vimeo.com/160720834}}
+\end{figure}
+
+As seen in the video of Figure~\ref{fig:tour}, with our current animint 
+implementation, points must be selected via mouse click. In this case,
+it would be convenient to also have brush selection, as we demonstrate in
+Figure~\ref{fig:tour} which implements the same touring example via the
+R packages ggvis and shiny. The brush in this example is implemented with
+shiny's support for brushing static images, which currently does not support
+multiple brushes, making it difficult to select non-contiguous regions. 
+
+\begin{figure}[htp]
+	\centerline{\includemovie[poster={tourbrush.png}, text={}]{250pt}{120pt}{tourbrush.mov}}
+	\label{fig:tourbrush}
+	\caption{Video demonstrating linked selection in a grand tour with ggvis and shiny. You can view this movie by opening the pdf document with Adobe Reader and clicking on the figure above, or view it online at \url{https://vimeo.com/160825528}}
+\end{figure}
+
+This example helps point out a few other important differences in using 
+animint versus ggvis+shiny to implement ``multiple linked and dynamic views" 
+as described in \citep{Ahlberg:1991} and \citep{Buja:1991vh}. 
+Maintaining state of the linked brush in Figure~\ref{fig:tourbrush} 
+requires both knowledge and clever use of some sophicated programming 
+techniques such as closures and reactivity. 
+Also, importantly for ggplot2 users, it also requires knowledge of the shiny 
+web application framework and a new approach to the grammar of graphics. 
+On the other hand, maintaining state in Figure~\ref{fig:tour} requires
+a few different \texttt{clickSelects}/\texttt{showSelected} mappings. As a
+result, we believe animint provided a more elegant user interface for 
+this application.
+
+The tourring example also helps point out important consequences of the
+design and implementation of these two different systems. As mentioned in 
+Section~\ref{sec:implementation}, our current animint implementation requires 
+every subset of data to be precomputed before render time.
+For visualizations such as tours, where it is more efficient to 
+perform statistical computations on-the-fly, this can be a harsh restriction, 
+but this is a restriction of our current implementation, 
+and not a restriction of the framework itself, 
+so we discuss possible solutions in Section~\ref{sec:limitations}.
+Thus, when touring a large high-dimensional space, where many projections are
+needed, ggvis+shiny may be desirable since the projections are 
+computed on the server and sent to the browser in real-time. This works fine
+when the application is running and viewed on the same host machine, but
+viewing such an application hosted on a remote machine can result in 
+staggered animation since GET requests must be performed, processed,
+and rendered roughly 30 times a second.Generally speaking, the animint system
+results a more pleasant experience when it comes to hosting and sharing
+applications since it doesn't require a Web Server with R and special software
+already installed.
 
 \subsection{World Bank Example}
 
@@ -857,18 +921,9 @@ function of a single query result. This results in a substantial
 conceptual difference between the selection models of Tableau and animint. In Tableau, there is a selection set for each plot, which may
 include several different marks. In contrast, animint keeps track of a
 selection set for each selection variable, each of which has
-geom-specific effects based on the geom's \texttt{clickSelects}/\texttt{showSelected}
-variables.
+geom-specific effects based on the geom's 
+\texttt{clickSelects}/\texttt{showSelected} variables.
 
-\subsection{The Grand Tour}
-
-The Grand Tour is a well-known method for viewing high dimensional data which requires interactive and dynamic graphics \citep{grand-tour}.
-
-\begin{figure}[htp]
-	\centerline{\includemovie[poster={tour.png}, text={}]{250pt}{120pt}{tour.mov}}
-	\label{fig:tour}
-	\caption{Video demonstrating a grand tour with linked selection. You can view this movie by opening the pdf document with Adobe Reader and clicking on the figure above, or view it online at \url{https://vimeo.com/160720834}}
-\end{figure}
 
 
 In this section we discuss the range of examples that we have designed
