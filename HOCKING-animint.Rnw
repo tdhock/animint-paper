@@ -112,8 +112,8 @@
   with data. As a result, web graphics are rarely used for exploratory
   data analysis where quick iteration between different visualizations
   is of utmost importance. This is the core strength of ggplot2, a
-  popular data visualization package for the world's leading
-  open-source statistical programming language, R. The conceptual
+  popular data visualization package for R, the world's leading
+  open-source statistical programming language. The conceptual
   framework behind ggplot2 is based on the grammar of graphics, which
   lays a foundation for describing any static graphic as a small set
   of independent components. Perhaps the most fundamental component is
@@ -227,7 +227,7 @@ described in \citep{Ahlberg:1991} and \citep{Buja:1991vh}.
 A conceptual model for our extension is provided in
 Section~\ref{sec:extension} and Section~\ref{sec:animation}. In 
 Section~\ref{sec:worldbank}, we demonstrate our extension with an example. 
-In Section~\ref{sec:implementation}, we outline design details made for our
+In Section~\ref{sec:implementation}, we outline design decisions made in our
 implementation in the R package animint. In Section~\ref{sec:performance}, we
 provide a sense scope for our system and its performance limitations through a
 handful of examples. In Section~\ref{sec:compare}, we conduct a comparison
@@ -237,24 +237,101 @@ our current system.
 
 \section{Related Work}
 
-We aim to provide a system which empowers ggplot2 users to go beyond the confines of static graphics with minimal friction imposed upon their current workflow. We acknowledge that numerous systems which support similar visualization techniques exist outside of the R ecosystem, but we intentionally focus on R interfaces since the surrounding statistical computing environment is crucial for maintaining a practical exploratory data analysis workflow.
+We aim to provide a system which empowers ggplot2 users to go beyond the 
+confines of static graphics with minimal friction imposed upon their current
+workflow. We acknowledge that numerous systems which support similar 
+visualization techniques exist outside of the R ecosystem, but we 
+intentionally focus on R interfaces since the surrounding statistical 
+computing environment is crucial for enabling an efficient exploratory data 
+analysis workflow.
 
-It is important to acknowledge that ggplot2 is built on top of the R package grid, a low-level graphics system, which is now bundled with R itself \citep{RCore}. Neither grid, nor base R graphics, have strong support for handling user interaction creating a need for add-on packages. There are a number of approaches these packages take to render graphics, each with their own benefits and drawbacks. These packages traditionally build on low-level R interfaces to graphical systems such as GTK+ \citep{RGtk2}, Qt \citep{qtbase, qtpaint}, or Java GUI frameworks \citep{rJava}. In general, the resulting system can be very fast and flexible, but sharing and reproducing output is difficult due to the heavy software requirements. Although there may be sacrifice in performance, using the modern web browser as a canvas is more portable, accessible, and composable (graphics can be embedded within larger frameworks/documents).
+It is important to acknowledge that ggplot2 is built on top of the R package 
+grid, a low-level graphics system, which is now bundled with R itself 
+\citep{RCore}. Neither grid, nor base R graphics, have strong support for 
+handling user interaction creating a need for add-on packages. There are a 
+number of approaches these packages take to rendering, each with their own 
+benefits and drawbacks. Traditionally, they build on low-level R interfaces 
+to graphical systems such as GTK+ \citep{RGtk2}, Qt \citep{qtbase, qtpaint}, 
+or Java GUI frameworks \citep{rJava}. In general, the resulting system can be 
+very fast and flexible, but sharing ir reproducing output is usually a problem 
+due to the heavy software requirements. Although there may be sacrifice in
+performance, using the modern web browser as a canvas is more portable, 
+accessible, and composable (graphics can be embedded within larger 
+frameworks/documents).
 
-Base R does provide a Scalable Vector Graphics (SVG) device, \texttt{svg()}, via the Cairo graphics API \citep{cairo}. The R package SVGAnnotation \citep{SVGAnnotation} provides functionality to post-process \texttt{svg()} output in order to add interactive and dynamic features. This is a powerful approach, since in theory it can work with any R graphic, but the package is self described as a proof-of-concept which reverse engineers poorly structured \texttt{svg()} output. As a result, anyone wishing to extend or alter the core functionality needs a deep understanding of base graphics and SVG. 
+Base R does provide a Scalable Vector Graphics (SVG) device, \texttt{svg()}, 
+via the Cairo graphics API \citep{cairo}. The R package SVGAnnotation 
+\citep{SVGAnnotation} provides functionality to post-process \texttt{svg()} 
+output in order to add interactive and dynamic features. This is a powerful 
+approach, since in theory it can work with any R graphic, but the package is 
+self described as a proof-of-concept which reverse engineers poorly structured
+\texttt{svg()} output. As a result, anyone wishing to extend or alter the 
+core functionality needs a deep understanding of base graphics and SVG. 
 
-The lack of well-structured SVG for R graphics motivated the gridSVG package which provides sensible structuring of SVG output for grid graphics \citep{gridSVG}. This package also provides some low-level tools for animating or adding interactive features, where grid objects must be referenced by name. As a result, if one wanted to use this interface to add interactivity to a ggplot2 plot, they must know and understand the naming scheme ggplot2 uses internally and hope it does not change down the road. An interface where interactivity can be expressed by referencing the data to be visualized, rather than the building blocks of the graphics system, would be preferable since the former interface is decoupled from the implementation and does not require knowledge of grid.
+The lack of well-structured SVG for R graphics motivated the gridSVG package 
+which provides sensible structuring of SVG output for grid graphics 
+\citep{gridSVG}. This package also provides some low-level tools for animating 
+or adding interactive features, where grid objects must be referenced by name.
+As a result, if one wanted to use this interface to add interactivity to a 
+ggplot2 plot, they must know and understand the grid naming scheme ggplot2 uses 
+internally and hope it does not change down the road. An interface where 
+interactivity can be expressed by referencing the data to be visualized, 
+rather than the building blocks of the graphics system, would be preferable 
+since the former interface is decoupled from the implementation and does not 
+require knowledge of grid.
 %% TODO: maybe draw a comparison to D3js vs DC? ^^^
 
-In terms of the user interface, the R package gganimate is very similar to our system \citep{gganimate}. It directly extends ggplot2 by adding a new aesthetic, named \texttt{frame}, which splits the data into subsets (one for each unique value of the frame variable), produces a static plot for each subset, and uses the animation package to combine the images into a key frame animation \citep{animation}. This is quite similar, but not as flexible as our system's support for animation, which we fully describe in Section~\ref{sec:animation}. Either system has the ability to control the amount of time that a given frame is displayed, but our system can also animate the transition between frames via the \texttt{d3.transition()} API \citep{d3}. Smooth transitions help us track positions between frames, which is useful in many scenarios, such as the touring example discussed in Section~6.
+In terms of the user interface, the R package gganimate is very similar to our
+system \citep{gganimate}. It directly extends ggplot2 by adding a new aesthetic,
+named \texttt{frame}, which splits the data into subsets (one for each unique 
+value of the frame variable), produces a static plot for each subset, and uses
+the animation package to combine the images into a key frame animation 
+\citep{animation}. This is quite similar, but not as flexible as our system's
+support for animation, which we fully describe in Section~\ref{sec:animation}.
+Either system has the ability to control the amount of time that a given frame 
+is displayed, but our system can also animate the transition between frames via
+the \texttt{d3.transition()} API \citep{d3}. Smooth transitions help us track
+positions between frames, which is useful in many scenarios, such as the 
+touring example discussed in Section~6.
 
-Tours are a useful visualization technique for exploring high-dimensional data which requires interactive and dynamic graphics. The open source software ggobi is currently the most fully-featured tool for touring data, but also provides the ability to produce more standard statistical graphics, and general interactive techniques such as linking, zooming, panning, and identifying \citep{ggobi:2007}. The R package rggobi \citep{rggobi} provides an R interface to ggobi's graphical interface, but unfortunately, the software requirements for installation and use of this toolchain are heavy and stringent. Furthermore, sharing the interactive versions of these graphics are not possible. The R package cranvas aims to be the successor to ggobi, with support for similar interactive techniques, but with a more flexible interface for describing plots inspired by the grammar of graphics \citep{cranvas}. Cranvas also has heavy and stringent software requirements which limits the portability and accessibility of the software.
+Tours are a useful visualization technique for exploring high-dimensional data
+which requires interactive and dynamic graphics. The open source software ggobi 
+is currently the most fully-featured tool for touring data and has support
+for interactive techniques such as linking, zooming, panning, and identifying 
+\citep{ggobi:2007}. The R package rggobi \citep{rggobi} provides an R interface 
+to ggobi's graphical interface, but unfortunately, the software requirements 
+for installation and use of this toolchain are heavy and stringent. Furthermore,
+sharing the interactive versions of these graphics are not possible. The R 
+package cranvas aims to be the successor to ggobi, with support for similar
+interactive techniques, but with a more flexible interface for describing 
+plots inspired by the grammar of graphics \citep{cranvas}. Cranvas also has 
+heavy and stringent software requirements which limits the portability and
+accessibility of the software.
 
-Another R package for interactive graphics which draws design inspiration from the grammar of graphics is ggvis \citep{ggvis}. It does not directly extend ggplot2, but instead provides a brand new purely functional interface which is designed with interactive graphics in mind. It currently relies on Vega to render the SVG graphics from JSON \citep{vega}, and the R package shiny to enable many of its interactive capabilities \citep{shiny}. The interface gives tremendous power to R users, as it allows one to write R functions to handle user events. This power does come with a cost, though, as sharing and hosting ggvis graphics may require special web server software, even when the interaction logic could be handled entirely client-side. As we outline in Section~4, our system does not require a web server, but can be used inside shiny web applications, when desired.
+Another R package for interactive graphics which draws design inspiration from 
+the grammar of graphics is ggvis \citep{ggvis}. It does not directly extend 
+ggplot2, but instead provides a brand new purely functional interface which 
+is designed with interactive graphics in mind. It currently relies on Vega to
+render the SVG graphics from JSON \citep{vega}, and the R package shiny to 
+enable many of its interactive capabilities \citep{shiny}. The interface gives
+tremendous power to R users, as it allows one to write R functions to handle 
+user events. This power does come with a cost, though, as sharing and hosting 
+ggvis graphics typically requires special web server software, even when the
+interaction logic could be handled entirely client-side. As we outline in 
+Section~\ref{sec:implementation}, our system does not require a web server, 
+but can also be used inside shiny web applications, when desired.
 
 \section{Extending the layered grammar of graphics}
 
-In this section, we propose an extension to the layered grammar of graphics \citep{ggplot2-paper} which enables declarative expression of animations and database queries via direct manipulation. In the ggplot2 system, there are five essential components that define a layer of graphical markings: data, mappings (i.e., aesthetics), geometry, statistic, and position. These simple components are easily understood in isolation and can be combined in many ways to express a wide array of graphics. For a simple example, here is one way to create a scatterplot in ggplot2 of variables named \texttt{<X>} and \texttt{<Y>} in \texttt{<DATA>}:
+In this section, we propose an extension to the layered grammar of graphics
+\citep{ggplot2-paper} which enables declarative expression of animations and
+database queries via direct manipulation. In the ggplot2 system, there are five
+essential components that define a layer of graphical markings: data, mappings 
+(i.e., aesthetics), geometry, statistic, and position. These simple components 
+are easily understood in isolation and can be combined in many ways to express
+a wide array of graphics. For a simple example, here is one way to create a
+scatterplot in ggplot2 of variables named \texttt{<X>} and \texttt{<Y>} in 
+\texttt{<DATA>}:
 
 <<gg>>=
 ggplot() + layer(
@@ -266,7 +343,9 @@ ggplot() + layer(
 )
 @
 
-For every geometry, ggplot2 provides a convenient wrapper around \texttt{layer()} which provides sensible defaults for the statistic and position (in this case, both are "identity"):
+For every geometry, ggplot2 provides a convenient wrapper around 
+\texttt{layer()} which provides sensible defaults for the statistic and 
+position (in this case, both are "identity"):
 
 <<gg2>>=
 ggplot() + geom_point(
@@ -275,18 +354,37 @@ ggplot() + geom_point(
 )
 @
 
-A single ggplot2 plot can be comprised of multiple layers, and different layers can correspond to different data. Since each graphical mark within a ggplot2 layer corresponds to one (or more) observations in \texttt{<DATA>}, aesthetic mappings provide a mechanism for mapping graphical selections to the original data (and vice-versa) which is essential to any interactive graphics system \citep{viewing-pipeline, plumbing}. Thus, given a way to combine multiple ggplot2 plots into a single view, this design can be extended to support a notion of multiple linked views, as those discussed in \citep{Ahlberg:1991} and \citep{Buja:1991vh}.
+A single ggplot2 plot can be comprised of multiple layers, and different layers 
+can correspond to different data. Since each graphical mark within a ggplot2 
+layer corresponds to one (or more) observations in \texttt{<DATA>}, aesthetic
+mappings provide a mechanism for mapping graphical selections to the original 
+data (and vice-versa) which is essential to any interactive graphics system
+\citep{viewing-pipeline, plumbing}. Thus, given a way to combine multiple 
+ggplot2 plots into a single view, this design can be extended to support a 
+notion of multiple linked views, as those discussed in \citep{Ahlberg:1991} 
+and \citep{Buja:1991vh}.
 
 \subsection{Direct Manipulation of Database Queries}
 \label{sec:extension}
 
-\citet{ggobi:2007} use SQL queries to formalize the direct manipulation methods discussed in \citet{Ahlberg:1991} and \citet{Buja:1991vh}. As it turns out, we can embed this framework inside the layered grammar of graphics with two classes of new aesthetics: one class to define a selection source and one to define a target. This is most easily seen using our animint implementation, which has a \texttt{clickSelects} aesthetic for defining the selection source (and modifying the selection via mouse click) and a \texttt{showSelected} aesthetic for defining the target. Here we use animint to create a linked view between a bar chart and a scatter plot, where the user can click on bars to control the points shown in the scatterplot, as shown in the video in Figure~\ref{fig:tips}. As a result, we can quickly see how the relationship among tip amount and total bill amount depends on whether the customer is smoker.
+\citet{ggobi:2007} use SQL queries to formalize the direct manipulation methods
+discussed in \citet{Ahlberg:1991} and \citet{Buja:1991vh}. As it turns out, we 
+can embed this framework inside the layered grammar of graphics with two classes
+of new aesthetics: one class to define a selection source and one to define a
+target. This is most easily seen using our animint implementation, which has a
+\texttt{clickSelects} aesthetic for defining the selection source (via mouse 
+click) and a \texttt{showSelected} aesthetic for defining the target. Here we 
+use animint to create a linked view between a bar chart and a scatter plot, 
+where the user can click on bars to control the points shown in the scatterplot,
+as shown in the video in Figure~\ref{fig:tips}. As a result, we can quickly see
+how the relationship among tip amount and total bill amount depends on whether 
+the customer is smoker.
 
 <<gg3>>=
 library(animint)
 p1 <- ggplot() + geom_bar(
   data = reshape2::tips, 
-  aes(x = smoker, clickSelects = smoker),
+  aes(x = smoker, clickSelects = smoker)
 )
 p2 <- ggplot() + geom_point(
   data = reshape2::tips, 
@@ -302,20 +400,43 @@ animint2dir(list(p1 = p1, p2 = p2))
 	\caption{Video demonstrating linked database querying via direct manipulation using animint. You can view this movie by opening the pdf document with Adobe Reader and clicking on the figure above, or view it online at \url{https://vimeo.com/160496419}}
 \end{figure}
 
-In essense, the R code above allows us to use direct manipulation to dynamically perform SQL queries of the form:
+In essense, the R code above allows us to use direct manipulation to dynamically
+perform SQL queries of the form:
 
 \vspace{0.3cm}
 \texttt{SELECT total\_bill, tip FROM tips} \\
 \hspace*{1cm} \texttt{WHERE smoker IN clickSelects}
 \vspace{0.3cm}
 
-In this example, \texttt{clickSelects} is either "Yes" or "No", but as we show in later examples, \texttt{clickSelects} can also be an array of values. Although \texttt{clickSelects} is tied to a mouseclick event, this same framework supports other selection events, such as hover or click+drag. Statistically speaking, this is useful for visualizing and navigating through joint distributions conditional upon discrete values. In this sense, our extension is closely related to the same a basis which leads to trellis displays \citep{trellis} and linked scatterplot brushing \citep{brushing-scatterplots}. The major differences are that conditioning: is layer (i.e., not plot) specific, is not tied to a particular geometry, and can be controlled through direct manipulation or animation controls.
+In this example, \texttt{clickSelects} is either "Yes" or "No", but as we show 
+in later examples, \texttt{clickSelects} can also be an array of values. 
+Although \texttt{clickSelects} is tied to a mouseclick event, this same 
+framework supports other selection events, such as hover or click+drag. 
+Statistically speaking, this is useful for visualizing and navigating through 
+joint distributions conditional upon discrete values. In this sense, our 
+extension is closely related to the same a basis which leads to trellis 
+displays \citep{trellis} and linked scatterplot brushing 
+\citep{brushing-scatterplots}. The major differences are that conditioning: 
+is layer (i.e., not plot) specific, is not tied to a particular geometry, and 
+can be controlled through direct manipulation or animation controls.
 %% TODO: make connections to scagnostics? trelliscope?
 
 \subsection{Adding animation}
 \label{sec:animation}
 
-In some sense, the \texttt{showSelected} aesthetic splits the layer into subsets -- one for every unique value of the \texttt{showSelected} variable. The \texttt{clickSelects} aesthetics provides a mechanism to alter the visibility of those subset(s) via direct manipulation, but our animint implementation can also loop through selections to produce animation(s). We acheive this by reserving the name \texttt{time} to specify which variable to select as well as the amount of time to wait before changing the selection (in milliseconds). We also reserve the name \texttt{duration} to specify the amount of time used to smoothly transition between frames (with linear easing). The code below was used to generate Figure~\ref{fig:animation} which demonstrates a simple animation with smooth transitions between 10 frames of a single point. Note that the resulting web page has controls for interactively altering the \texttt{time} and \texttt{duration} parameters. 
+In some sense, the \texttt{showSelected} aesthetic splits the layer into subsets
+-- one for every unique value of the \texttt{showSelected} variable. The 
+\texttt{clickSelects} aesthetics provides a mechanism to alter the visibility 
+of those subset(s) via direct manipulation, but our system also provides a 
+mechanism for automatically looping through selections to produce animation(s).
+We acheive this by reserving the name \texttt{time} to specify which variable 
+to select as well as the amount of time to wait before changing the selection 
+(in milliseconds). We also reserve the name \texttt{duration} to specify the 
+amount of time used to smoothly transition between frames (with linear easing). 
+The code below was used to generate Figure~\ref{fig:animation} which 
+demonstrates a simple animation with smooth transitions between 10 frames of a
+single point. Note that the resulting web page has controls for interactively
+altering the \texttt{time} and \texttt{duration} parameters. 
 
 <<>>=
 d <- data.frame(v = 1:10)
@@ -397,17 +518,35 @@ and fertility rate.
   \label{fig:worldbank}
 \end{figure*}
 
+When viewing the interactive version of Figure~\ref{fig:worldbank}, suppose
+we wish to select Thailand. Direct manipulation is not very useful in 
+this case since it is not easy to identify and select Thailand based
+on graphical marks on a plot. For this reason, animint also provides 
+dropdown menu(s) for each selection variable to aid the selection process.
+Figure~\ref{fig:widgets} shows what the user sees after typing ``th'' in 
+the search box. Note that these dropdowns support selection of multiple
+values and coordinate sensibly with selections made via direct manipulation.
+
+\begin{figure}[htp]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{Screenshot-toggle-selected-value}
+  \caption{Animint provides a menu to update each selection
+    variable. In this example, after typing ``th'' the country menu
+    shows the subset of matching countries.}
+  \label{fig:widgets}
+\end{figure}
+
 We anticipate that some ggplot2 users will be able to reverse engineer the
 animint code which creates Figure~\ref{fig:worldbank}, simply by looking at it.
-In fact, this is one of the wonderful things about ggplot2, it helps minimize 
-the amount of time required to translate a figure in your head into code. 
-In the left hand plot, 
-we have a time series of the life expectancy where
-each line (\texttt{group}) is a country and lines are \texttt{color}ed by 
-region. By clicking on a line, we want the country label to appear
-in the right hand plot, so we also need to set \texttt{clickSelects=country}. 
-Lastly, by setting \text{showSelected=region} we can hide/show lines
-by clicking on the color legend entries.
+In fact, this is a big reason why ggplot2 is so widely used: 
+it helps minimize the amount of time required to translate a figure that exists
+in your head into computer code. Note that, in the left hand plot of 
+Figure~\ref{fig:worldbank}, we have a time series 
+of the life expectancy where each line is a country (i.e., we \texttt{group} by
+country) and lines are colored by region. By clicking on a line, we also want 
+the country label to appear in the right hand plot, so we also need to set 
+\texttt{clickSelects=country}. Lastly, by setting \text{showSelected=region},
+we can hide/show lines by clicking on the color legend entries.
 
 <<lifeLines>>=
 timeSeries <- ggplot() + geom_line(
@@ -458,8 +597,8 @@ scatterPlot <- ggplot() + geom_point(
 )
 @
 
-The text layer for annotating selected countries looks quite similar to the 
-point layer with a few important differences:
+The text layer for annotating selected countries is essentially the same as the
+point layer, except we map the country name to the \texttt{label} aesthetic.
 
 <<countryText>>=
 scatterPlot <- scatterPlot + geom_text(
@@ -484,11 +623,17 @@ scatterPlot <- scatterPlot + geom_text(
 @
 
 Now that we have defined the plots in Figure~\ref{fig:worldbank}, we can set
-the \texttt{time} and \texttt{duration} options (introduced in Section~\ref{sec:animation}) to control the animation parameters. Our animint implementation also respects a \texttt{selector.types} option which controls whether or not selections for a given variable can accumulate and a \texttt{first} option for controlling which values are selected by default.\footnote{We maintain a complete list of options here -- \url{https://github.com/tdhock/animint/wiki/Advanced-features-present-animint-but-not-in-ggplot2}} By default, supplying the list of 
-plots and additional options to 
+the \texttt{time} and \texttt{duration} options (introduced in 
+Section~\ref{sec:animation}) to control the animation parameters. Our animint
+implementation also respects a \texttt{selector.types} option which controls
+whether or not selections for a given variable can accumulate and a 
+\texttt{first} option for controlling which values are selected by default.
+\footnote{We maintain a complete list of (animint specific) options here --
+\url{https://github.com/tdhock/animint/wiki/Advanced-features-present-animint-but-not-in-ggplot2}} 
+By default, supplying the list of plots and additional options to 
 \texttt{animint2dir()} will write all the files necessary to render 
-the visualization to a temporary directory and prompt the browser to 
-open the relevant HTML file.
+the visualization to a temporary directory and prompt a web browser to 
+open an HTML file.
 
 <<viz>>=
 viz <- list(
@@ -509,34 +654,13 @@ animint2dir(viz)
 @
 
 
-%% TODO: this bit down here seems a bit out of place. Add to it and put in it's own section?
-Direct manipulation is useful when it is easy to identify and select 
-a graphical marks on a plot, but that is not always the best method. 
-In these cases,
-it is convenient to have a dropdown menu to aid the selection process.
-For this reason, the animint system automatically provides selection 
-menu(s) for each \texttt{showSelected} variable. 
-For an example, suppose that we would like select a country by name in
-Figure~\ref{fig:worldbank}. Figure~\ref{fig:widgets} shows what the user
-sees after typing ``th'' in the search box. 
-
-\begin{figure}[htp]
-  \centering
-  \includegraphics[width=0.5\columnwidth]{Screenshot-toggle-selected-value}
-  \caption{Animint provides a menu to update each selection
-    variable. In this example, after typing ``th'' the country menu
-    shows the subset of matching countries.}
-  \label{fig:widgets}
-\end{figure}
-
 \subsection{Implementation details}
 \label{sec:implementation}
 
 As shown in Figure~\ref{fig:design}, the animint system is implemented
 in 2 parts: the compiler and the renderer. The compiler is implemented in about 
 2000 lines of R code that converts a list of ggplots and options to a JSON 
-plot meta-data file and a tab-separated values (TSV) file database
-(Figure~\ref{fig:design}).
+plot meta-data file and a tab-separated values (TSV) file database.
 
 \begin{figure}[htp]
   \centering
@@ -708,7 +832,7 @@ choose projections in a tour, and many ways to interpolate
 between projections, most of which can be programmed fairly easily
 using R and relevant add-on packages. In this case, we used the R package tourr,
 which uses the geodesic random walk (i.e., random 2D projection with geodesic
-interpolation) in the grand tour algorithm \citep{tourr}.
+interpolation) in its grand tour algorithm \citep{tourr}.
 
 \begin{figure}[htp]
 	\centerline{\includemovie[poster={tour.png}, text={}]{250pt}{120pt}{tour.mov}}
@@ -723,10 +847,11 @@ reveal that points with high marginal density are located in the
 ellipsoid center while points with a low marginal density appear near the 
 ellipsoid border. In this case, it would be convenient to also have brush 
 selection, as we demonstrate in
-Figure~\ref{fig:tour} which implements the same touring example using the
-R packages ggvis and shiny. The brush in this example is implemented with
-shiny's support for brushing static images, which currently does not support
-multiple brushes, making it difficult to select non-contiguous regions. 
+Figure~\ref{fig:tourbrush} which implements the same touring example using the
+R packages ggvis and shiny. The brush in Figure~\ref{fig:tourbrush} is 
+implemented with shiny's support for brushing static images, which currently 
+does not support multiple brushes, making it difficult to select
+non-contiguous regions. 
 
 \begin{figure}[htp]
 	\centerline{\includemovie[poster={tourbrush.png}, text={}]{250pt}{120pt}{tourbrush.mov}}
@@ -754,18 +879,17 @@ every subset of data to be precomputed before render time.
 For visualizations such as tours, where it is more efficient to 
 perform statistical computations on-the-fly, this can be a harsh restriction, 
 but this is a restriction of our current implementation 
-(not a restriction of the framework itself) 
-and we discuss possible solutions in Section~\ref{sec:limitations}.
+(not a restriction of the framework itself).
 As a result, when touring a large high-dimensional space, where many 
 projections are needed, ggvis+shiny may be desirable since the projections are 
 computed on the server and sent to the browser in real-time. This works fine
 when the application is running and viewed on the same host machine, but
 viewing such an application hosted on a remote machine can produce
 staggered animations since client-server requests must be performed, processed,
-and rendered roughly 30 times a second. Generally speaking, the animint system
-results a more pleasant experience when it comes to hosting and sharing
-applications since it doesn't require a Web Server with R and special software
-already installed.
+and rendered roughly 30 times a second. Also, generally speaking, 
+the animint system results a more pleasant experience when it comes to hosting 
+and sharing applications since it doesn't require a Web Server with R and 
+special software already installed.
 
 \subsection{World Bank Example}
 
@@ -819,8 +943,8 @@ more complicated and requires more code
 %% limitation of Tableau that we should discuss?
 
 It was also impossible to completely replicate Figure~\ref{fig:worldbank}
-using Tableau essentially because the \emph{layered} grammar of graphics
-grants us more flexibility. In particular, since graphical
+using Tableau essentially because the example requires a \emph{layered} 
+approach to the grammar of graphics. In particular, since graphical
 marks and interaction source/target(s) must derive from the same table
 in Tableau, it was impossible to control the clickable multiple time 
 series and the clickable tallrects in different ways based on the two 
@@ -936,28 +1060,15 @@ added, for instance. There are other types of interaction that should be
 added, that wouldn't require additional extensions to the grammar of graphics,
 such as: zooming, panning, and plot resizing.
 
-\section{Closing discussion}
+\section{Conclusion}
 
-Finally, another key strength of ggplot2 and D3 for visualization
-design are the libraries' declarative syntax, which allows a
-visualization designer to specify \emph{what} they want to render
-rather than \emph{how} to render it. \citet{declarative} proposed a
-declarative syntax for animated transanitions, and studied the
-benefits of declarative languages for data visualization. animint is
-another declarative DSL, but defined at a higher level of abstraction
-than D3. It enables designers to focus on data visualization, while
-the animint library developers can work on improving the lower-level
-rendering details.
-
-This highlights one of the main motivations for using a declarative
-DSL like animint: none of the designer's R code needs to be changed to
-implement improvements like this. Instead, the animint developers just
-need to work on a better compiler and rendering engine. Indeed,
-\citet{declarative} noted that this is one of the main benefits of
-declarative language design: ``By decoupling specification from
-implementation, developers can implement language optimizations
-without interfering with the work of designers.''
-
+Our R package animint extends ggplot2's layered grammar of graphics 
+implementation for a declarative approach to producing interactive
+and dynamic web graphics. By adding two aesthetics to specify selection
+source(s) and target(s), ggplot2 users can easily create animations with 
+smooth transitions and perform database queries via direct manipulation of 
+linked views like those described in \citep{Ahlberg:1991} and 
+\citep{Buja:1991vh}.
 
 \section*{Acknowledgements}
 
