@@ -228,9 +228,7 @@ A conceptual model for our extension is provided in
 Section~\ref{sec:extension} and Section~\ref{sec:animation}. In 
 Section~\ref{sec:worldbank}, we demonstrate our extension with an example. 
 In Section~\ref{sec:implementation}, we outline design decisions made in our
-implementation in the R package animint. In Section~\ref{sec:performance}, we
-provide a sense scope for our system and its performance limitations through a
-handful of examples. In Section~\ref{sec:compare}, we conduct a comparison
+implementation in the R package animint. In Section~\ref{sec:performance}, we use a handful of examples to demonstrate the scope and performance of our system. In Section~\ref{sec:compare}, we conduct a comparison
 study by replicating examples with other leading systems. Finally, in 
 Section~\ref{sec:limitations}, we discuss future work and limitations of
 our current system.
@@ -247,13 +245,13 @@ analysis workflow.
 
 It is important to acknowledge that ggplot2 is built on top of the R package 
 grid, a low-level graphics system, which is now bundled with R itself 
-\citep{RCore}. Neither grid, nor base R graphics, have strong support for 
-handling user interaction creating a need for add-on packages. There are a 
+\citep{RCore}. Neither grid nor base R graphics have strong support for 
+user interaction, creating a need for add-on packages. There are a 
 number of approaches these packages take to rendering, each with their own 
 benefits and drawbacks. Traditionally, they build on low-level R interfaces 
 to graphical systems such as GTK+ \citep{RGtk2}, Qt \citep{qtbase, qtpaint}, 
 or Java GUI frameworks \citep{rJava}. In general, the resulting system can be 
-very fast and flexible, but sharing ir reproducing output is usually a problem 
+very fast and flexible, but sharing and reproducing output is usually a problem 
 due to the heavy software requirements. Although there may be sacrifice in
 performance, using the modern web browser as a canvas is more portable, 
 accessible, and composable (graphics can be embedded within larger 
@@ -281,18 +279,20 @@ since the former interface is decoupled from the implementation and does not
 require knowledge of grid.
 %% TODO: maybe draw a comparison to D3js vs DC? ^^^
 
-In terms of the user interface, the R package gganimate is very similar to our
-system \citep{gganimate}. It directly extends ggplot2 by adding a new aesthetic,
-named \texttt{frame}, which splits the data into subsets (one for each unique 
-value of the frame variable), produces a static plot for each subset, and uses
-the animation package to combine the images into a key frame animation 
-\citep{animation}. This is quite similar, but not as flexible as our system's
-support for animation, which we fully describe in Section~\ref{sec:animation}.
-Either system has the ability to control the amount of time that a given frame 
-is displayed, but our system can also animate the transition between frames via
-the \texttt{d3.transition()} API \citep{d3}. Smooth transitions help us track
-positions between frames, which is useful in many scenarios, such as the 
-touring example discussed in Section~6.
+In terms of the user interface, the R packages gganim and gganimate
+are very similar to our system \citep{gganim, gganimate}. These
+directly extend ggplot2 by adding a new \verb|time| or \verb|frame|
+variable to use for animation. The data are split and plotted for the
+different values of this variable, then the animation package combines
+the sequence of static plots into a key frame animation
+\citep{animation}. This is quite similar, but not as flexible as our
+system's support for animation, which we fully describe in
+Section~\ref{sec:animation}.  Either system has the ability to control
+the amount of time that a given frame is displayed, but our system can
+also animate the transition between frames via the
+\texttt{d3.transition()} API \citep{d3}. Smooth transitions help us
+track positions between frames, which is useful in many scenarios,
+such as the touring example discussed in Section~6.
 
 Tours are a useful visualization technique for exploring high-dimensional data
 which requires interactive and dynamic graphics. The open source software ggobi 
