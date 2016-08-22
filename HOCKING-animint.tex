@@ -1,4 +1,4 @@
-\documentclass[journal]{vgtc}\usepackage[]{graphicx}\usepackage[]{color}
+\documentclass[12pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
 %% maxwidth is the original width if it is less than linewidth
 %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
@@ -21,6 +21,7 @@
 \newcommand{\hlkwb}[1]{\textcolor[rgb]{0,0,0}{#1}}%
 \newcommand{\hlkwc}[1]{\textcolor[rgb]{0,0,1}{#1}}%
 \newcommand{\hlkwd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\let\hlipl\hlkwb
 
 \usepackage{framed}
 \makeatletter
@@ -47,113 +48,71 @@
 \definecolor{errorcolor}{rgb}{1, 0, 0}
 \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
-\usepackage{alltt}                % final (journal style)
-%\documentclass[review,journal]{vgtc}         % review (journal style)
-%\documentclass[widereview]{vgtc}             % wide-spaced review
-%\documentclass[preprint,journal]{vgtc}       % preprint (journal style)
-%\documentclass[electronic,journal]{vgtc}     % electronic version, journal
+\usepackage{alltt} 
 
-%% Uncomment one of the lines above depending on where your paper is
-%% in the conference process. ``review'' and ``widereview'' are for review
-%% submission, ``preprint'' is for pre-publication, and the final version
-%% doesn't use a specific qualifier. Further, ``electronic'' includes
-%% hyperreferences for more convenient online viewing.
-
-%% Please use one of the ``review'' options in combination with the
-%% assigned online id (see below) ONLY if your paper uses a double blind
-%% review process. Some conferences, like IEEE Vis and InfoVis, have NOT
-%% in the past.
-
-%% Please note that the use of figures other than the optional teaser is not permitted on the first page
-%% of the journal version.  Figures should begin on the second page and be
-%% in CMYK or Grey scale format, otherwise, colour shifting may occur
-%% during the printing process.  Papers submitted with figures other than the optional teaser on the
-%% first page will be refused.
-
-%% These three lines bring in essential packages: ``mathptmx'' for Type 1
-%% typefaces, ``graphicx'' for inclusion of EPS figures. and ``times''
-%% for proper handling of the times font family.
-
-\usepackage{mathptmx}
-\usepackage{graphicx}
-\usepackage{times}
 \usepackage{amsmath}
-\usepackage{stmaryrd}%\rightarrowtriangle
-\usepackage{graphicx}
+\usepackage{graphicx,psfrag,epsf}
 \usepackage{enumerate}
+\usepackage{mathptmx}
 \usepackage{natbib}
+\usepackage{times}
+\usepackage{stmaryrd}%\rightarrowtriangle
 \usepackage{url}
+\usepackage{hyperref}
 % for gifs -- http://tex.stackexchange.com/questions/7602/how-to-add-a-gif-file-to-my-latex-file
 \usepackage{movie15}
 
-%% We encourage the use of mathptmx for consistent usage of times font
-%% throughout the proceedings. However, if you encounter conflicts
-%% with other math-related packages, you may want to disable it.
+% DON'T change margins - should be 1 inch all around.
+\addtolength{\oddsidemargin}{-.5in}%
+\addtolength{\evensidemargin}{-.5in}%
+\addtolength{\textwidth}{1in}%
+\addtolength{\textheight}{1.3in}%
+\addtolength{\topmargin}{-.8in}%
 
-%% This turns references into clickable hyperlinks.
-\usepackage[bookmarks,backref=true,linkcolor=black]{hyperref} %,colorlinks
-\hypersetup{
-  pdfauthor = {},
-  pdftitle = {},
-  pdfsubject = {},
-  pdfkeywords = {},
-  colorlinks=true,
-  linkcolor= black,
-  citecolor= black,
-  pageanchor=true,
-  urlcolor = black,
-  plainpages = false,
-  linktocpage
-}
+%\pdfminorversion=4
+% NOTE: To produce blinded version, replace "0" with "1" below.
+\newcommand{\blind}{0}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
 
-% Reduce space between enumerations
-\newenvironment{tight_enumerate}{
-\begin{enumerate}
-  \setlength{\itemsep}{0pt}
-  \setlength{\parskip}{0pt}
-}{\end{enumerate}}
+%\bibliographystyle{natbib}
 
-%% If you are submitting a paper to a conference for review with a double
-%% blind reviewing process, please replace the value ``0'' below with your
-%% OnlineID. Otherwise, you may safely leave it at ``0''.
-\onlineid{0}
+\def\spacingset#1{\renewcommand{\baselinestretch}%
+{#1}\small\normalsize} \spacingset{1}
 
-%% declare the category of your paper, only shown in review mode
-\vgtccategory{Research}
 
-%% allow for this line if you want the electronic option to work properly
-\vgtcinsertpkg
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% In preprint mode you may define your own headline.
-%\preprinttext{To appear in IEEE Transactions on Visualization and Computer Graphics.}
+\if0\blind
+{
+  \title{\bf Extending ggplot2's grammar of graphics implementation for linked and dynamic graphics on the web}
+  \author{Carson Sievert \\
+    Department of Statistics, Iowa State University \\
+    Toby Dylan Hocking \\
+    Department of Human Genetics, McGill University \\
+    Susan VanderPlas \\
+    Department of Statistics, Iowa State University \\
+    Jun Cai \\
+    Center for Earth System Science, Tsinghua University \\
+    Kevin Ferris \\
+    Baseball Operations Departmen, Tampa Bay Rays}
+  \maketitle
+} \fi
 
-%% Paper title.
-\title{Extending ggplot2's grammar of graphics implementation for linked and dynamic graphics on the web}
+\if1\blind
+{
+  \bigskip
+  \bigskip
+  \bigskip
+  \begin{center}
+    {\LARGE\bf Title}
+\end{center}
+  \medskip
+} \fi
 
-%% This is how authors are specified in the journal style
-
-%% indicate IEEE Member or Student Member in form indicated below
-\author{Carson Sievert, Toby Dylan Hocking, Susan VanderPlas, Jun Cai, Kevin Ferris}
-\authorfooter{
-\item
- Carson Sievert is with the Department of Statistics at Iowa State University. E-mail: sievert@iastate.edu
-\item
- Toby Dylan Hocking is with the McGill University department of Human Genetics. E-mail: toby.hocking@mail.mcgill.ca
-\item
- Susan VanderPlas is with the Department of Statistics at Iowa State University. E-mail: srvanderplas@gmail.com
-\item
-  Jun Cai is with the Center for Earth System Science at Tsinghua University. E-mail: cai-j12@mails.tsinghua.edu.cn
-\item
-  Kevin Ferris is with the Baseball Operations Department of the Tampa Bay Rays. E-mail: kevin.ferris10@gmail.com
-}
-
-%other entries to be set up for journal
-\shortauthortitle{Biv \MakeLowercase{\textit{et al.}}: Global Illumination for Fun and Profit}
-%\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
-
-%% Abstract section.
-\abstract{ 
-  The web is the most popular medium for sharing interactive
+\bigskip
+\begin{abstract}
+The web is the most popular medium for sharing interactive
   data visualizations thanks to the portability of the web browser and
   the accessibility of the internet. Unfortunately, creating
   interactive web graphics often requires a working knowledge of
@@ -173,39 +132,22 @@
   coordinated linked views. We implement this extension in the
   open-source R package animint, which converts ggplot2 objects to
   interactive web visualizations via D3.  
-} % end of abstract
+\end{abstract}
 
-%% Keywords that describe your work. Will show as 'Index Terms' in journal
-%% please capitalize first letter and insert punctuation after last keyword
-\keywords{Animation, Linked Views, Statistical graphics, Exploratory data analysis, Web technologies}
+\noindent%
+{\it Keywords:}  Animation, Linked Views, Statistical graphics, Exploratory data analysis, Web technologies
+\vfill
 
-%% Uncomment below to include a teaser figure.
-%    \teaser{
-%    \centering
-%    \includegraphics[width=16cm]{CypressView}
-%    \caption{In the Clouds: Vancouver from Cypress Mountain.}
-%   }
+\newpage
+\spacingset{1.45} % DON'T change the spacing!
 
-%% Uncomment below to disable the manuscript note
-%\renewcommand{\manuscriptnotetxt}{}
 
-%% Copyright space is enabled by default as required by guidelines.
-%% It is disabled by the 'review' option or via the following command:
-% \nocopyrightspace
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%% START OF THE PAPER %%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% The ``\maketitle'' command must be the first command after the
-%% ``\begin{document}'' command. It prepares and prints the title block.
+\section{Introduction}
+\label{sec:intro}
 
-%% the only exception to this rule is the \firstsection command
-\firstsection{Introduction}
-
-\maketitle
 
 %% In general, there are three influential roles involving an Animint
 %% visualization: the developer, who implements the Animint library; the
