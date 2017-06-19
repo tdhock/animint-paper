@@ -132,18 +132,7 @@ analysis, Web technologies},
 
 \title{\bf Extending ggplot2's grammar of graphics implementation for linked and
 dynamic graphics on the web}
-\author{
-  Carson Sievert \\ 
-  Department of Statistics, Iowa State University \\
-  Toby Dylan Hocking \\ 
-  Department of Human Genetics, McGill University \\
-  Susan VanderPlas \\
-  Department of Statistics, Iowa State University \\
-  Jun Cai \\
-  Center for Earth System Science, Tsinghua University\\
-  Kevin Ferris \\
-  Baseball Operations Department, Tampa Bay Rays
-}
+\author{Carson Sievert \\ Department of Statistics, Iowa State University}
 \maketitle
 
 \bigskip
@@ -182,7 +171,8 @@ analysis, Web technologies
 % End of JCGS specific titlepage
 % ------------------------------------------------------------------------------
 
-\section{Introduction}\label{intro}
+\section{Introduction}
+\label{sec:intro}
 
 The world's leading open source statistical programming language, R, has
 a rich history of interfacing with computational tools for the use of
@@ -227,17 +217,17 @@ graphics. Our extension allows one to create animated transitions and
 perform database queries via direct manipulation of linked views like
 those described in Ahlberg, Williamson, and Shneiderman (1991) and Buja
 et al. (1991). A conceptual model for our extension is provided in
-Section \ref{extension} and Section \ref{animation}. In Section
-\ref{worldbank}, we demonstrate our extension with an example. In
-Section \ref{implementation}, we outline design decisions made in our
-implementation in the R package animint. In Section \ref{performance},
-we provide a sense scope for our system and its performance limitations
-through a handful of examples. In Section \ref{compare}, we conduct a
-comparison study by replicating examples with other leading systems.
-Finally, in Section \ref{limitations}, we discuss future work and
-limitations of our current system.
+Section \ref{sec:extension} and Section \ref{sec:animation}. In Section
+\ref{sec:worldbank}, we demonstrate our extension with an example. In
+Section @ref(sec:implementation\}, we outline design decisions made in
+our implementation in the R package animint. In Section
+\ref{sec:performance}, we provide a sense scope for our system and its
+performance limitations through a handful of examples. In Section
+\ref{sec:compare}, we conduct a comparison study by replicating examples
+with other leading systems. Finally, in Section \ref{sec:limitations},
+we discuss future work and limitations of our current system.
 
-\section{Related Work}\label{related-work}
+\section{Related Work}
 
 We aim to provide a system which empowers ggplot2 users to go beyond the
 confines of static graphics with minimal friction imposed upon their
@@ -293,13 +283,13 @@ new aesthetic, named \texttt{frame}, which splits the data into subsets
 plot for each subset, and uses the animation package to combine the
 images into a key frame animation (Xie 2013). This is quite similar, but
 not as flexible as our system's support for animation, which we fully
-describe in Section \ref{animation}. Either system has the ability to
-control the amount of time that a given frame is displayed, but our
+describe in Section \ref{sec:animation}. Either system has the ability
+to control the amount of time that a given frame is displayed, but our
 system can also animate the transition between frames via the
 \texttt{d3.transition()} API (Bostock, Oglevetsky, and Heer 2011).
 Smooth transitions help us track positions between frames, which is
 useful in many scenarios, such as the touring example discussed in
-Section \ref{tour}.
+Section \ref{sec:tour}.
 
 Tours are a useful visualization technique for exploring
 high-dimensional data which requires interactive and dynamic graphics.
@@ -327,12 +317,11 @@ power to R users, as it allows one to write R functions to handle user
 events. This power does come with a cost, though, as sharing and hosting
 ggvis graphics typically requires special web server software, even when
 the interaction logic could be handled entirely client-side. As we
-outline in Section \ref{implementation}, our system does not require a
-web server, but can also be used inside shiny web applications, when
+outline in Section \ref{sec:implementation}, our system does not require
+a web server, but can also be used inside shiny web applications, when
 desired.
 
-\section{Extending the layered grammar of
-graphics}\label{extending-the-layered-grammar-of-graphics}
+\section{Extending the layered grammar of graphics}
 
 In this section, we propose an extension to the layered grammar of
 graphics (Wickham 2010), which enables declarative expression of
@@ -383,7 +372,8 @@ can be extended to support a notion of multiple linked views, as those
 discussed in Ahlberg, Williamson, and Shneiderman (1991) and Buja et al.
 (1991).
 
-\subsection{Direct Manipulation of Database Queries}\label{extension}
+\subsection{Direct Manipulation of Database Queries}
+\label{sec:extension}
 
 Cook and Swayne (2007) use SQL queries to formalize the direct
 manipulation methods discussed in Ahlberg, Williamson, and Shneiderman
@@ -448,22 +438,13 @@ is not tied to a particular geometry, and can be controlled through
 direct manipulation or animation controls. \%\% TODO: make connections
 to scagnostics? trelliscope?
 
-\subsection{Adding animation}\label{animation}
+\subsection{Adding animation}
+\label{sec:animation}
 
 In some sense, the \texttt{showSelected} aesthetic splits the layer into
 subsets -- one for every unique value of the \texttt{showSelected}
-variable. The \texttt{clickSelects} aesthetics provides a mechanism to
-alter the visibility of those subset(s) via direct manipulation, but our
-system also provides a mechanism for automatically looping through
-selections to produce animation(s). We acheive this by reserving the
-name \texttt{time} to specify which variable to select as well as the
-amount of time to wait before changing the selection (in milliseconds).
-We also reserve the name \texttt{duration} to specify the amount of time
-used to smoothly transition between frames (with linear easing). The
-code below was used to generate Figure \ref{fig:animation} which
-demonstrates a simple animation with smooth transitions between 10
-frames of a single point. Note that the resulting web page has controls
-for interactively altering the \texttt{time} and \texttt{duration}
+variable. The
+\texttt{clickSelects\}\ aesthetics\ provides\ a\ mechanism\ to\ alter\ the\ visibility\ \ of\ those\ subset(s)\ via\ direct\ manipulation,\ but\ our\ system\ also\ provides\ a\ \ mechanism\ for\ automatically\ looping\ through\ selections\ to\ produce\ animation(s).\ We\ acheive\ this\ by\ reserving\ the\ name}time\texttt{to\ specify\ which\ variable\ \ to\ select\ as\ well\ as\ the\ amount\ of\ time\ to\ wait\ before\ changing\ the\ selection\ \ (in\ milliseconds).\ We\ also\ reserve\ the\ name}duration\texttt{to\ specify\ the\ \ amount\ of\ time\ used\ to\ smoothly\ transition\ between\ frames\ (with\ linear\ easing).\ \ The\ code\ below\ was\ used\ to\ generate\ Figure\ \textbackslash{}@ref(fig:animation)\ which\ \ demonstrates\ a\ simple\ animation\ with\ smooth\ transitions\ between\ 10\ frames\ of\ a\ single\ point.\ Note\ that\ the\ resulting\ web\ page\ has\ controls\ for\ interactively\ altering\ the}time\texttt{and}duration`
 parameters.
 
 \begin{Shaded}
@@ -488,7 +469,8 @@ interactively altering transition durations. A video demonstration can
 be viewed online at \url{https://vimeo.com/160505146}}
 \end{figure}
 
-\subsection{World Bank Example}\label{worldbank}
+\subsection{World Bank Example}
+\label{sec:worldbank}
 
 Figure \ref{fig:worldbank} shows an interactive animation of the World
 Bank data set created with our animint implementation (World Bank 2012).
@@ -632,7 +614,7 @@ we add another layer of text at a fixed location.
 
 Now that we have defined the plots in Figure \ref{fig:worldbank}, we can
 set the \texttt{time} and \texttt{duration} options (introduced in
-Section \ref{animation}) to control the animation parameters. Our
+Section \ref{sec:animation}) to control the animation parameters. Our
 animint implementation also respects a \texttt{selector.types} option
 which controls whether or not selections for a given variable can
 accumulate and a \texttt{first} option for controlling which values are
@@ -664,7 +646,8 @@ an HTML file.
 \end{Highlighting}
 \end{Shaded}
 
-\subsection{Implementation details}\label{implementation}
+\subsection{Implementation details}
+\label{sec:implementation}
 
 As shown in Figure \ref{fig:design}, the animint system is implemented
 in 2 parts: the compiler and the renderer. The compiler is implemented
@@ -748,8 +731,8 @@ directory of files, the interactive plots can be hosted on any web
 server. The interactive plots can be viewed by opening the
 \texttt{index.html} page in any modern web browser.
 
-\section{Exploring performance \& scope with
-examples}\label{performance}
+\section{Exploring performance \& scope with examples}
+\label{sec:performance}
 
 This section attempts to demonstrate a range of visualizations that are
 supported by animint with more examples. Figure \ref{fig:tornado} shows
@@ -814,13 +797,15 @@ variables.
 \label{tab:examples}
 \end{table*}
 
-\section{Comparison study}\label{compare}
+\section{Comparison study}
+\label{sec:compare}
 
 In this section we compare our animint implementation with other similar
 leading systems by creating a given visualization in each system and
 discussing the pros and cons of the different approaches.
 
-\subsection{The Grand Tour}\label{tour}
+\subsection{The Grand Tour}
+\label{sec:tour}
 
 The Grand Tour is a well-known method for viewing high dimensional data
 which requires interactive and dynamic graphics (Asimov 1985). Figure
@@ -864,21 +849,14 @@ and shiny. A video demonstration can be viewed online at
 \end{figure}
 
 This example helps point out a few other important differences in using
-animint versus ggvis+shiny to implement `multiple linked and dynamic
-views' as described in Ahlberg, Williamson, and Shneiderman (1991) and
-Buja et al. (1991). Maintaining state of the linked brush in Figure
-\ref{fig:tourbrush} requires both knowledge and clever use of some
-sophicated programming techniques such as closures and reactivity. It
-also requires knowledge of the shiny web application framework and a new
-approach to the grammar of graphics. On the other hand, maintaining
-state in Figure \ref{fig:tour} requires a few different
-\texttt{clickSelects}/\texttt{showSelected} mappings. As a result, we
-believe animint provides a more elegant user interface for this
-application.
+animint versus ggvis+shiny to implement
+`\texttt{multiple\ linked\ and\ dynamic\ views"\ \ as\ described\ in\ @Ahlberg:1991\ and\ @Buja:1991vh.\ \ Maintaining\ state\ of\ the\ linked\ brush\ in\ Figure\ \textbackslash{}@ref(fig:tourbrush)\ requires\ both\ knowledge\ and\ clever\ use\ of\ some\ sophicated\ programming\ \ techniques\ such\ as\ closures\ and\ reactivity.\ \ It\ also\ requires\ knowledge\ of\ the\ shiny\ web\ application\ framework\ and\ \ a\ new\ approach\ to\ the\ grammar\ of\ graphics.\ \ On\ the\ other\ hand,\ maintaining\ state\ in\ Figure\ \textbackslash{}@ref(fig:tour)\ requires\ a\ few\ different}clickSelects\texttt{/}showSelected`
+mappings. As a result, we believe animint provides a more elegant user
+interface for this application.
 
 The tourring example also helps point out important consequences of the
 design and implementation of these two different systems. As mentioned
-in Section \ref{implementation}, our current animint implementation
+in Section @ref(sec:implementation\}, our current animint implementation
 requires every subset of data to be precomputed before render time. For
 visualizations such as tours, where it is more efficient to perform
 statistical computations on-the-fly, this can be a harsh restriction,
@@ -895,7 +873,7 @@ results a more pleasant experience when it comes to hosting and sharing
 applications since it doesn't require a Web Server with R and special
 software already installed.
 
-\subsection{World Bank Example}\label{world-bank-example}
+\subsection{World Bank Example}
 
 We also recreated Figure \ref{fig:worldbank} using ggvis+shiny (see
 \url{http://bit.ly/1SsJKlN}) and Tableau (see
@@ -923,8 +901,7 @@ ways based on the two different selection variables. In other words, in
 Tableau, selections are managed on the plot level, but in animint,
 selections are specific to each graphical layer.
 
-\section{User feedback and
-observations}\label{user-feedback-and-observations}
+\section{User feedback and observations}
 
 By working with researchers in several fields of research, we have
 created a wide variety of interactive visualizations using animint.
@@ -936,7 +913,7 @@ with annotated sketches of the desired plots, which we then translated
 to animint R code. In this section we share comments and constructive
 criticism that we have obtained from our users.
 
-\subsection{User perspective}\label{user-perspective}
+\subsection{User perspective}
 
 For the \texttt{prior} data visualization (\url{http://bit.ly/1peIT7t}),
 the animint user is a machine learning researcher who developed an
@@ -951,8 +928,8 @@ important since it shows under which conditions our proposed method
 works well and provides avenues for further research.''
 
 Another user from a machine learning background found the interactive
-plots useful for presenting his work: ``the `regularization path' is a
-difficult concept to demonstrate in my research. The animint
+plots useful for presenting his work: `\texttt{the}regularization path'
+is a difficult concept to demonstrate in my research. The animint
 (\url{http://bit.ly/1gVb8To}) helped greatly by rendering an interactive
 plot of regularization path, likelihood, and graph at the same time and
 illustrating their connections. It also reveals an interesting
@@ -971,7 +948,7 @@ publications: ``\ldots{} the web interface is simple and easy to use. It
 also enables us to publish more detailed interactive results on our
 website to accompany the results presented in publications.''
 
-\subsection{Developer perspective}\label{developer-perspective}
+\subsection{Developer perspective}
 
 R users, and in particular ggplot2 users, have found that animint is
 easy to learn and use. One statistics Ph.D.~student writes, ``animint is
@@ -980,7 +957,8 @@ familiar with R and ggplot2's grammar of graphics implementation. The
 API is very intuitive and allows one to quickly bring their static
 graphics to life in a way that facilitates exploratory data analysis.''
 
-\section{Limitations and future work}\label{limitations}
+\section{Limitations and future work}
+\label{sec:limitations}
 
 A number of limitations derive from the fact that some plot features are
 computed once during the compilation step and remain static on a
@@ -1007,8 +985,8 @@ computations from the compiler to the renderer.
 
 Another set of limitations derive our current restriction that all
 subsets (corresponding to each possible selection) must be precomputed
-before render time. As eluded to in Section \ref{tour}, if there is a
-large space of possible selections, it is impractical to precompute
+before render time. As eluded to in Section \ref{sec:tour}, if there is
+a large space of possible selections, it is impractical to precompute
 every subset before viewing. Therefore, it would be useful if the
 renderer could dynamically compute subsets when new selections are made.
 
@@ -1016,13 +994,13 @@ Our implementation is also limited to two specific types of direct
 manipulation: selecting graphical elements via mouse click
 (\texttt{clickSelects}), and showing/hiding related elements
 (\texttt{showSelected}). However, the framework described in Section
-\ref{extension} is not restricted to a particular event type, so
+\ref{sec:extension} is not restricted to a particular event type, so
 \texttt{hoverSelects} and \texttt{brushSelects} aesthetics could be
 added, for instance. There are other types of interaction that should be
 added, that wouldn't require additional extensions to the grammar of
 graphics, such as: zooming, panning, and plot resizing.
 
-\section{Conclusion}\label{conclusion}
+\section{Conclusion}
 
 Our R package animint extends ggplot2's layered grammar of graphics
 implementation for a declarative approach to producing interactive and
