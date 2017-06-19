@@ -2,13 +2,6 @@
 .Rhistory
 .RData
 *.DS_Store
+movies/
 jcgs-template/
 rsconnect/
-InfoVisReviews.pdf
-HOCKING-animint-concordance.tex
-HOCKING-animint.out
-HOCKING-animint.log
-HOCKING-animint.bbl
-HOCKING-animint.synctex.gz
-HOCKING-animint.blg
-HOCKING-animint.aux

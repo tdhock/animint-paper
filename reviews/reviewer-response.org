@@ -1,0 +1,207 @@
+TODO: change the end of the manuscript and add a section that clearly
+outlines what is not posible in animint.
+
+** Associate Editor
+
+All reviewers are enthusiastic about the goals of this paper. For
+example, R1 writes "The authors do a great job of motivating why
+Animint is an important and timely contribution."
+
+However, the reviewers unanimously agree that the work is not ready
+for publication in its current form. In particular, the limited
+demonstrated expressiveness of Animint is a primary concern. R2 writes
+"the threat to validity that I'm worried about is expressiveness: can
+I do *enough* things with this?", while R3 states "I believe it's too
+simple: it only addresses a limited set of visualizations and
+interactions... I did not come away convinced that this work
+represents a major advance."
+
+I concur with these judgments. In particular, the full expressiveness
+of the Animint approach should be better demonstrated to substantiate
+both its utility and scope of research contribution. Additional use
+cases speaking to the usefulness and usability of the system for
+external users would further strengthen the paper. The reviewers also
+raise other questions and comments the authors should consider.
+
+As a "Major Revision" decision comes with a strict timeline for
+resubmission, I'm returning a decision of "Revise and Submit as
+New". This gives the authors as much time as they need to revise their
+work and manuscript should they wish to resubmit.
+
+Finally, I would like to thank the authors for submitting their paper
+to TVCG. I hope that they find the reviewer comments useful for the
+next step of their work.
+
+We hope that you will find the comments from the reviewers to be
+useful in your future work. As always, we appreciate that you chose to
+submit your work to TVCG and we thank you for your interest in TVCG.
+
+Sincerely,
+Prof. Leila De Floriani, EIC
+Transactions on Visualization and Computer Graphics
+ldf4tvcg@umiacs.umd.edu
+
+** Reviewer: 1
+
+The authors do a great job of motivating why Animint is an important
+and timely contribution. Namely, widely used toolkits like D3 and
+ggplot2 have focused on the specification of visual elements without
+any treatment for interaction. Within the R environment, Animint is a
+particularly interesting approach as it allows specification of
+direct-manipulation interactions, as opposed to interactions mediated
+through control widgets (as with ggvis+shiny).
+
+The two aesthetics that comprise Animint (selection + show/hide) map
+to those in prior work (e.g., Satyanarayan et al.). But, as the
+authors note, Animint exists at a higher level of
+abstraction. However, the authors do not discuss what tradeoffs are
+made by moving up the ladder of abstraction, and why they are
+justified. Though the authors claim that Animint enables "a large
+class of interactive plots," comparing the in-paper and online
+examples against taxonomies of interaction in data visualization
+(e.g., [1] or [2]) seems to indicate that Animint is currently only
+capable of supporting Connect-type interactions.
+
+The authors do discuss limitations of Animint under Section 7 but
+claim that the limitation exists with the current _implementation_
+rather than the design of the Animint DSL. While it is understandable
+to defer engineering tasks that do not ultimately affect the broader
+research contribution, not being able to support logical expressions
+seems to be a major oversight. Any type of continuous selection is
+impossible (e.g., brushing) which is particularly problematic when
+Connect-type interactions are the major class of supported
+interactions.
+
+Furthermore, the authors must include concrete examples to bolster
+their claim that "[they] could implement several other types of
+interactivity [e.g., zooming, panning] without changing the Animint
+DSL." They propose adding a third aesthetic ("hoverSelects") but it is
+unclear how, if at all, this strategy would generalize.
+
+Some final lingering questions/thoughts:
+
+- Sec. 1 discusses the Animint developer and designer. What is the
+  difference between implementing the Animint library in the
+  visualization, and using the library to define a visualization? Does
+  the discussion imply that the authors imagine 3rd parties could add
+  extensions to Animint?
+
+- How does showSelected work exactly? Are the points simply hidden
+  from the chart, or are they removed and have to be redrawn if
+  subsequently shown? What are the performance implications?
+
+- Multiple showSelected aesthetics may be applied which performs a
+  logical AND operation. How do you support logical ORs?
+
+- Animint provides tallRects. What about making similar sections along
+  the y-axis (i.e., longRects)? The in-paper and online examples
+  appear to only allow a single tallRect to be selected at once, how
+  would I select multiple tallRects simultaneously?
+
+- It is unclear which dataset the "year" variable is taken from in the
+  animation example. How does animint resolve this correctly,
+  especially in the case where both datasets contain year but with
+  different values/cardinalities?
+
+- Sec. 3.2 suggests that some types of multiple selection is indeed
+  possible but it is unclear how you specify single vs multiple
+  selection. Why is "year" a single selection variable, but country is
+  not? What if I wanted to display multiple years, or a single
+  country?
+
+[1] Yi, Ji Soo, et al. "Toward a deeper understanding of the role of
+interaction in information visualization." Visualization and Computer
+Graphics, IEEE Transactions on 13.6 (2007): 1224-1231.
+
+[2] Heer, Jeffrey, and Ben Shneiderman. "Interactive dynamics for
+visual analysis." Queue 10.2 (2012): 30.
+
+
+** Reviewer: 2
+
+This paper extends the GGPLOT tool in R to add several new keywords: a
+selection keyword that looks for mouse clicks ("CLICKSELECT"), a
+selection keyword for brushing and linking ("SHOWSELECT"), and
+animation keywords ("DURATION"). With these keywords, a user can
+specify some forms of brushing and linking
+
+The strongest part of this paper is that it is a remarkable technical
+accomplishment. As an engineering contribution, it's solid: the paper
+walks me through the major parts of the design, the compiler and
+visualizer, presents detailed performance information, and even
+compares the performance to a client/server solution provided in
+another context.
+
+Unfortunately, I don't really need to know performance numbers: that's
+not really the part of this paper that I'd be worried about. Looking
+at Munzner's "Nested Model" paper, the threat to validity that I'm
+worried about is expressiveness: can I do *enough* things with this?
+What do I compromise with this philosophy?
+
+The authors have done an excellent job of articulating what they DID
+do, and they even nod to things that they might wish to add in the
+future. But I don't yet know if there is a common visualization type
+that this simply can't support, or an interaction that is out of
+scope. There's no task analysis to discuss types of interactivity in
+vis, and therefore which things are good or bad choices to
+support. The paper could do a tremendous service by articulating these
+design decisions -- after all, the next reader might care less about
+R, and instead want to add a similar interactivity to MatPlotLib, or
+their own system.
+
+In a revision, I'd like to see a richer discussion of the design
+decisions made for this paper. I think the engineering is
+fantastic--but the best way to promote engineering alone is through
+getting the code used, not by writing an article about it. The article
+should be a chance to think more broadly.
+
+
+** Reviewer: 3
+
+The system in this paper seems like it does a good job for its
+intended purpose, which is to create interactive linked
+charts. However, I did not come away convinced that this work
+represents a major advance.
+
+The class of visualizations Animint supports seems narrow. In section
+7, the authors describe future work, but much of this seems like
+something that should have been implemented in version 1. For
+instance, the fact that hovers aren't supported yet seems strange, and
+makes the reader wonder if there's something about them that requires
+a nontrivial design change. Panning and zooming, similarly, seem like
+basic features that this type of system should enable.
+
+Although I appreciate that researchers don't need to produce finished,
+polished systems to prove their point, in this case it seems important
+to have a wider range of capabilities. One reason is that without
+these, it's unlikely that their system will see enough user uptake to
+evaluate its benefits. A second reason is that when introducing
+something as dramatic as an extra compilation step, it's important to
+show that there's a broad benefit that a simple library couldn't
+provide.
+
+I also was not convinced by the evaluation given by the authors. They
+place a high value on lines of code, but for two reasons I don't
+believe that's necessarily the right metric. First, often brevity
+stems from default library and language behavior, rather than
+expressiveness. For example, in Fig. 2, the Animint/R code has no
+reference to x and y scales, whereas the D3/js code does. If a user
+wanted control over those scales, presumably the Animint/R code would
+become considerably more complex, whereas the D3 code would
+not. Furthermore, R itself is simply more concise than
+Javascript. More importantly, brevity is not intrinsically worthwhile,
+but is usually just a rough proxy for developer convenience.
+
+Unfortunately, there's no evaluation that looks carefully at ease of
+use for developers. Section 6 did have a number of case studies, but
+only one of the user quotes refers to ease of use. The others talk
+about the value of interactivity, which is something we already know
+to be true.
+
+Finally, as an aside, the organization of the paper made it a little
+hard to understand. The meat of the research wasn't introduced until
+fairly late. If the paper is revised, I'd like to see it moved a bit
+earlier.
+
+For these reasons, I would not recommend publication until the work is
+better developed and there is more evidence for its value.
