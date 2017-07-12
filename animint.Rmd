@@ -93,7 +93,7 @@ Section \@ref(extension) and Section \@ref(animation). In
 Section \@ref(worldbank), we demonstrate our extension with an example. 
 In Section \@ref(implementation), we outline design decisions made in our
 implementation in the R package animint. In Section \@ref(performance), we
-provide a sense scope for our system and its performance limitations through a
+provide a sense of the scope of our system and its performance limitations through a
 handful of examples. In Section \@ref(compare), we conduct a comparison
 study by replicating examples with other leading systems. Finally, in 
 Section \@ref(limitations), we discuss future work and limitations of
@@ -112,13 +112,13 @@ analysis workflow.
 It is important to acknowledge that ggplot2 is built on top of the R package 
 grid, a low-level graphics system, which is now bundled with R itself 
 [@RCore]. Neither grid, nor base R graphics, have strong support for 
-handling user interaction creating a need for add-on packages. There are a 
+handling user interaction, which creates a need for add-on packages. There are a 
 number of approaches these packages take to rendering, each with their own 
 benefits and drawbacks. Traditionally, they build on low-level R interfaces 
 to graphical systems such as GTK+, Qt, or Java GUI frameworks 
 [@RGtk2, @qtbase, @qtpaint, @rJava]. In general, the resulting system can be 
-very fast and flexible, but sharing ir reproducing output is usually a problem 
-due to the heavy software requirements. Although there may be sacrifice in
+very fast and flexible, but sharing and reproducing output is usually a problem 
+due to the heavy software requirements. Although there may be sacrifices in
 performance, using the modern web browser as a canvas is more portable, 
 accessible, and composable (graphics can be embedded within larger 
 frameworks/documents).
@@ -278,12 +278,12 @@ Although `clickSelects` is tied to a mouseclick event, this same
 framework supports other selection events, such as hover or click+drag. 
 Statistically speaking, this is useful for visualizing and navigating through 
 joint distributions conditional upon discrete values. In this sense, our 
-extension is closely related to the same a basis which leads to trellis 
+extension is closely related to trellis 
 displays and linked scatterplot brushing 
-[@trellis, @brushing-scatterplots]. The major differences are that conditioning: 
-is layer (i.e., not plot) specific, is not tied to a particular geometry, and 
+[@trellis, @brushing-scatterplots]. The major differences are that our conditioning
+is layer-specific (not plot-specific), is not tied to a particular geometry, and 
 can be controlled through direct manipulation or animation controls.
-%% TODO: make connections to scagnostics? trelliscope?
+
 
 ## Adding animation {#animation}
 
@@ -401,15 +401,15 @@ timeSeries <- ggplot() + geom_line(
 )
 ```
 
-We want to provide a visual clue for the selected year in the 
-time series, so we also layer some ``tall rectangles" onto the time series.
-These tall rectangles will also serve as a way to directly modify the 
+We want to provide a visual cue for the selected year in the time
+series, so in the code below we add some tall rectangles to the time series plot.
+These tall rectangles will also serve as a way to directly modify the
 selected year. The tallrect geometry is a special case of a rectangle
-that automatically spans the entire vertical range, so we just have to 
-specify the horizontal range via `xmin` and `xmax`. Also, 
-since the layered grammar of graphics allows for different data in 
-each layer, we supply a data frame with just the unique years in the 
-entire data for this layer.
+that automatically spans the entire vertical range, so we just have to
+specify the horizontal range via xmin and xmax. Also, since the
+layered grammar of graphics allows for different data in each layer,
+we supply a data frame with just the unique years in the entire data
+for this layer.
 
 ```{r}
 years <- data.frame(year = unique(WorldBank$year))
@@ -601,7 +601,7 @@ interaction variables.
 \caption{
 Characteristics of 11 interactive visualizations designed with
     animint. The interactive version of these visualizations can be accessed 
-    via \url{http://sugiyama-www.cs.titech.ac.jp/~toby/animint/}.
+    via \url{http://members.cbio.ensmp.fr/~thocking/animint/}.
     From left to right, we show the data set name and 
     Figure number in this paper (Figure), the
     lines of R code (LOC) including data processing but not including comments
