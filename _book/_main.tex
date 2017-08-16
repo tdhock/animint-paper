@@ -25,8 +25,7 @@
 \usepackage{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
-            pdftitle={Extending ggplot2's grammar of graphics implementation for linked and dynamic graphics on the web},
-            pdfauthor={Carson Sievert},
+            pdftitle={Extending ggplot2 for linked and dynamic web graphics},
             pdfkeywords={Animation, Linked Views, Statistical graphics, Exploratory data
 analysis, Web technologies},
             colorlinks=true,
@@ -113,6 +112,7 @@ analysis, Web technologies},
 % Start of JCGS specific titlepage
 % ------------------------------------------------------------------------------
 
+\usepackage{tabularx}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[section]
@@ -130,8 +130,7 @@ analysis, Web technologies},
 \def\spacingset#1{\renewcommand{\baselinestretch}%
 {#1}\small\normalsize} \spacingset{1}
 
-\title{\bf Extending ggplot2's grammar of graphics implementation for linked and
-dynamic graphics on the web}
+\title{\bf Extending ggplot2 for linked and dynamic web graphics}
 \author{
   Carson Sievert \\ 
   Department of Statistics, Iowa State University \\
@@ -483,9 +482,10 @@ parameters.
 \begin{figure}
 \centering
 \includegraphics{images/animation}
-\caption{\label{fig:animation}A simple animation with smooth transitions and
-interactively altering transition durations. A video demonstration can
-be viewed online at \url{https://vimeo.com/160505146}}
+\caption{\label{fig:animation}Two frames from an animation of one marker
+moving from (1, 1) towards (10, 10). A video of the animation with
+smooth transitions may be viewed online at
+\url{https://vimeo.com/160505146}}
 \end{figure}
 
 \subsection{World Bank Example}\label{worldbank}
@@ -529,7 +529,7 @@ made via direct manipulation.
 
 \begin{figure}
 \centering
-\includegraphics{images/Screenshot-toggle-selected-value}
+\includegraphics{images/dropdown}
 \caption{\label{fig:widgets}Animint provides a menu to update each selection
 variable. In this example, after typing `th' the country menu shows the
 subset of matching countries.}
@@ -790,29 +790,46 @@ point detection model in the breakpoints data
 parameters and data sets since these are encoded as animint interaction
 variables.
 
-\begin{table*}[htp] % This table is too wide to fill in the page.
-  \centering
-  \input{table-examples}
-  \vskip 0.2cm
-  \caption{Characteristics of 11 interactive visualizations designed with
+\begin{table}
+
+\caption{
+Characteristics of 11 interactive visualizations designed with
     animint. The interactive version of these visualizations can be accessed 
     via \url{http://sugiyama-www.cs.titech.ac.jp/~toby/animint/}.
-    From left to right, we show the data set name, the
+    From left to right, we show the data set name and 
+    Figure number in this paper (Figure), the
     lines of R code (LOC) including data processing but not including comments
     (80 characters max per line),
     the amount of time it takes to compile the visualization (seconds),
     the total size of the uncompressed TSV files in megabytes (MB),
     the total number of data points (rows),
     the median number of data points shown at once (onscreen),
-    the number of data columns visualized (variables),
+    the number of data columns visualized (vars),
     the number of \texttt{clickSelects}/\texttt{showSelected} 
-    variables (interactive),
+    variables (int),
     the number of linked panels (plots),
-    if the plot is animated,
-    and the corresponding Figure number in this paper (Fig).
-  }
-\label{tab:examples}
-\end{table*}
+    if the plot is animated.
+}\label{tab:examples}
+
+\begin{tabularx}{\textwidth}{|l|l|l|l|l|l|l|l|l|l|l|}
+    \hline
+ Figure & LOC & seconds & MB & rows & onscreen & vars & int & plots & animated? \\ 
+  \hline
+  worldPop & 17 & 0.2 & 0.1 & 924 & 624 &  4 &  2 &  2 & yes  \\ 
+  WorldBank \ref{fig:worldbank} & 20 & 2.3 & 2.1 & 34132 & 11611 &  6 &  2 &  2 & yes \\ 
+  evolution & 25 & 21.6 & 12.0 & 240600 & 2703 &  5 &  2 &  2 & yes  \\ 
+  change & 36 & 2.8 & 2.5 & 36238 & 25607 & 12 &  2 &  3 & no  \\ 
+  tornado  \ref{fig:tornado} & 39 & 1.7 & 6.1 & 103691 & 16642 & 11 &  2 &  2 & no \\ 
+  prior & 54 & 0.7 & 0.2 & 1960 & 142 & 12 &  3 &  4 & no  \\ 
+  compare & 66 & 10.7 & 7.9 & 133958 & 2140 & 20 &  2 &  5 & no  \\ 
+  breakpoints & 68 & 0.5 & 0.3 & 4242 & 667 & 13 &  2 &  3 & no  \\ 
+  climate \ref{fig:climate} & 84 & 12.8 & 19.7 & 253856 & 88980 & 15 &  2 &  6 & yes \\ 
+  scaffolds & 110 & 56.3 & 78.5 & 618740 & 9051 & 30 &  3 &  3 & no  \\ 
+  ChIPseq & 229 & 29.9 & 78.3 & 1292464 & 1156 & 44 &  4 &  5 & no  \\
+  \hline
+\end{tabularx}
+
+\end{table}
 
 \section{Comparison study}\label{compare}
 
