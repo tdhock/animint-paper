@@ -54,12 +54,12 @@ analysis problems, and minimize time spent learning computational tools. R
 excels in this regard, as it is designed specifically for interactive use, 
 where users can quickly explore their data using highly expressive interfaces.
 Another key player in R's success story is its packaging infrastructure, which
-provides tools for distributing entire research conpendium(s) (code, data, 
+provides tools for distributing entire research compendium(s) (code, data, 
 documentation, auxiliary documents, etc) [@Gentleman:Lang]. 
 
 One of the most widely used R packages is ggplot2, a data
 visualization package inspired by the grammar of graphics [@ggplot2-book, @wilkinson]. 
-In fact, @Donoho:2015tu writes: ``This effort may have more impact on 
+In fact, @Donoho:2015tu writes: "This effort may have more impact on 
 today’s practice of data analysis than many highly-regarded theoretical 
 statistics papers". In our experience, ggplot2 has made an impact thanks to its
 foundation in the grammar of graphics, carefully chosen defaults, and overall
@@ -77,7 +77,7 @@ workflow, but these approaches are often not easy to reproduce or distribute to
 a larger audience. It is true that most graphics generated during EDA are 
 ultimately not useful, but sometimes, understanding gained during this phase 
 is most easily shared via the interactive graphics themselves. Thus, there is 
-value is being able to easily share, and embed interactive graphics inside a 
+value in being able to easily share, and embed interactive graphics inside a 
 larger report. Unfortunately, this is typically hard, if not impossible, 
 using traditional interactive graphics toolkits. As a result, there is a 
 large disconnect between the visualization tools that we use for exploration 
@@ -86,7 +86,7 @@ versus presentation.
 We aim to narrow this gap in visualization tools by extending ggplot2's grammar 
 of graphics implementation for interactive and dynamic web graphics. Our 
 extension allows one to create animated transitions
-and perform database queries via direct manipulation of linked views like those
+and perform dynamic queries via direct manipulation of linked views like those
 described in @Ahlberg:1991 and @Buja:1991vh. 
 A conceptual model for our extension is provided in
 Section \@ref(extension) and Section \@ref(animation). In 
@@ -99,15 +99,14 @@ study by replicating examples with other leading systems. Finally, in
 Section \@ref(limitations), we discuss future work and limitations of
 our current system.
 
-# Related Work
+# Related work
 
 We aim to provide a system which empowers ggplot2 users to go beyond the 
 confines of static graphics with minimal friction imposed upon their current
 workflow. We acknowledge that numerous systems which support similar 
 visualization techniques exist outside of the R ecosystem, but we 
 intentionally focus on R interfaces since the surrounding statistical 
-computing environment is crucial for enabling an efficient exploratory data 
-analysis workflow.
+computing environment is crucial for enabling an efficient EDA workflow.
 
 It is important to acknowledge that ggplot2 is built on top of the R package 
 grid, a low-level graphics system, which is now bundled with R itself 
@@ -178,7 +177,7 @@ render the SVG graphics from JSON [@vega], and the R package shiny to
 enable many of its interactive capabilities [@shiny]. The interface gives
 tremendous power to R users, as it allows one to write R functions to handle 
 user events. This power does come with a cost, though, as sharing and hosting 
-ggvis graphics typically requires special web server software, even when the
+ggvis graphics typically requires special web server softwares, even when the
 interaction logic could be handled entirely client-side. As we outline in 
 Section \@ref(implementation), our system does not require a web server, 
 but can also be used inside shiny web applications, when desired.
@@ -187,8 +186,8 @@ but can also be used inside shiny web applications, when desired.
 
 In this section, we propose an extension to the layered grammar of graphics
 [@ggplot2-paper], which enables declarative expression of animations and
-database queries via direct manipulation. In the ggplot2 system, there are five
-essential components that define a layer of graphical markings: data, mappings 
+dynamic queries via direct manipulation. In the ggplot2 system, there are five
+essential components that define a layer of graphical makings: data, mappings 
 (i.e., aesthetics), geometry, statistic, and position. These simple components 
 are easily understood in isolation and can be combined in many ways to express
 a wide array of graphics. For a simple example, here is one way to create a
@@ -231,7 +230,7 @@ ggplot2 plots into a single view, this design can be extended to support a
 notion of multiple linked views, as those discussed in @Ahlberg:1991 
 and @Buja:1991vh.
 
-## Direct Manipulation of Database Queries {#extension}
+## Direct manipulation of dynamic queries {#extension}
 
 @ggobi:2007 use SQL queries to formalize the direct manipulation methods
 discussed in @Ahlberg:1991 and @Buja:1991vh. As it turns out, we 
@@ -260,7 +259,7 @@ p2 <- ggplot() + geom_point(
 animint2dir(list(p1 = p1, p2 = p2))
 ```
 
-```{r tips, echo = FALSE, eval = TRUE, fig.cap = "Linked database querying via direct manipulation using animint. A video demonstration can be viewed online at <https://vimeo.com/160496419>"}
+```{r tips, echo = FALSE, eval = TRUE, fig.cap = "Linked dynamic querying via direct manipulation using animint. A video demonstration can be viewed online at <https://vimeo.com/160496419>"}
 knitr::include_graphics("images/tips")
 ```
 
@@ -292,7 +291,7 @@ In some sense, the `showSelected` aesthetic splits the layer into subsets
 `clickSelects` aesthetics provides a mechanism to alter the visibility 
 of those subset(s) via direct manipulation, but our system also provides a 
 mechanism for automatically looping through selections to produce animation(s).
-We acheive this by reserving the name `time` to specify which variable 
+We achieve this by reserving the name `time` to specify which variable 
 to select as well as the amount of time to wait before changing the selection 
 (in milliseconds). We also reserve the name `duration` to specify the 
 amount of time used to smoothly transition between frames (with linear easing). 
@@ -305,7 +304,7 @@ altering the `time` and `duration` parameters.
 d <- data.frame(v = 1:10)
 plotList <- list(
   plot = ggplot() + geom_point(
-    data = d, aes(x=v, y=v, showSelected=v)
+    data = d, aes(x = v, y = v, showSelected = v)
   ),
   time = list(variable = "v", ms = 1000),
   duration = list(v = 1000)
@@ -313,12 +312,12 @@ plotList <- list(
 animint2dir(plotList)
 ```
 
-```{r animation, echo = FALSE, eval = TRUE, fig.cap = "Two frames from an animation of one marker moving from (1, 1) towards (10, 10). A video of the animation with smooth transitions may be viewed online at <https://vimeo.com/160505146>"}
+```{r animation, echo = FALSE, eval = TRUE, fig.cap = "Two frames from an animation of one marker moving from (1, 1) towards (10, 10). A video of the animation with smooth transitions can be viewed online at <https://vimeo.com/160505146>"}
 knitr::include_graphics("images/animation")
 ```
 
 
-## World Bank Example {#worldbank}
+## World Bank example {#worldbank}
 
 <!--
 %% In the system we propose, the central concept of interactivity is a
@@ -362,7 +361,7 @@ automatically incremented every few seconds, using animation to
 visualize yearly changes in the relationship between life expectancy
 and fertility rate.
 
-```{r worldbank, echo = FALSE, eval = TRUE, fig.cap = "An interactive animation of World Bank demographic data of several countries, designed using `clickSelects` and `showSelected` keywords (top).  Left: a multiple time series from 1960 to 2010 of life expectancy, with bold lines showing the selected countries and a vertical grey tallrect showing the selected year. Right: a scatterplot of life expectancy versus fertility rate of all countries. The legend and text elements show the current selection: year=1979, country= {United States, Vietnam}, and region={East Asia & Pacific, North America}"}
+```{r worldbank, echo = FALSE, eval = TRUE, fig.cap = "An interactive animation of World Bank demographic data of several countries, designed using `clickSelects` and `showSelected` keywords (top).  Left: a multiple time series from 1960 to 2010 of life expectancy, with bold lines showing the selected countries and a vertical grey tallrect showing the selected year. Right: a scatterplot of life expectancy versus fertility rate of all countries. The legend and text elements show the current selection: year=1979, country={United States, Vietnam}, and region={East Asia & Pacific, North America}"}
 knitr::include_graphics("images/figure-1")
 ```
 
@@ -375,7 +374,7 @@ Figure \@ref(fig:widgets) shows what the user sees after typing ``th'' in
 the search box. Note that these dropdowns support selection of multiple
 values and coordinate sensibly with selections made via direct manipulation.
 
-```{r widgets, echo = FALSE, eval = TRUE, fig.cap = "Animint provides a menu to update each selection variable. In this example, after typing 'th' the country menu shows the subset of matching countries."}
+```{r widgets, echo = FALSE, eval = TRUE, fig.cap = "Animint provides a menu to update each selection variable. In this example, after typing \"th\" the country menu shows the subset of matching countries."}
 knitr::include_graphics("images/dropdown")
 ```
 
@@ -424,7 +423,7 @@ As for the right hand plot in Figure \@ref(fig:worldbank), there are
 three layers: a point layer for countries, a text layer for countries, 
 and a text layer to display the selected year. By clicking on a point,
 we want to display the country text label and highlight the corresponding
-time series on the right hand plot, so we set `clickSelects=country`
+time series on the left hand plot, so we set `clickSelects=country`
 in this layer. Furthermore, we only want to show the points for the 
 selected year and region, so we also need `showSelected=year` and 
 `showSelected2=region`.
@@ -490,7 +489,7 @@ viz <- list(
     region = "multiple"
   ),
   first = list(
-    country = c("United States", "Thailand")
+    country = c("United States", "Vietnam")
   )
 )
 animint2dir(viz)
@@ -528,7 +527,7 @@ file.
 The compiler also uses ggplot2 to convert data variables (e.g. life
 expectancy and region) to visual properties (e.g. y position and
 color). The data for each layer/geom are saved in several TSV files,
-one for each combination showSelected values. Thus for large data
+one for each combination `showSelected` values. Thus for large data
 sets, the web browser only needs to download the subset of data
 required to render the current selection [@2013-immens].
 
@@ -561,7 +560,7 @@ time, the user can simultaneously view the spatial distribution of
 tornadoes in the selected year over all states, and see the trend over
 all years for the selected state. Clicking a state on the map updates the
 time series bars to show the tornado counts from that state. Clicking
-a bar on the time series updates the selected year. Figure \@ref(fig:climate) 
+a bar on the time series updates the spatial distribution of tornadoes in the selected year. Figure \@ref(fig:climate) 
 shows an interactive animation of climate
 time series data observed in Central America. Two maps display the
 spatial distribution of two temperature variables, which are shown
@@ -571,7 +570,7 @@ the selected time and region. Clicking any of the plots updates all 6
 of them. The `clickSelects` and `showSelected` aesthetics make it
 easy to design this set of 6 linked plots in only 87 lines of code.
 
-Summary statistics describing complexity and performance for 
+Summary statistics describing complexity and performance of 
 examples in this paper, as well as other animint examples, 
 are displayed in Table \@ref(tab:examples). The climate data 
 visualization has noticeably slow animations, 
@@ -582,7 +581,7 @@ inherent bottleneck when rendering large interactive plots in web
 browsers using JavaScript and SVG. Another animint with a similar
 amount of total rows is based on the evolution data
 (<http://bit.ly/O0VTS4>), but since it shows less data onscreen
-(about 2703 elements), it exhibits faster responses to interactivity
+(about 2,703 elements), it exhibits faster responses to interactivity
 and animation.
 
 Animint is still useful for creating interactive but
@@ -651,7 +650,7 @@ The Grand Tour is a well-known method for viewing high dimensional data which
 requires interactive and dynamic graphics [@grand-tour]. 
 Figure \@ref(fig:tour) shows a grand tour of 300 observations sampled
 from a correlated tri-variate normal distribution. The left hand view
-shows the marginal density of each point while the right hand view ``tours"
+shows the marginal density of each point while the right hand view "tours"
 through 2D projections of the 3D data. There are many ways to
 choose projections in a tour, and many ways to interpolate
 between projections, most of which can be programmed fairly easily
@@ -666,7 +665,7 @@ knitr::include_graphics("images/tour")
 When touring data, it is generally useful to link low-dimensional displays with
 the tour itself. The video in Figure \@ref(fig:tour) was generated with our
 current animint implementation, and points are selected via mouse click which
-reveal that points with high marginal density are located in the
+reveals that points with high marginal density are located in the
 ellipsoid center while points with a low marginal density appear near the 
 ellipsoid border. In this case, it would be convenient to also have brush 
 selection, as we demonstrate in
@@ -681,7 +680,7 @@ knitr::include_graphics("images/tourbrush")
 ```
 
 This example helps point out a few other important differences in using 
-animint versus ggvis+shiny to implement 'multiple linked and dynamic views'
+animint versus ggvis+shiny to implement "multiple linked and dynamic views"
 as described in @Ahlberg:1991 and @Buja:1991vh. 
 Maintaining state of the linked brush in Figure \@ref(fig:tourbrush)
 requires both knowledge and clever use of some sophicated programming 
@@ -693,7 +692,7 @@ a few different `clickSelects`/`showSelected` mappings. As a
 result, we believe animint provides a more elegant user interface for 
 this application.
 
-The tourring example also helps point out important consequences of the
+The touring example also helps point out important consequences of the
 design and implementation of these two different systems. As mentioned in 
 Section \@ref(implementation), our current animint implementation requires 
 every subset of data to be precomputed before render time.
@@ -712,19 +711,19 @@ the animint system results a more pleasant experience when it comes to hosting
 and sharing applications since it doesn't require a Web Server with R and 
 special software already installed.
 
-## World Bank Example
+## World Bank example
 
 We also recreated Figure \@ref(fig:worldbank) using ggvis+shiny (see 
 <http://bit.ly/1SsJKlN>) and Tableau (see 
 <http://bit.ly/worldBank-tableau>). 
 Even as experienced ggvis+shiny users, we found it quite difficult to
-replicate this example, and were not able completely replicate it 
+replicate this example, and were not able to completely replicate it 
 due to a lack of a mechanism for coordinating indirect and direct
 manipulations. Overall the visualization is pretty similar, but 
 lacks a few important features. 
 In particular, there is no way to control the selected
 year using both the slider (indirect) and clicking on the ggvis plot (direct).
-It also lacks the ability to click on a countries time series and label
+It also lacks the ability to click on a country time series and label
 the corresponding point on the scatterplot. This might be possible, but we
 could not find a way to update a plot based on a click event on a different
 plot. Even with this lack of functionality, the ggvis+shiny is significantly
@@ -864,9 +863,9 @@ non-identity statistic(s)/position(s) may not generate a sensible result.
 It would be possible, but a significant amount of work, to transfer these 
 computations from the compiler to the renderer.
 
-Another set of limitations derive our current restriction that all 
+Another set of limitations derive from our current restriction that all 
 subsets (corresponding to each possible selection) must be precomputed
-before render time. As eluded to in Section \@ref(tour),
+before render time. As elucidated in Section \@ref(tour),
 if there is a large space of possible selections,
 it is impractical to precompute every subset before viewing.
 Therefore, it would be useful if the renderer could
@@ -888,9 +887,9 @@ Our R package animint extends ggplot2's layered grammar of graphics
 implementation for a declarative approach to producing interactive
 and dynamic web graphics. By adding two aesthetics to specify selection
 source(s) and target(s), ggplot2 users can quickly and easily create 
-animations with smooth transitions and perform database queries via direct
+animations with smooth transitions and perform dynamic queries via direct
 manipulation of linked views. As a result, animint is a useful tool 
-not only for exploratory data analysis, but also for the presentation
+not only for EDA, but also for the presentation
 and distribution of interactive statistical graphics.
 
 \section*{Acknowledgements}
