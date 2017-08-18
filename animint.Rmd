@@ -517,6 +517,10 @@ knitr::include_graphics("images/figure-tornado")
 knitr::include_graphics("images/figure-climate")
 ```
 
+```{r updates, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of tornadoes recorded from 1950 to 2012 in the United States, with axes updates specified in the third plot. Left: map of the lower 48 United States with tornado paths in 1982. Selected state is Arkansas. Middle: time series of tornado counts in Arkansas with no axes updates specified. The geom only uses about half of the viewing area. Right: time series of tornado counts in Arkansas with axes updates. The plot scales are updated automatically and full viewing area is utilized. This interactive example can be reproduced using the code in this gist: <https://gist.github.com/faizan-khan-iit/5393fdbfefb9ef7b1a84fc740acad8d2> and can be viewed here: <https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year={1982}state={AR}> "}
++knitr::include_graphics("images/screenshot-tornado-update")
+```
+
 The compiler scans the aesthetics in the ggplots to determine
 how many selection variables are present, and which geoms to update
 after a selection variable is updated. It uses ggplot2 to
@@ -538,6 +542,8 @@ store the common data, but are merged with the common data after
 downloading. This method for constructing the TSV file database was
 developed to minimize the disk usage of animint, particularly
 for ggplots of spatial maps as in Figure \@ref(fig:tornado).
+
+animint also supports axes updates for both x and y axes for selected geoms. The idea is that when the user selects a subset of data to be displayed in a plot, the axes are re-calculated so that the displayed data covers the whole of the viewing area in the plot, as shown in Figure \@ref(fig:updates). The axes updates currently work only for single selection variables, as the axes ranges are computed in the compiler and stored in the JSON plot meta-data file. The renderer uses these stored ranges to update the axes scales everytime the displayed subset of data changes. Calculating all the subset combinations in the compiler for multiple selection variables is not efficient, in which case it would be beneficial to shift this computation to the renderer itself.
 
 Finally, the rendering engine (`index.html`, `d3.v3.js`,
 and `animint.js` files) is copied to the plot directory. The
@@ -846,9 +852,7 @@ rendered plot. For example, users are unable to change variable
 mappings after compilation.
 Also, when different data subsets have very different ranges of
 values, it may be preferable to recompute scales when
-`clickSelects` selection(s) change. A future
-implementation of animint would benefit from changes to the compiler
-and renderer that allow scales to be updated after each click. Some 
+`clickSelects` selection(s) change. Some 
 of these limitations can be resolved by adding interactive widgets
 to ``recompile" components hard-coded in the plot meta information.
 In fact, animint makes it easy to embed visualizations inside of
