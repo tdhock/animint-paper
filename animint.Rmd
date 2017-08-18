@@ -509,16 +509,12 @@ knitr::include_graphics("images/figure-design")
 ```
 
 
-```{r tornado, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of tornadoes recorded from 1950 to 2012 in the United States. Left: map of the lower 48 United States with tornado paths in 1982. The text shows the selected year, and clicking the map changes the selected state, currently Texas. Right: time series of tornado counts in Texas. Clicking a bar changes the selected year, and the text shows selected state and the number of tornadoes recorded there in that year (119 tornadoes in Texas in 1982)."}
+```{r tornado, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of US tornadoes from 1950 to 2012. This diagram depicts a scenario where the user queried Texas (by clicking the map), and the year 1982 (by clicking the bar chart).  In addition to the graphical elements being (automatically) highlighted as a visual clue of what query is being made, this visualization includes dynamic labels reflecting the query. Particular queries may also be stored and shared via a URL, for example: <https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year={1982}state={TX}>. In this link to the interactive version, we also demonstrate the ability to dynamically rescale axes when a new query is triggered. The middle and right panel display the same data, but use different scaling: the middle panel reflects the 'global' range (US) while the right panel reflects the 'local' range (Arkansas). Futhermore, when an axis update is triggered, it smoothly transitions from one state to next (preserving object constancy in the axis ticks). This helps the viewer better perceive/understand how the range has changed from one state to the next."}
 knitr::include_graphics("images/figure-tornado")
 ```
 
 ```{r climate, echo = FALSE, eval = TRUE, fig.cap = "Visualization containing 6 linked, interactive, animated plots of Central American climate data. Top: for the selected time (December 1997), maps displaying the spatial distribution of two temperature variables, and a scatterplot of these two variables. The selected region is displayed with a black outline, and can be changed by clicking a rect on the map or a point on the scatterplot. Bottom: time series of the two temperature variables with the selected region shown in violet, and a scatterplot of all times for that region. The selected time can be changed by clicking a background tallrect on a time series or a point on the scatterplot. The selected region can be changed by clicking a line on a time series."}
 knitr::include_graphics("images/figure-climate")
-```
-
-```{r updates, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of tornadoes in the United States from 1950 to 2012. In this view, the year 1982 and state of Arkansas are selected, so tornado paths from 1982 are displayed on the map and the tornado counts represent Arkansas. The middle and right panel display the same data, but use different scaling: the middle panel reflects the 'global' range (US) while the right panel reflects the 'local' range (Arkansas). Futhermore, when an axis update is triggered, they smoothly transition from one state to next (preserving object constancy in the axis ticks). This helps the viewer better perceive/understand how the range has changed from one state to the next. The interactive version of this chart may be viewed here https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year=\{1982\}state=\{AR\} "}
-knitr::include_graphics("images/screenshot-tornado-update")
 ```
 
 The compiler scans the aesthetics in the ggplots to determine
@@ -543,8 +539,6 @@ downloading. This method for constructing the TSV file database was
 developed to minimize the disk usage of animint, particularly
 for ggplots of spatial maps as in Figure \@ref(fig:tornado).
 
-animint also supports axes updates for both x and y axes for selected geoms. The idea is that when the user selects a subset of data to be displayed in a plot, the axes are re-calculated so that the displayed data covers the whole of the viewing area in the plot, as shown in Figure \@ref(fig:updates). The axes updates currently work only for single selection variables, as the axes ranges are computed in the compiler and stored in the JSON plot meta-data file. The renderer uses these stored ranges to update the axes scales everytime the displayed subset of data changes. Calculating all the subset combinations in the compiler for multiple selection variables is not efficient, in which case it would be beneficial to shift this computation to the renderer itself.
-
 Finally, the rendering engine (`index.html`, `d3.v3.js`,
 and `animint.js` files) is copied to the plot directory. The
 `animint.js` renderer is implemented in about 2200 lines of
@@ -558,23 +552,28 @@ on any web server. The interactive plots can be viewed by opening the
 
 # Exploring performance & scope with examples {#performance}
 
-This section attempts to demonstrate a range of visualizations that 
+This section attempts to demonstrate the range of visualizations that 
 are supported by animint with more examples. 
-Figure \@ref(fig:tornado) shows an interactive animation of tornadoes
-observed in the United States between 1950 and 2012. At any moment in
-time, the user can simultaneously view the spatial distribution of
-tornadoes in the selected year over all states, and see the trend over
-all years for the selected state. Clicking a state on the map updates the
-time series bars to show the tornado counts from that state. Clicking
-a bar on the time series updates the spatial distribution of tornadoes in the selected year. Figure \@ref(fig:climate) 
-shows an interactive animation of climate
+Figure \@ref(fig:tornado) depicts an interactive animation with data from 
+all US tornadoes from 1950 to 2012, but graphical queries restrict focus to 
+tornado paths from 1982 and tornado counts within the state of Texas. 
+In the interactive version, one may click on any state to view it's tornado
+counts throughout the years, and/or click on any bar to view the spatial 
+distribution of tornado paths for that year, and/or press play to animate
+the paths throughout time. These interactive techniques can be useful for 
+discovering unusual patterns or even help to suggest a reasonable model for 
+describing/predicting tornado paths.
+
+Figure \@ref(fig:climate) depicts an interactive animation of climate
 time series data observed in Central America. Two maps display the
-spatial distribution of two temperature variables, which are shown
-over time in corresponding the time series plots below. Scatterplots
+spatial distribution of sea surface temperature as well as its deviation 
+from its monthly norm. Conditioning on a particular cell/region
+highlights that region's corresponding time series below the map, 
+allowing one to assess whether a particularly
+low/high value at one time point remains so over time. Scatterplots
 also show the relationships between the two temperature variables for
-the selected time and region. Clicking any of the plots updates all 6
-of them. The `clickSelects` and `showSelected` aesthetics make it
-easy to design this set of 6 linked plots in only 87 lines of code.
+the selected time and region, allowing us to further examine how unusual
+a particular query is with respect to both time and space.
 
 Summary statistics describing complexity and performance of 
 examples in this paper, as well as other animint examples, 
