@@ -370,7 +370,7 @@ we wish to select Thailand. Direct manipulation is not very useful in
 this case since it is not easy to identify and select Thailand based
 on graphical marks on a plot. For this reason, animint also provides 
 dropdown menu(s) for each selection variable to aid the selection process.
-Figure \@ref(fig:widgets) shows what the user sees after typing ``th'' in 
+Figure \@ref(fig:widgets) shows what the user sees after typing ''th'' in 
 the search box. Note that these dropdowns support selection of multiple
 values and coordinate sensibly with selections made via direct manipulation.
 
@@ -517,8 +517,8 @@ knitr::include_graphics("images/figure-tornado")
 knitr::include_graphics("images/figure-climate")
 ```
 
-```{r updates, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of tornadoes recorded from 1950 to 2012 in the United States, with axes updates specified in the third plot. Left: map of the lower 48 United States with tornado paths in 1982. Selected state is Arkansas. Middle: time series of tornado counts in Arkansas with no axes updates specified. The geom only uses about half of the viewing area. Right: time series of tornado counts in Arkansas with axes updates. The plot scales are updated automatically and full viewing area is utilized. This interactive example can be reproduced using the code in this gist: <https://gist.github.com/faizan-khan-iit/5393fdbfefb9ef7b1a84fc740acad8d2> and can be viewed here: <https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year={1982}state={AR}> "}
-+knitr::include_graphics("images/screenshot-tornado-update")
+```{r updates, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of tornadoes in the United States from 1950 to 2012. In this view, the year 1982 and state of Arkansas are selected, so tornado paths from 1982 are displayed on the map and the tornado counts represent Arkansas. The middle and right panel display the same data, but use different scaling: the middle panel reflects the 'global' range (US) while the right panel reflects the 'local' range (Arkansas). Futhermore, when an axis update is triggered, they smoothly transition from one state to next (preserving object constancy in the axis ticks). This helps the viewer better perceive/understand how the range has changed from one state to the next. The interactive version of this chart may be viewed here https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year=\{1982\}state=\{AR\} "}
+knitr::include_graphics("images/screenshot-tornado-update")
 ```
 
 The compiler scans the aesthetics in the ggplots to determine
@@ -854,7 +854,7 @@ Also, when different data subsets have very different ranges of
 values, it may be preferable to recompute scales when
 `clickSelects` selection(s) change. Some 
 of these limitations can be resolved by adding interactive widgets
-to ``recompile" components hard-coded in the plot meta information.
+to "recompile" components hard-coded in the plot meta information.
 In fact, animint makes it easy to embed visualizations inside of
 shiny web applications, and we have an example of interactively
 redefining variable mappings (<http://bit.ly/animint-shiny>).
