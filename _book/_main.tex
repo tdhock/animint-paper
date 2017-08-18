@@ -141,7 +141,9 @@ analysis, Web technologies},
   Jun Cai \\
   Department of Earth System Science, Tsinghua University\\
   Kevin Ferris \\
-  Baseball Operations Department, Tampa Bay Rays
+  Baseball Operations Department, Tampa Bay Rays \\
+  Faizan Uddin Fahad Khan \\
+  Department of Computer Science \& Engineering, IIT BHU \\
 }
 \maketitle
 
@@ -717,6 +719,23 @@ or a point on the scatterplot. The selected region can be changed by
 clicking a line on a time series.}
 \end{figure}
 
+\begin{figure}
+\centering
+\includegraphics{images/screenshot-tornado-update}
+\caption{\label{fig:updates}Interactive animation of tornadoes in the United
+States from 1950 to 2012. In this view, the year 1982 and state of
+Arkansas are selected, so tornado paths from 1982 are displayed on the
+map and the tornado counts represent Arkansas. The middle and right
+panel display the same data, but use different scaling: the middle panel
+reflects the `global' range (US) while the right panel reflects the
+`local' range (Arkansas). Futhermore, when an axis update is triggered,
+they smoothly transition from one state to next (preserving object
+constancy in the axis ticks). This helps the viewer better
+perceive/understand how the range has changed from one state to the
+next. The interactive version of this chart may be viewed here
+\url{https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/\#year}=\{1982\}state=\{AR\}}
+\end{figure}
+
 The compiler scans the aesthetics in the ggplots to determine how many
 selection variables are present, and which geoms to update after a
 selection variable is updated. It uses ggplot2 to automatically
@@ -737,6 +756,19 @@ store the common data, but are merged with the common data after
 downloading. This method for constructing the TSV file database was
 developed to minimize the disk usage of animint, particularly for
 ggplots of spatial maps as in Figure \ref{fig:tornado}.
+
+animint also supports axes updates for both x and y axes for selected
+geoms. The idea is that when the user selects a subset of data to be
+displayed in a plot, the axes are re-calculated so that the displayed
+data covers the whole of the viewing area in the plot, as shown in
+Figure \ref{fig:updates}. The axes updates currently work only for
+single selection variables, as the axes ranges are computed in the
+compiler and stored in the JSON plot meta-data file. The renderer uses
+these stored ranges to update the axes scales everytime the displayed
+subset of data changes. Calculating all the subset combinations in the
+compiler for multiple selection variables is not efficient, in which
+case it would be beneficial to shift this computation to the renderer
+itself.
 
 Finally, the rendering engine (\texttt{index.html}, \texttt{d3.v3.js},
 and \texttt{animint.js} files) is copied to the plot directory. The
@@ -1006,10 +1038,8 @@ computed once during the compilation step and remain static on a
 rendered plot. For example, users are unable to change variable mappings
 after compilation. Also, when different data subsets have very different
 ranges of values, it may be preferable to recompute scales when
-\texttt{clickSelects} selection(s) change. A future implementation of
-animint would benefit from changes to the compiler and renderer that
-allow scales to be updated after each click. Some of these limitations
-can be resolved by adding interactive widgets to ``recompile" components
+\texttt{clickSelects} selection(s) change. Some of these limitations can
+be resolved by adding interactive widgets to ``recompile" components
 hard-coded in the plot meta information. In fact, animint makes it easy
 to embed visualizations inside of shiny web applications, and we have an
 example of interactively redefining variable mappings
