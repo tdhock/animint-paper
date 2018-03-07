@@ -207,12 +207,13 @@ New features that animint adds to the grammar of graphics.
 \begin{tabularx}{\textwidth}{rl}
 Feature & Description \\
 \hline
-clickSelects & aesthetic for a geom which can be clicked to update the current selection.
-showSelected & aesthetic for a geom which plots only the data corresponding to the current selection.
-selector.types & global option to specify single or multiple selection for each interaction variable.
-first & global option to specify first selection.
-time & global option to specify delay between animation frames.
-duration & global option to specify smooth transitions.
+clickSelects & aesthetic for a geom which can be clicked to update the current selection.  \\
+showSelected & aesthetic for a geom which plots only the data corresponding to the current selection.  \\
+selector.types & global option to specify single or multiple selection for each interaction variable.  \\
+first & global option to specify first selection.  \\
+time & global option to specify delay between animation frames.  \\
+duration & global option to specify smooth transitions.  \\
+\hline
 \end{tabularx}
 
 \end{table}
