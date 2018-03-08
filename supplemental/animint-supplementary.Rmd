@@ -1,3 +1,71 @@
+## Supplementary Table 1: additional examples
+
+Summary statistics describing complexity and performance of 
+examples in this paper, as well as other **animint** examples, 
+are displayed in Table \@ref(tab:examples). The climate data 
+visualization has noticeably slow animations, 
+since it displays about 88,980 geometric elements at once. We observed
+this slowdown across all browsers, which suggested that there is an
+inherent bottleneck when rendering large interactive plots in web
+browsers using JavaScript and SVG. Another **animint** with a similar
+amount of total rows is based on the evolution data, but since it shows less data onscreen
+(about 2,703 elements), it exhibits faster responses to interactivity
+and animation.
+
+**animint** is still useful for creating interactive but
+non-animated plots when there is not a time variable in the data.
+In fact, 7 of the 11 examples in
+Table \@ref(tab:examples) are not animated. For example, linked plots
+are useful to illustrate complex concepts such as a change point
+detection model in the breakpoints data. The user can explore different model
+parameters and data sets since these are encoded as **animint**
+interaction variables.
+
+
+\begin{table}
+
+\caption{
+Characteristics of 11 interactive visualizations designed with
+    \textbf{animint}. The interactive version of these visualizations can be accessed 
+    via \url{http://members.cbio.ensmp.fr/~thocking/animint/}.
+    From left to right, we show the data set name and 
+    Figure number in this paper (Figure), the
+    lines of R code (LOC) including data processing but not including comments
+    (80 characters max per line),
+    the amount of time it takes to compile the visualization (seconds),
+    the total size of the uncompressed TSV files in megabytes (MB),
+    the total number of data points (rows),
+    the median number of data points shown at once (onscreen),
+    the number of data columns visualized (vars),
+    the number of \texttt{clickSelects}/\texttt{showSelected} 
+    variables (int),
+    the number of linked panels (plots),
+    if the plot is animated.
+}\label{tab:examples}
+
+\begin{tabularx}{\textwidth}{|l|l|l|l|l|l|l|l|l|l|l|}
+    \hline
+ Figure & LOC & seconds & MB & rows & onscreen & vars & int & plots & animated? \\ 
+  \hline
+  worldPop & 17 & 0.2 & 0.1 & 924 & 624 &  4 &  2 &  2 & yes  \\ 
+  WorldBank \ref{fig:worldbank} & 20 & 2.3 & 2.1 & 34132 & 11611 &  6 &  2 &  2 & yes \\ 
+  evolution & 25 & 21.6 & 12.0 & 240600 & 2703 &  5 &  2 &  2 & yes  \\ 
+  change & 36 & 2.8 & 2.5 & 36238 & 25607 & 12 &  2 &  3 & no  \\ 
+  tornado  \ref{fig:tornado} & 39 & 1.7 & 6.1 & 103691 & 16642 & 11 &  2 &  2 & no \\ 
+  prior & 54 & 0.7 & 0.2 & 1960 & 142 & 12 &  3 &  4 & no  \\ 
+  compare & 66 & 10.7 & 7.9 & 133958 & 2140 & 20 &  2 &  5 & no  \\ 
+  breakpoints & 68 & 0.5 & 0.3 & 4242 & 667 & 13 &  2 &  3 & no  \\ 
+  climate \ref{fig:climate} & 84 & 12.8 & 19.7 & 253856 & 88980 & 15 &  2 &  6 & yes \\ 
+  scaffolds & 110 & 56.3 & 78.5 & 618740 & 9051 & 30 &  3 &  3 & no  \\ 
+  ChIPseq & 229 & 29.9 & 78.3 & 1292464 & 1156 & 44 &  4 &  5 & no  \\
+  \hline
+\end{tabularx}
+
+\end{table}
+
+
+
+
 ## Indirect manipulation
 
 When viewing the interactive version of Figure \@ref(fig:worldbank), suppose
@@ -14,6 +82,10 @@ knitr::include_graphics("images/dropdown")
 ```
 
 ## Additional implementation details {#implementation}
+
+```{r design, echo = FALSE, eval = TRUE, fig.cap = "A schematic explanation of compilation and rendering in the World Bank visualization. Top: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. Center: **animint** R code compiles data in ggplot geoms to a database of TSV files (\\textcolor{red}{$\\rightarrowtriangle$}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\\rightarrowtriangle$). Bottom: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\\textcolor{blue}{$\\rightarrowtriangle$})."}
+knitr::include_graphics("images/figure-design")
+```
 
 As shown in Figure \@ref(fig:design), the **animint** system is implemented
 in 2 parts: the compiler and the renderer. The compiler is implemented in about 
@@ -62,3 +134,18 @@ on any web server. The interactive plots can be viewed by opening the
 Our current implementation of **animint** depends on a fork of **ggplot2**\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages.
+
+## Caption of Tornadoes figure
+
+Particular queries may also be stored and shared via a URL, for
+example:
+<https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year={1982}state={TX}>. In
+this link to the interactive version, we also demonstrate the ability
+to dynamically rescale axes when a new query is triggered. The middle
+and right panel display the same data, but use different scaling: the
+middle panel reflects the 'global' range (US) while the right panel
+reflects the 'local' range (Arkansas). Futhermore, when an axis update
+is triggered, it smoothly transitions from one state to next
+(preserving object constancy in the axis ticks). This helps the viewer
+better perceive/understand how the range has changed from one state to
+the next.
