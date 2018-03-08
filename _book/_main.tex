@@ -205,18 +205,18 @@ traditional interactive graphics toolkits. As a result, there is a large
 disconnect between the visualization tools that we use for exploration
 versus presentation.
 
-One of the most widely used R packages is \textbf{ggplot2}, a data
-visualization package inspired by the grammar of graphics (Wickham 2009,
-@wilkinson). In fact, Donoho (2015) writes: ``This effort may have more
-impact on today's practice of data analysis than many highly-regarded
-theoretical statistics papers''. In our experience, \textbf{ggplot2} has
-made an impact thanks to its foundation in the grammar of graphics,
-carefully chosen defaults, and overall usability. This helps data
-analysts rapidly iterate and discover informative visualizations -- an
-essential task in exploratory data analysis (EDA). When dealing with
-high-dimensional data, however, it is often useful to produce
-interactive and/or dynamic graphics, which \textbf{ggplot2} does not
-inherently support.
+One of the most widely used R packages is \textbf{ggplot2} (Wickham
+2009), a data visualization package inspired by the grammar of graphics
+(Wilkinson et al. 2006). In fact, Donoho (2015) writes: ``This effort
+may have more impact on today's practice of data analysis than many
+highly-regarded theoretical statistics papers''. In our experience,
+\textbf{ggplot2} has made an impact thanks to its foundation in the
+grammar of graphics, carefully chosen defaults, and overall usability.
+This helps data analysts rapidly iterate and discover informative
+visualizations -- an essential task in exploratory data analysis (EDA).
+When dealing with high-dimensional data, however, it is often useful to
+produce interactive and/or dynamic graphics, which \textbf{ggplot2} does
+not inherently support.
 
 We aim to narrow this gap in visualization tools by extending
 \textbf{ggplot2}'s grammar of graphics implementation for interactive
@@ -248,13 +248,13 @@ efficient EDA workflow.
 
 It is important to acknowledge that \textbf{ggplot2} is built on top of
 the R package \textbf{grid}, a low-level graphics system, which is now
-bundled with R itself (R Core Team 2017). Neither grid, nor base R
-graphics, have strong support for handling user interaction, which
-creates a need for add-on packages. There are a number of approaches
-these packages take to rendering, each with their own benefits and
-drawbacks. Traditionally, they build on low-level R interfaces to
-graphical systems such as GTK+ (Lawrence and Temple Lang 2010), Qt
-(Lawrence and Sarkar 2016a, @qtpaint), or Java GUI frameworks (Urbanek
+bundled with R itself (R Core Team 2017). Neither \textbf{grid}, nor
+\textbf{base} R graphics, have strong support for handling user
+interaction, which creates a need for add-on packages. There are a
+number of approaches these packages take to rendering, each with their
+own benefits and drawbacks. Traditionally, they build on low-level R
+interfaces to graphical systems such as GTK+ (Lawrence and Temple Lang
+2010), Qt (Lawrence and Sarkar 2016), or Java GUI frameworks (Urbanek
 2016). In general, the resulting system can be very fast and flexible,
 but sharing and reproducing output is usually a problem due to the heavy
 software requirements. Although there may be sacrifices in performance,
@@ -273,17 +273,18 @@ proof-of-concept which reverse-engineers poorly-structured
 this system for linked data visualizations with advanced functionality
 (multiple layers, multiple plots, multiple selection variables).
 
-The lack of well-structured SVG for R graphics motivated the gridSVG
-package which provides sensible structuring of SVG output for grid
-graphics (Murrell and Potter 2015). This package also provides some
-low-level tools for animating or adding interactive features, where grid
-objects must be referenced by name. As a result, use of this interface
-to add interactivity to a \textbf{ggplot2} plot requires understanding
-of the grid naming scheme \textbf{ggplot2} uses internally. An interface
-where interactivity can be expressed by referencing the data to be
-visualized, rather than the building blocks of the graphics system,
-would be preferable since the former interface is decoupled from the
-implementation and does not require knowledge of grid.
+The lack of well-structured SVG for R graphics motivated the
+\textbf{gridSVG} package which provides sensible structuring of SVG
+output for grid graphics (Murrell and Potter 2015). This package also
+provides some low-level tools for animating or adding interactive
+features, where grid objects must be referenced by name. As a result,
+use of this interface to add interactivity to a \textbf{ggplot2} plot
+requires understanding of the grid naming scheme \textbf{ggplot2} uses
+internally. An interface where interactivity can be expressed by
+referencing the data to be visualized, rather than the building blocks
+of the graphics system, would be preferable since the former interface
+is decoupled from the implementation and does not require knowledge of
+grid.
 
 In terms of the animation API, the R package \textbf{gganimate} is very
 similar to our system (Robinson 2016). It directly extends
@@ -320,19 +321,19 @@ does not require a web server, but can also be used inside
 
 The tour is a useful visualization technique for exploring
 high-dimensional data which requires interactive and dynamic graphics.
-The open-source software ggobi is currently the most fully-featured tool
-for touring data and has support for interactive techniques such as
-linking, zooming, panning, and identifying (Cook and Swayne 2007). The R
-package \textbf{rggobi} (Wickham et al. 2008) provides an R interface to
-ggobi's graphical interface, but unfortunately, the software
-requirements for installation and use of this toolchain are heavy and
-stringent. Furthermore, sharing the interactive versions of these
-graphics are not possible. The R package cranvas aims to be the
-successor to ggobi, with support for similar interactive techniques, but
-with a more flexible interface for describing plots inspired by the
-grammar of graphics (Xie et al. 2013). Cranvas also has heavy and
-stringent software requirements which limits the portability and
-accessibility of the software.
+The open-source software ggobi is currently the most fully-featured
+toolkit for touring data and has support for interactive techniques such
+as linking, zooming, panning, and identifying (Cook and Swayne 2007).
+The R package \textbf{rggobi} (Wickham et al. 2008) provides an R
+interface to ggobi's graphical interface, but unfortunately, the
+software requirements for installation and use of this toolchain are
+heavy and stringent. Furthermore, sharing the interactive versions of
+these graphics are not possible. The R package \textbf{cranvas} aims to
+be the successor to ggobi, with support for similar interactive
+techniques, but with a more flexible interface for describing plots
+inspired by the grammar of graphics (Xie et al. 2013). \textbf{Cranvas}
+also has heavy and stringent software requirements which limits the
+portability and accessibility of the software.
 
 Another R package for interactive graphics is \textbf{iplots} (Urbanek
 2011), which has several important differences compared to
@@ -354,7 +355,7 @@ graphics}\label{extending-the-layered-grammar-of-graphics}}
 \caption{
 New features that animint adds to the grammar of graphics.
 }\label{tab:overview}
-
+\small
 \begin{tabularx}{\textwidth}{rl}
 Feature & Description \\
 \hline
@@ -413,11 +414,11 @@ mark within a \textbf{ggplot2} layer corresponds to one (or more)
 observations in \texttt{\textless{}DATA\textgreater{}}, aesthetic
 mappings provide a mechanism for mapping graphical selections to the
 original data (and vice-versa) which is essential to any interactive
-graphics system (Andreas Buja and McDonald 1988, @plumbing). Thus, given
-a way to combine multiple \textbf{ggplot2} plots into a single view,
-this design can be extended to support a notion of multiple linked
-views, as those discussed in Ahlberg, Williamson, and Shneiderman (1991)
-and Buja et al. (1991).
+graphics system (Andreas Buja and McDonald 1988) (Wickham et al. 2010).
+Thus, given a way to combine multiple \textbf{ggplot2} plots into a
+single view, this design can be extended to support a notion of multiple
+linked views, as those discussed in Ahlberg, Williamson, and Shneiderman
+(1991) and Buja et al. (1991).
 
 \hypertarget{extension}{%
 \subsection{Direct manipulation of dynamic queries}\label{extension}}
@@ -482,28 +483,41 @@ using animint. A video demonstration can be viewed online at
 \url{https://vimeo.com/160496419}}
 \end{figure}
 
-In essense, the R code above allows us to use direct manipulation to
-dynamically perform SQL queries of the form:
+In the R code above, the proposed \texttt{showSelected} and
+\texttt{clickSelects} aesthetics are used to link the two ggplots, since
+they refer to a common variable, \texttt{smoker}. Each variable that is
+used in a \texttt{clickSelects} or \texttt{showSelected} aesthetic is
+treated as a selection variable with an interactively updated set of
+selected values that is used to dynamically update the plots in response
+to user input. In the example above, we have used
+\texttt{aes(clickSelects=smoker)} to specify a plot in which direct
+manipulation (mouse clicks on the barplot) dynamically changes the
+\texttt{smoker} selection variable. We have used
+\texttt{aes(showSelected=smoker)} to designate a scatterplot where we
+only want to show data points for the current selection of the
+\texttt{smoker} variable. In essense, this means performing SQL queries
+of the form:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{SELECT}\NormalTok{ total_bill, tip }\KeywordTok{FROM}\NormalTok{ tips}
-  \KeywordTok{WHERE}\NormalTok{ smoker }\KeywordTok{IN}\NormalTok{ clickSelects}
+  \KeywordTok{WHERE}\NormalTok{ smoker }\KeywordTok{IN}\NormalTok{ smoker_selection}
 \end{Highlighting}
 \end{Shaded}
 
-In this example, \texttt{clickSelects} is either ``Yes'' or ``No'', but
-as we show in later examples, \texttt{clickSelects} can also be an array
-of values. Although the \texttt{clickSelects} aesthetic is tied to a
-mouseclick event, other aesthetics could easily be created to support
-other selection events, such as hover or click+drag. Statistically
-speaking, this type of visualization is useful for navigating through
-joint distributions conditional upon discrete values. In this sense, our
-extension is closely related to trellis displays (Becker, Cleveland, and
-Shyu 2010) and linked scatterplot brushing (Becker and Cleveland 1987).
-The major differences are that our conditioning is layer-specific (not
-plot-specific), is not tied to a particular geometry, and can be
-controlled through direct manipulation or animation controls.
+In this example, \texttt{smoker\_selection} is either ``Yes'' or ``No'',
+but as we show in later examples, \texttt{smoker\_selection} can also be
+an array of values. Although the \texttt{clickSelects} aesthetic is tied
+to a mouseclick event, other aesthetics could easily be created to
+support other selection events, such as hover or click+drag.
+Statistically speaking, this type of visualization is useful for
+navigating through joint distributions conditional upon discrete values.
+In this sense, our extension is closely related to trellis displays
+(Becker, Cleveland, and Shyu 2010) and linked scatterplot brushing
+(Becker and Cleveland 1987). The major differences are that our
+conditioning is layer-specific (not plot-specific), is not tied to a
+particular geometry, and can be controlled through direct manipulation
+or animation controls.
 
 \hypertarget{animation}{%
 \subsection{Adding animation}\label{animation}}
@@ -668,7 +682,17 @@ Note that any aesthetics containing the substring \texttt{showSelected}
 (including \texttt{showSelected2}) are interpreted as
 \texttt{showSelected} variables, and combined together using the
 intersection operation. In the example above, that means that a point
-will be drawn for the currently selected combination of year and region.
+will be drawn for the currently selected combination of year and region,
+as in the following SQL query,
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ * }\KeywordTok{FROM}\NormalTok{ WorldBank}
+  \KeywordTok{WHERE} \DataTypeTok{year}   \KeywordTok{IN}\NormalTok{ year_selection}
+  \KeywordTok{AND}\NormalTok{   region }\KeywordTok{IN}\NormalTok{ region_selection}
+\end{Highlighting}
+\end{Shaded}
+
 Below, the text layer for annotating selected countries is essentially
 the same as the point layer, except we map the country name to the
 \texttt{label} aesthetic.
@@ -1170,12 +1194,8 @@ Visual Querying of Big Data.'' \emph{Computer Graphics Forum (Proc.
 EuroVis)} 32 (3). \url{http://vis.stanford.edu/papers/immens}.
 
 \leavevmode\hypertarget{ref-qtbase}{}%
-Lawrence, Michael, and Deepayan Sarkar. 2016a. \emph{Interface Between R
+Lawrence, Michael, and Deepayan Sarkar. 2016. \emph{Interface Between R
 and Qt}. \url{https://github.com/ggobi/qtbase}.
-
-\leavevmode\hypertarget{ref-qtpaint}{}%
----------. 2016b. \emph{Qt-Based Painting Infrastructure}.
-\url{https://github.com/ggobi/qtpaint}.
 
 \leavevmode\hypertarget{ref-RGtk2}{}%
 Lawrence, Michael, and Duncan Temple Lang. 2010. ``RGtk2: A Graphical
