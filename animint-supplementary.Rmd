@@ -62,3 +62,18 @@ on any web server. The interactive plots can be viewed by opening the
 Our current implementation of **animint** depends on a fork of **ggplot2**\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages.
+
+## Caption of Tornadoes figure
+
+Particular queries may also be stored and shared via a URL, for
+example:
+<https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year={1982}state={TX}>. In
+this link to the interactive version, we also demonstrate the ability
+to dynamically rescale axes when a new query is triggered. The middle
+and right panel display the same data, but use different scaling: the
+middle panel reflects the 'global' range (US) while the right panel
+reflects the 'local' range (Arkansas). Futhermore, when an axis update
+is triggered, it smoothly transitions from one state to next
+(preserving object constancy in the axis ticks). This helps the viewer
+better perceive/understand how the range has changed from one state to
+the next.
