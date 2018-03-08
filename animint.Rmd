@@ -217,6 +217,7 @@ selector.types & global option to specify single or multiple selection for each 
 first & global option to specify first selection.  \\
 time & global option to specify delay between animation frames.  \\
 duration & global option to specify smooth transitions.  \\
+key & aesthetic specifying variable to use for matching data in smooth transitions.
 \hline
 \end{tabularx}
 
@@ -399,8 +400,8 @@ knitr::include_graphics("images/figure-1")
 We anticipate that some **ggplot2** users will be able to reverse engineer the
 **animint** code which creates Figure \@ref(fig:worldbank), simply by looking at it.
 In fact, this is a big reason why **ggplot2** is so widely used: 
-it helps minimize the amount of time required to translate a figure that exists
-in your head into computer code. Note that, in the left hand plot of 
+it helps minimize the amount of time required to translate an idea for a figure into computer code. 
+Note that, in the left hand plot of 
 Figure \@ref(fig:worldbank), we have a time series 
 of the life expectancy where each line is a country (i.e., we `group` by
 country) and lines are colored by region. By clicking on a line, we also want 
@@ -496,59 +497,98 @@ scatterPlot <- scatterPlot + geom_text(
 )
 ```
 
-Now that we have defined the plots in Figure \@ref(fig:worldbank), we
-can set the `time` and `duration` options (introduced in Section
-\@ref(animation)) to control the animation parameters. Our **animint**
-implementation also respects a `selector.types` option which controls
-whether or not selections for a given variable can accumulate and a
-`first` option for controlling which values are selected when the visualization is first rendered
-(see Table~1 for a summary of new features in **animint**).  By default,
-supplying the list of plots and additional options to `animint2dir()`
-will write all the files necessary to render the visualization to a
-temporary directory and prompt a web browser to open an HTML file.
+## Linking, animation and other options {#animation}
+
+Linking is declared by putting ggplots with common `clickSelects` and
+`showSelected` aesthetics together in a list. For example, we can link
+the ggplots from the previous section by including them together as the first
+two elements of the following list:
 
 ```{r}
 viz <- list(
   timeSeries = timeSeries,
-  scatterPlot = scatterPlot,
-  time = list(variable = "year", ms = 3000),
-  duration = list(year = 1000),
-  selector.types = list(
-    year = "single",
-    country = "multiple",
-    region = "multiple"
-  ),
-  first = list(
-    country = c("United States", "Vietnam")
+  scatterPlot = scatterPlot
   )
-)
-animint2dir(viz)
 ```
 
-## Adding animation {#animation}
+Note that the animint `viz` list above can also contain rendering
+options, as we discuss below (see Table~1 for a summary of new
+interactive features in **animint**). For example, the
+`selector.types` option controls whether or not selections for a given
+variable can accumulate (single or multiple selected values).
 
-In some sense, the `showSelected` aesthetic splits the layer into subsets
--- one for every unique value of the `showSelected` variable. The 
-`clickSelects` aesthetics provides a mechanism to alter the visibility 
-of those subset(s) via direct manipulation, but our system also provides a 
-mechanism for automatically looping through selections to produce animation(s).
-We achieve this by reserving the name `time` to specify which variable 
-to select as well as the amount of time to wait before changing the selection 
-(in milliseconds). We also reserve the name `duration` to specify the 
-amount of time used to smoothly transition between frames (with linear easing). 
+```{r}
+viz$selector.types = list(
+  year = "single",
+  country = "multiple",
+  region = "multiple"
+  )
+```
+
+The code above declares `year` as a single selection
+variable, which means that only a single year may be selected at a
+time (clicking a geom with `clickSelects=year` will change the
+selection to the corresponding year). The `country` and `region`
+variables are declared as multiple selection variables, which can have
+multiple selected values at a time (clicking a geom with
+`clickSelects=country` will add/remove that country to/from the
+selection set). 
+
+Another example is the `first` option, which controls selected values
+when the visualization is first rendered. The code below declares that
+the first selection of the `country` variable is the set of two
+countries, United States and Vietnam.
+
+```{r}
+viz$first = list(country = c("United States", "Vietnam"))
+```
+
+Animation is declared using the `time` option, which specifies a
+selection variable which will be automatically updated over time, as
+well as a time delay in milliseconds. The code below declares the
+`year` variable to be animated every 3 seconds. 
+
+```{r}
+viz$time <- list(variable = "year", ms = 3000)
+```
+
+Animation is useful in the World Bank data visualization because it shows how
+the bivariate relationship between fertility rate and life expectancy
+changes over time. Animation clearly shows how many countries progress
+from low life expectancy and high fertility rate in early years, to
+high life expectancy and low fertility rate in later years.
 
 
-As shown in Figure \@ref(fig:design), the **animint** system is implemented
-in 2 parts: the compiler and the renderer. The compiler is implemented in about 
-2000 lines of R code that converts a list of ggplots and options to a JSON 
-plot meta-data file and a tab-separated values (TSV) file database.
+Finally, the `duration` option specifies the amount of time used to
+smoothly transition between selections (with linear easing). Smooth
+transitions help the viewer track geoms before and after an update to
+the selection set. For example in the code below we declare a 1 second
+smooth transition on the `year` variable, in order to more easily
+track the points on the scatterplot. 
 
-## Implementation details
+```{r}
+viz$duration <- list(year = 1000)
+```
+
+Note that for accurate interpretation of smooth transitions, the new
+`key` aesthetic must be specified. The `key` aesthetic is used to
+match data elements before and after the smooth transition. In the
+World Bank example, we would need to specify `aes(key=country)` for
+the points and text in the scatterplot.
+
+
+## Compiling and rendering
 
 ```{r design, echo = FALSE, eval = TRUE, fig.cap = "A schematic explanation of compilation and rendering in the World Bank visualization. Top: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. Center: **animint** R code compiles data in ggplot geoms to a database of TSV files (\\textcolor{red}{$\\rightarrowtriangle$}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\\rightarrowtriangle$). Bottom: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\\textcolor{blue}{$\\rightarrowtriangle$})."}
 knitr::include_graphics("images/figure-design")
 ```
 
+Supplying the `viz` list of ggplots and rendering options to the
+`animint2dir()` function will save all the files necessary for rendering
+the visualization:
+```{r}
+animint2dir(viz)
+```
 As shown in Figure \@ref(fig:design), the **animint** system is
 implemented in 2 parts: the compiler and the renderer. The compiler is
 implemented in R code that converts a list of ggplots and options to a
