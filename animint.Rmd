@@ -281,7 +281,7 @@ interfaces use widgets (such as buttons or menus) to change the plot.
 @ggobi:2007 use SQL queries to formalize the direct manipulation
 methods discussed in @Ahlberg:1991 and @Buja:1991vh. We propose to
 embed this direct manipulation framework inside the layered grammar of
-graphics with two new aesthetics, clickSelects and showSelected.
+graphics with two new aesthetics, `clickSelects` and `showSelected`. 
 
 * `clickSelects` defines a selection source via a mouse click. For
   example `aes(clickSelects=year)` designates a plot element which,
@@ -298,21 +298,19 @@ among tip amount and total bill amount depends on whether the customer
 is smoker.
 
 ```{r}
-library(animint)
-p1 <- ggplot() + geom_bar(
+gg.bar <- ggplot() + geom_bar(
   data = reshape2::tips, 
   aes(x = smoker, clickSelects = smoker)
 )
-p2 <- ggplot() + geom_point(
+gg.scatter <- ggplot() + geom_point(
   data = reshape2::tips, 
   aes(x = total_bill, y = tip, 
       showSelected = smoker)
 )
-animint2dir(list(p1 = p1, p2 = p2))
 ```
 
-```{r tips, echo = FALSE, eval = TRUE, fig.cap = "Linked dynamic querying via direct manipulation using animint. A video demonstration can be viewed online at <https://vimeo.com/160496419>"}
-knitr::include_graphics("images/tips")
+```{r tips, echo = FALSE, eval = TRUE, fig.cap = "Linked dynamic querying via direct manipulation using animint. The `clickSelects` aesthetic designates a clickable geom that can change a selection variable, and the `showSelected` aesthetic designates a geom that responds by showing only the data which corresponds to the current selection. A video demonstration can be viewed online at <https://vimeo.com/160496419>"}
+knitr::include_graphics("images/figure-tips")
 ```
 
 In the R code above, the proposed `showSelected` and `clickSelects`
@@ -321,21 +319,23 @@ common variable, `smoker`. Each variable that is used in a
 `clickSelects` or `showSelected` aesthetic is treated as a selection
 variable with an interactively updated set of selected values that is
 used to dynamically update the plots in response to user input.  In
-the example above, we have used `aes(clickSelects=smoker)` to specify
-a plot in which direct manipulation (mouse clicks on the barplot)
-dynamically changes the `smoker` selection variable. We have used
-`aes(showSelected=smoker)` to designate a scatterplot where we only
-want to show data points for the current selection of the `smoker`
-variable. In essense, this means performing SQL queries of the form:
+the first plot above, we have used `aes(clickSelects=smoker)` to
+specify a bar with direct manipulation (mouse clicks on the barplot)
+that dynamically changes the `smoker` selection variable. In the
+second plot above, we have used `aes(showSelected=smoker)` to specify
+that we only want to show data points for the current selection of the
+`smoker` variable. In response to a user clicking on the bars in the
+first plot, our system essentially performs the SQL query below in
+order to generate the data to display in the second plot:
 
 ```sql
-SELECT total_bill, tip FROM tips
+SELECT * FROM tips
   WHERE smoker IN smoker_selection
 ```
 
-In this example, `smoker_selection` is either "Yes" or "No", but as we
-show in later examples, `smoker_selection` can also be an array of values.
-Although the `clickSelects` aesthetic is tied to a mouseclick event,
+In this example, `smoker_selection` is either "Yes" or "No" (a single selected value), but as we
+show in later examples, `smoker_selection` can also be an array of values (multiple selected values).
+Although the `clickSelects` aesthetic is tied to a mouse click event,
 other aesthetics could easily be created to support other selection
 events, such as hover or click+drag. Statistically speaking, this type
 of visualization is useful for navigating through joint distributions
