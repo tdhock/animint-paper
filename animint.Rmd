@@ -233,7 +233,7 @@ selector.types & global option to specify single or multiple selection for each 
 first & global option to specify first selection.  \\
 time & global option to specify delay between animation frames.  \\
 duration & global option to specify smooth transitions.  \\
-key & aesthetic specifying variable to use for matching data in smooth transitions.
+key & aesthetic specifying variable to use for matching data in smooth transitions. \\
 \hline
 \end{tabularx}
 

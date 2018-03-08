@@ -374,6 +374,7 @@ selector.types & global option to specify single or multiple selection for each 
 first & global option to specify first selection.  \\
 time & global option to specify delay between animation frames.  \\
 duration & global option to specify smooth transitions.  \\
+key & aesthetic specifying variable to use for matching data in smooth transitions. \\
 \hline
 \end{tabularx}
 
@@ -566,15 +567,14 @@ We anticipate that some \textbf{ggplot2} users will be able to reverse
 engineer the \textbf{animint} code which creates Figure
 \ref{fig:worldbank}, simply by looking at it. In fact, this is a big
 reason why \textbf{ggplot2} is so widely used: it helps minimize the
-amount of time required to translate a figure that exists in your head
-into computer code. Note that, in the left hand plot of Figure
-\ref{fig:worldbank}, we have a time series of the life expectancy where
-each line is a country (i.e., we \texttt{group} by country) and lines
-are colored by region. By clicking on a line, we also want the country
-label to appear in the right hand plot, so we also need to set
-\texttt{clickSelects=country}. Lastly, by setting
-\texttt{showSelected=region}, we can hide/show lines by clicking on the
-color legend entries.
+amount of time required to translate an idea for a figure into computer
+code. Note that, in the left hand plot of Figure \ref{fig:worldbank}, we
+have a time series of the life expectancy where each line is a country
+(i.e., we \texttt{group} by country) and lines are colored by region. By
+clicking on a line, we also want the country label to appear in the
+right hand plot, so we also need to set \texttt{clickSelects=country}.
+Lastly, by setting \texttt{showSelected=region}, we can hide/show lines
+by clicking on the color legend entries.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -676,61 +676,97 @@ we add another layer of text at a fixed location.
 \end{Highlighting}
 \end{Shaded}
 
-Now that we have defined the plots in Figure \ref{fig:worldbank}, we can
-set the \texttt{time} and \texttt{duration} options (introduced in
-Section \ref{animation}) to control the animation parameters. Our
-\textbf{animint} implementation also respects a \texttt{selector.types}
-option which controls whether or not selections for a given variable can
-accumulate and a \texttt{first} option for controlling which values are
-selected when the visualization is first rendered (see
-Table\textasciitilde{}1 for a summary of new features in
-\textbf{animint}). By default, supplying the list of plots and
-additional options to \texttt{animint2dir()} will write all the files
-necessary to render the visualization to a temporary directory and
-prompt a web browser to open an HTML file.
+\hypertarget{animation}{%
+\subsection{Linking, animation and other options}\label{animation}}
+
+Linking is declared by putting ggplots with common \texttt{clickSelects}
+and \texttt{showSelected} aesthetics together in a list. For example, we
+can link the ggplots from the previous section by including them
+together as the first two elements of the following list:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{viz <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}
   \DataTypeTok{timeSeries =}\NormalTok{ timeSeries,}
-  \DataTypeTok{scatterPlot =}\NormalTok{ scatterPlot,}
-  \DataTypeTok{time =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{variable =} \StringTok{"year"}\NormalTok{, }\DataTypeTok{ms =} \DecValTok{3000}\NormalTok{),}
-  \DataTypeTok{duration =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{year =} \DecValTok{1000}\NormalTok{),}
-  \DataTypeTok{selector.types =} \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{year =} \StringTok{"single"}\NormalTok{,}
-    \DataTypeTok{country =} \StringTok{"multiple"}\NormalTok{,}
-    \DataTypeTok{region =} \StringTok{"multiple"}
-\NormalTok{  ),}
-  \DataTypeTok{first =} \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{country =} \KeywordTok{c}\NormalTok{(}\StringTok{"United States"}\NormalTok{, }\StringTok{"Vietnam"}\NormalTok{)}
+  \DataTypeTok{scatterPlot =}\NormalTok{ scatterPlot}
 \NormalTok{  )}
-\NormalTok{)}
-\KeywordTok{animint2dir}\NormalTok{(viz)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{animation}{%
-\subsection{Adding animation}\label{animation}}
+Note that the animint \texttt{viz} list above can also contain rendering
+options, as we discuss below (see Table\textasciitilde{}1 for a summary
+of new interactive features in \textbf{animint}). For example, the
+\texttt{selector.types} option controls whether or not selections for a
+given variable can accumulate (single or multiple selected values).
 
-In some sense, the \texttt{showSelected} aesthetic splits the layer into
-subsets -- one for every unique value of the \texttt{showSelected}
-variable. The \texttt{clickSelects} aesthetics provides a mechanism to
-alter the visibility of those subset(s) via direct manipulation, but our
-system also provides a mechanism for automatically looping through
-selections to produce animation(s). We achieve this by reserving the
-name \texttt{time} to specify which variable to select as well as the
-amount of time to wait before changing the selection (in milliseconds).
-We also reserve the name \texttt{duration} to specify the amount of time
-used to smoothly transition between frames (with linear easing).
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{selector.types =}\StringTok{ }\KeywordTok{list}\NormalTok{(}
+  \DataTypeTok{year =} \StringTok{"single"}\NormalTok{,}
+  \DataTypeTok{country =} \StringTok{"multiple"}\NormalTok{,}
+  \DataTypeTok{region =} \StringTok{"multiple"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
 
-As shown in Figure \ref{fig:design}, the \textbf{animint} system is
-implemented in 2 parts: the compiler and the renderer. The compiler is
-implemented in about 2000 lines of R code that converts a list of
-ggplots and options to a JSON plot meta-data file and a tab-separated
-values (TSV) file database.
+The code above declares \texttt{year} as a single selection variable,
+which means that only a single year may be selected at a time (clicking
+a geom with \texttt{clickSelects=year} will change the selection to the
+corresponding year). The \texttt{country} and \texttt{region} variables
+are declared as multiple selection variables, which can have multiple
+selected values at a time (clicking a geom with
+\texttt{clickSelects=country} will add/remove that country to/from the
+selection set).
 
-\hypertarget{implementation-details}{%
-\subsection{Implementation details}\label{implementation-details}}
+Another example is the \texttt{first} option, which controls selected
+values when the visualization is first rendered. The code below declares
+that the first selection of the \texttt{country} variable is the set of
+two countries, United States and Vietnam.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{first =}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{country =} \KeywordTok{c}\NormalTok{(}\StringTok{"United States"}\NormalTok{, }\StringTok{"Vietnam"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Animation is declared using the \texttt{time} option, which specifies a
+selection variable which will be automatically updated over time, as
+well as a time delay in milliseconds. The code below declares the
+\texttt{year} variable to be animated every 3 seconds.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{time <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{variable =} \StringTok{"year"}\NormalTok{, }\DataTypeTok{ms =} \DecValTok{3000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Animation is useful in the World Bank data visualization because it
+shows how the bivariate relationship between fertility rate and life
+expectancy changes over time. Animation clearly shows how many countries
+progress from low life expectancy and high fertility rate in early
+years, to high life expectancy and low fertility rate in later years.
+
+Finally, the \texttt{duration} option specifies the amount of time used
+to smoothly transition between selections (with linear easing). Smooth
+transitions help the viewer track geoms before and after an update to
+the selection set. For example in the code below we declare a 1 second
+smooth transition on the \texttt{year} variable, in order to more easily
+track the points on the scatterplot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{duration <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{year =} \DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Note that for accurate interpretation of smooth transitions, the new
+\texttt{key} aesthetic must be specified. The \texttt{key} aesthetic is
+used to match data elements before and after the smooth transition. In
+the World Bank example, we would need to specify
+\texttt{aes(key=country)} for the points and text in the scatterplot.
+
+\hypertarget{compiling-and-rendering}{%
+\subsection{Compiling and rendering}\label{compiling-and-rendering}}
 
 \begin{figure}
 \centering
@@ -747,6 +783,16 @@ are combined with data-independent JavaScript and HTML files which
 render the interactive animation in a web browser
 (\textcolor{blue}{$\rightarrowtriangle$}).}
 \end{figure}
+
+Supplying the \texttt{viz} list of ggplots and rendering options to the
+\texttt{animint2dir()} function will save all the files necessary for
+rendering the visualization:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{animint2dir}\NormalTok{(viz)}
+\end{Highlighting}
+\end{Shaded}
 
 As shown in Figure \ref{fig:design}, the \textbf{animint} system is
 implemented in 2 parts: the compiler and the renderer. The compiler is
