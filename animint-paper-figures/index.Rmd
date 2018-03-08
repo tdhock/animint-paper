@@ -10,6 +10,12 @@ compiles and renders and animint viz list. In the code chunks below we
 use `structure(viz, class="animint")` in order to render the animint
 inside of this Rmd document (`animint2dir` is used internally).
 
+Each section below contains 
+
+* Source code for each interactive figure.
+* A rendering of the interactive figure.
+* Instructions about how to interpret and interact with the figure.
+
 ## Smoker figure
 
 ```{r smoker-viz}
@@ -86,7 +92,7 @@ structure(wb.viz, class="animint")
   each line adds/removes the corresponding country to/from the set of
   currently selected countries.
 * The plot on the left shows a vertical grey bar centered on the
-  currently selected year. click the background elsewhere in the left
+  currently selected year. Click the background elsewhere in the left
   plot to change the currently selected year.
 * The plot on the right shows a scatterplot of life expectancy and
   fertility rate for the selected year. Clicking each point
@@ -97,6 +103,9 @@ structure(wb.viz, class="animint")
   an entry to show/hide the corresponding countries.
 * Click "Show animation controls" and edit the entries to change the
   speed of animation and smooth transitions.
+* Stand-alone animint figure: http://bl.ocks.org/tdhock/raw/8ce47eebb3039263878f/
+* Shiny+ggvis figure for comparison: https://cpsievert.shinyapps.io/worldBank-ggvis/
+* Tableau figure for comparison: https://public.tableau.com/profile/sievert#!/vizhome/worldbank_5/page-both
 
 ## Tornado figure
 
@@ -229,7 +238,7 @@ viz$scatterNow <- ggplot()+
   xlab(getlab(var.names[[1]]))+
   ylab(getlab(var.names[[2]]))+
   geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
-                        key=id,
+                        key="id",
                         clickSelects="id", showSelected="time2"),
              data=climate, alpha=dot.alpha)
 times <- data.frame(time2=sort(unique(climate$time2)))
@@ -268,7 +277,25 @@ viz$scatterHere <- ggplot()+
 structure(viz, class="animint")
 ```
 
-* Click the 
+* Maps in the upper left show two temperature variables for the
+  currently selected month. Click a shaded tile on either map in order
+  to change the selected region.
+* Scatterplots on the right show all data for the currently selected
+  region and month. Clicking a point changes the currently selected
+  region (top) or month (bottom).
+* Time series plots on the bottom left show two termperature
+  variables, with the currently selected month shown as a grey
+  vertical bar. Clicking the background changes the currently selected
+  month, and clicking a line changes the currently selected region.
+* Stand-alone figure: http://members.cbio.mines-paristech.fr/~thocking/climate-anim/
+
+## Additional interactive figures 
+
+* A demonstration of using animint inside a shiny app is mentioned in
+  the limitations and future work section:
+  https://cpsievert.shinyapps.io/animintShiny/
+* The figures described in Supplemetary Table 1 (but not shown in the paper) can be
+  found at http://members.cbio.ensmp.fr/~thocking/animint/
 
 ## Session info
 
