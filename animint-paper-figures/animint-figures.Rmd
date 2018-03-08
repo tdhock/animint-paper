@@ -5,10 +5,11 @@ output:
     css: animint-figures-style.css
 ---
 
-```{r}
-options(width=500)
-knitr::opts_chunk$set(width=500)
-```
+<!-- Dear emacs,
+Local variables:
+compile-command: "R -e \"rmarkdown::render('animint-figures.Rmd')\" "
+End:
+-->
 
 ## Smoker figure
 
