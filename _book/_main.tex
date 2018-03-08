@@ -26,7 +26,7 @@
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
             pdftitle={Extending ggplot2 for linked and dynamic web graphics},
-            pdfkeywords={Animation, Linked Views, Statistical graphics, Exploratory data
+            pdfkeywords={Animation, Multiple linked views, Statistical graphics, Exploratory data
 analysis, Web technologies},
             colorlinks=true,
             linkcolor=cyan,
@@ -153,29 +153,23 @@ analysis, Web technologies},
 \bigskip
 \begin{abstract}
 % 200 or fewer words
-The web is the most popular medium for sharing interactive data
-visualizations thanks to the portability of the web browser and the
-accessibility of the internet. Unfortunately, creating interactive web
-graphics often requires a working knowledge of numerous web technologies
-that are foreign to many people working with data. As a result, web
-graphics are rarely used for exploratory data analysis where quick
-iteration between different visualizations is of utmost importance. This
-is the core strength of \textbf{ggplot2}, a popular data visualization
-package for R, the world's leading open-source statistical programming
-language. The conceptual framework behind \textbf{ggplot2} is based on
-the grammar of graphics, which lays a foundation for describing any
-static graphic as a small set of independent components. Perhaps the
-most fundamental component is the mapping from abstract data to the
-visual space, sometimes referred to as the aesthetic mapping. We propose
-adding two new aesthetics to the grammar, which together are sufficient
-for elegantly describing both animations and certain classes of
-coordinated linked views. We implement this extension in the open-source
-R package \textbf{animint}, which converts \textbf{ggplot2} objects to
-interactive web visualizations via D3.
+Interactive web graphics are great for communication and knowledge
+sharing, but are difficult to leverage during the exploratory phase of a
+data science workflow. Even before the web, interactive graphics helped
+data analysts quickly gather insight from data, discover the unexpected,
+and develop better model diagnostics. Web technologies, however, are not
+designed to fit inside an exploratory data analysis workflow where rapid
+iteration between data manipulation, modeling, and visualization must
+occur. We propose the R package \textbf{animint} for rapid creation of
+linked and animated web graphics through a simple extension of
+\textbf{ggplot2}'s implementation of the Grammar of Graphics. The
+extension allows users to use their existing \textbf{ggplot2} code, then
+leverage an idomatic API for describing animations and graphical queries
+between multiple linked views.
 \end{abstract}
 
 \noindent
-{\it Keywords:}  Animation, Linked Views, Statistical graphics, Exploratory data
+{\it Keywords:}  Animation, Multiple linked views, Statistical graphics, Exploratory data
 analysis, Web technologies
 \vfill
 
@@ -189,8 +183,23 @@ analysis, Web technologies
 \hypertarget{intro}{%
 \section{Introduction}\label{intro}}
 
+For more than a half century now, statisticians have explored how
+interactive graphics can inform the modeling process and extract
+information from data. In fact, the ASA maintains a thorough video
+library demonstrating applications of influential interactive
+statistical graphics systems such as \texttt{PRIM-9} (Fisherkeller and
+Tukey 1988), \texttt{Dataviewer} (Andreas Buja and McDonald 1988),
+\texttt{XGobi} (Swayne and Buja 1998), \texttt{GGobi} (D. Cook and
+Swayne 2007), and \texttt{Mondrian} (Theus 2002). These, as well as
+other influential systems, such as \texttt{LISP-STAT} (Tierney 1990) and
+\texttt{MANET} (Unwin A. 1996), all have a rich environment for
+accomplishing a wide variety of statistical analysis tasks, and most
+were developed before the web browser had rich support for graphics.
+
+D. Cook, Buja, and Swayne (2007)
+
 Interactive graphics are an important part of applied statistical
-practice, because they can help provide a better understanding of
+practice, because they can lead to a better understanding of
 high-dimensional data sets and models. Interactive graphics are useful
 in the context of EDA, model selection/validation, and presenting
 results of an analysis. Interactive graphics toolkits in R have been
@@ -323,7 +332,7 @@ The tour is a useful visualization technique for exploring
 high-dimensional data which requires interactive and dynamic graphics.
 The open-source software ggobi is currently the most fully-featured
 toolkit for touring data and has support for interactive techniques such
-as linking, zooming, panning, and identifying (Cook and Swayne 2007).
+as linking, zooming, panning, and identifying (D. Cook and Swayne 2007).
 The R package \textbf{rggobi} (Wickham et al. 2008) provides an R
 interface to ggobi's graphical interface, but unfortunately, the
 software requirements for installation and use of this toolchain are
@@ -365,6 +374,7 @@ selector.types & global option to specify single or multiple selection for each 
 first & global option to specify first selection.  \\
 time & global option to specify delay between animation frames.  \\
 duration & global option to specify smooth transitions.  \\
+key & aesthetic specifying variable to use for matching data in smooth transitions. \\
 \hline
 \end{tabularx}
 
@@ -414,11 +424,11 @@ mark within a \textbf{ggplot2} layer corresponds to one (or more)
 observations in \texttt{\textless{}DATA\textgreater{}}, aesthetic
 mappings provide a mechanism for mapping graphical selections to the
 original data (and vice-versa) which is essential to any interactive
-graphics system (Andreas Buja and McDonald 1988) (Wickham et al. 2010).
-Thus, given a way to combine multiple \textbf{ggplot2} plots into a
-single view, this design can be extended to support a notion of multiple
-linked views, as those discussed in Ahlberg, Williamson, and Shneiderman
-(1991) and Buja et al. (1991).
+graphics system (Wickham et al. 2010). Thus, given a way to combine
+multiple \textbf{ggplot2} plots into a single view, this design can be
+extended to support a notion of multiple linked views, as those
+discussed in Ahlberg, Williamson, and Shneiderman (1991) and Buja et al.
+(1991).
 
 \hypertarget{extension}{%
 \subsection{Direct manipulation of dynamic queries}\label{extension}}
@@ -433,11 +443,11 @@ representation of the data (such as lines or points) changes the plot.
 In contrast, indirect manipulation interfaces use widgets (such as
 buttons or menus) to change the plot.
 
-Cook and Swayne (2007) use SQL queries to formalize the direct
+D. Cook and Swayne (2007) use SQL queries to formalize the direct
 manipulation methods discussed in Ahlberg, Williamson, and Shneiderman
 (1991) and Buja et al. (1991). We propose to embed this direct
 manipulation framework inside the layered grammar of graphics with two
-new aesthetics, clickSelects and showSelected.
+new aesthetics, \texttt{clickSelects} and \texttt{showSelected}.
 
 \begin{itemize}
 \tightlist
@@ -461,25 +471,27 @@ the customer is smoker.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(animint)}
-\NormalTok{p1 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}
+\NormalTok{gg.bar <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{(}
   \DataTypeTok{data =}\NormalTok{ reshape2}\OperatorTok{::}\NormalTok{tips, }
   \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ smoker, }\DataTypeTok{clickSelects =}\NormalTok{ smoker)}
 \NormalTok{)}
-\NormalTok{p2 <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}
+\NormalTok{gg.scatter <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}
   \DataTypeTok{data =}\NormalTok{ reshape2}\OperatorTok{::}\NormalTok{tips, }
   \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ total_bill, }\DataTypeTok{y =}\NormalTok{ tip, }
       \DataTypeTok{showSelected =}\NormalTok{ smoker)}
 \NormalTok{)}
-\KeywordTok{animint2dir}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DataTypeTok{p1 =}\NormalTok{ p1, }\DataTypeTok{p2 =}\NormalTok{ p2))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}
 \centering
-\includegraphics{images/tips}
+\includegraphics{images/figure-tips}
 \caption{\label{fig:tips}Linked dynamic querying via direct manipulation
-using animint. A video demonstration can be viewed online at
+using animint. The \texttt{clickSelects} aesthetic designates a
+clickable geom that can change a selection variable, and the
+\texttt{showSelected} aesthetic designates a geom that responds by
+showing only the data which corresponds to the current selection. A
+video demonstration can be viewed online at
 \url{https://vimeo.com/160496419}}
 \end{figure}
 
@@ -489,26 +501,28 @@ they refer to a common variable, \texttt{smoker}. Each variable that is
 used in a \texttt{clickSelects} or \texttt{showSelected} aesthetic is
 treated as a selection variable with an interactively updated set of
 selected values that is used to dynamically update the plots in response
-to user input. In the example above, we have used
-\texttt{aes(clickSelects=smoker)} to specify a plot in which direct
-manipulation (mouse clicks on the barplot) dynamically changes the
-\texttt{smoker} selection variable. We have used
-\texttt{aes(showSelected=smoker)} to designate a scatterplot where we
-only want to show data points for the current selection of the
-\texttt{smoker} variable. In essense, this means performing SQL queries
-of the form:
+to user input. In the first plot above, we have used
+\texttt{aes(clickSelects=smoker)} to specify a bar with direct
+manipulation (mouse clicks on the barplot) that dynamically changes the
+\texttt{smoker} selection variable. In the second plot above, we have
+used \texttt{aes(showSelected=smoker)} to specify that we only want to
+show data points for the current selection of the \texttt{smoker}
+variable. In response to a user clicking on the bars in the first plot,
+our system essentially performs the SQL query below in order to generate
+the data to display in the second plot:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{SELECT}\NormalTok{ total_bill, tip }\KeywordTok{FROM}\NormalTok{ tips}
+\KeywordTok{SELECT}\NormalTok{ * }\KeywordTok{FROM}\NormalTok{ tips}
   \KeywordTok{WHERE}\NormalTok{ smoker }\KeywordTok{IN}\NormalTok{ smoker_selection}
 \end{Highlighting}
 \end{Shaded}
 
-In this example, \texttt{smoker\_selection} is either ``Yes'' or ``No'',
-but as we show in later examples, \texttt{smoker\_selection} can also be
-an array of values. Although the \texttt{clickSelects} aesthetic is tied
-to a mouseclick event, other aesthetics could easily be created to
+In this example, \texttt{smoker\_selection} is either ``Yes'' or ``No''
+(a single selected value), but as we show in later examples,
+\texttt{smoker\_selection} can also be an array of values (multiple
+selected values). Although the \texttt{clickSelects} aesthetic is tied
+to a mouse click event, other aesthetics could easily be created to
 support other selection events, such as hover or click+drag.
 Statistically speaking, this type of visualization is useful for
 navigating through joint distributions conditional upon discrete values.
@@ -518,48 +532,6 @@ In this sense, our extension is closely related to trellis displays
 conditioning is layer-specific (not plot-specific), is not tied to a
 particular geometry, and can be controlled through direct manipulation
 or animation controls.
-
-\hypertarget{animation}{%
-\subsection{Adding animation}\label{animation}}
-
-In some sense, the \texttt{showSelected} aesthetic splits the layer into
-subsets -- one for every unique value of the \texttt{showSelected}
-variable. The \texttt{clickSelects} aesthetics provides a mechanism to
-alter the visibility of those subset(s) via direct manipulation, but our
-system also provides a mechanism for automatically looping through
-selections to produce animation(s). We achieve this by reserving the
-name \texttt{time} to specify which variable to select as well as the
-amount of time to wait before changing the selection (in milliseconds).
-We also reserve the name \texttt{duration} to specify the amount of time
-used to smoothly transition between frames (with linear easing). The
-code below was used to generate Figure \ref{fig:animation} which
-demonstrates a simple animation with smooth transitions between 10
-frames of a single point. Note that the resulting web page has controls
-for interactively altering the \texttt{time} and \texttt{duration}
-parameters.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{d <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{v =} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
-\NormalTok{plotList <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}
-  \DataTypeTok{plot =} \KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}
-    \DataTypeTok{data =}\NormalTok{ d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ v, }\DataTypeTok{y =}\NormalTok{ v, }\DataTypeTok{showSelected =}\NormalTok{ v)}
-\NormalTok{  ),}
-  \DataTypeTok{time =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{variable =} \StringTok{"v"}\NormalTok{, }\DataTypeTok{ms =} \DecValTok{1000}\NormalTok{),}
-  \DataTypeTok{duration =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{v =} \DecValTok{1000}\NormalTok{)}
-\NormalTok{)}
-\KeywordTok{animint2dir}\NormalTok{(plotList)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-\centering
-\includegraphics{images/animation}
-\caption{\label{fig:animation}Two frames from an animation of one marker
-moving from (1, 1) towards (10, 10). A video of the animation with
-smooth transitions can be viewed online at
-\url{https://vimeo.com/160505146}}
-\end{figure}
 
 \hypertarget{worldbank}{%
 \subsection{World Bank example}\label{worldbank}}
@@ -591,37 +563,18 @@ show the current selection: year=1979, country=\{United States,
 Vietnam\}, and region=\{East Asia \& Pacific, North America\}}
 \end{figure}
 
-When viewing the interactive version of Figure \ref{fig:worldbank},
-suppose we wish to select Thailand. Direct manipulation is not very
-useful in this case since it is not easy to identify and select Thailand
-based on graphical marks on a plot. For this reason, \textbf{animint}
-also provides dropdown menu(s) for each selection variable to aid the
-selection process. Figure \ref{fig:widgets} shows what the user sees
-after typing `'th'' in the search box. Note that these dropdowns support
-selection of multiple values and coordinate sensibly with selections
-made via direct manipulation.
-
-\begin{figure}
-\centering
-\includegraphics{images/dropdown}
-\caption{\label{fig:widgets}Animint provides a menu to update each selection
-variable. In this example, after typing ``th'' the country menu shows
-the subset of matching countries.}
-\end{figure}
-
 We anticipate that some \textbf{ggplot2} users will be able to reverse
 engineer the \textbf{animint} code which creates Figure
 \ref{fig:worldbank}, simply by looking at it. In fact, this is a big
 reason why \textbf{ggplot2} is so widely used: it helps minimize the
-amount of time required to translate a figure that exists in your head
-into computer code. Note that, in the left hand plot of Figure
-\ref{fig:worldbank}, we have a time series of the life expectancy where
-each line is a country (i.e., we \texttt{group} by country) and lines
-are colored by region. By clicking on a line, we also want the country
-label to appear in the right hand plot, so we also need to set
-\texttt{clickSelects=country}. Lastly, by setting
-\texttt{showSelected=region}, we can hide/show lines by clicking on the
-color legend entries.
+amount of time required to translate an idea for a figure into computer
+code. Note that, in the left hand plot of Figure \ref{fig:worldbank}, we
+have a time series of the life expectancy where each line is a country
+(i.e., we \texttt{group} by country) and lines are colored by region. By
+clicking on a line, we also want the country label to appear in the
+right hand plot, so we also need to set \texttt{clickSelects=country}.
+Lastly, by setting \texttt{showSelected=region}, we can hide/show lines
+by clicking on the color legend entries.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -723,51 +676,101 @@ we add another layer of text at a fixed location.
 \end{Highlighting}
 \end{Shaded}
 
-Now that we have defined the plots in Figure \ref{fig:worldbank}, we can
-set the \texttt{time} and \texttt{duration} options (introduced in
-Section \ref{animation}) to control the animation parameters. Our
-\textbf{animint} implementation also respects a \texttt{selector.types}
-option which controls whether or not selections for a given variable can
-accumulate and a \texttt{first} option for controlling which values are
-selected when the visualization is first rendered (see
-Table\textasciitilde{}1 for a summary of new features in
-\textbf{animint}). By default, supplying the list of plots and
-additional options to \texttt{animint2dir()} will write all the files
-necessary to render the visualization to a temporary directory and
-prompt a web browser to open an HTML file.
+\hypertarget{animation}{%
+\subsection{Linking, animation and other options}\label{animation}}
+
+Linking is declared by putting ggplots with common \texttt{clickSelects}
+and \texttt{showSelected} aesthetics together in a list. For example, we
+can link the ggplots from the previous section by including them
+together as the first two elements of the following list:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{viz <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}
   \DataTypeTok{timeSeries =}\NormalTok{ timeSeries,}
-  \DataTypeTok{scatterPlot =}\NormalTok{ scatterPlot,}
-  \DataTypeTok{time =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{variable =} \StringTok{"year"}\NormalTok{, }\DataTypeTok{ms =} \DecValTok{3000}\NormalTok{),}
-  \DataTypeTok{duration =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{year =} \DecValTok{1000}\NormalTok{),}
-  \DataTypeTok{selector.types =} \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{year =} \StringTok{"single"}\NormalTok{,}
-    \DataTypeTok{country =} \StringTok{"multiple"}\NormalTok{,}
-    \DataTypeTok{region =} \StringTok{"multiple"}
-\NormalTok{  ),}
-  \DataTypeTok{first =} \KeywordTok{list}\NormalTok{(}
-    \DataTypeTok{country =} \KeywordTok{c}\NormalTok{(}\StringTok{"United States"}\NormalTok{, }\StringTok{"Vietnam"}\NormalTok{)}
+  \DataTypeTok{scatterPlot =}\NormalTok{ scatterPlot}
 \NormalTok{  )}
-\NormalTok{)}
-\KeywordTok{animint2dir}\NormalTok{(viz)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{implementation}{%
-\subsection{Implementation details}\label{implementation}}
+Note that the animint \texttt{viz} list above can also contain rendering
+options, as we discuss below (see Table\textasciitilde{}1 for a summary
+of new interactive features in \textbf{animint}). For example, the
+\texttt{selector.types} option controls whether or not selections for a
+given variable can accumulate (single or multiple selected values).
 
-As shown in Figure \ref{fig:design}, the \textbf{animint} system is
-implemented in 2 parts: the compiler and the renderer. The compiler is
-implemented in about 2000 lines of R code that converts a list of
-ggplots and options to a JSON plot meta-data file and a tab-separated
-values (TSV) file database.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{selector.types =}\StringTok{ }\KeywordTok{list}\NormalTok{(}
+  \DataTypeTok{year =} \StringTok{"single"}\NormalTok{,}
+  \DataTypeTok{country =} \StringTok{"multiple"}\NormalTok{,}
+  \DataTypeTok{region =} \StringTok{"multiple"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+The code above declares \texttt{year} as a single selection variable,
+which means that only a single year may be selected at a time (clicking
+a geom with \texttt{clickSelects=year} will change the selection to the
+corresponding year). The \texttt{country} and \texttt{region} variables
+are declared as multiple selection variables, which can have multiple
+selected values at a time (clicking a geom with
+\texttt{clickSelects=country} will add/remove that country to/from the
+selection set).
+
+Another example is the \texttt{first} option, which controls selected
+values when the visualization is first rendered. The code below declares
+that the first selection of the \texttt{country} variable is the set of
+two countries, United States and Vietnam.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{first =}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{country =} \KeywordTok{c}\NormalTok{(}\StringTok{"United States"}\NormalTok{, }\StringTok{"Vietnam"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+Animation is declared using the \texttt{time} option, which specifies a
+selection variable which will be automatically updated over time, as
+well as a time delay in milliseconds. The code below declares the
+\texttt{year} variable to be animated every 3 seconds.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{time <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{variable =} \StringTok{"year"}\NormalTok{, }\DataTypeTok{ms =} \DecValTok{3000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Animation is useful in the World Bank data visualization because it
+shows how the bivariate relationship between fertility rate and life
+expectancy changes over time. Animation clearly shows how many countries
+progress from low life expectancy and high fertility rate in early
+years, to high life expectancy and low fertility rate in later years.
+
+Finally, the \texttt{duration} option specifies the amount of time used
+to smoothly transition between selections (with linear easing). Smooth
+transitions help the viewer track geoms before and after an update to
+the selection set. For example in the code below we declare a 1 second
+smooth transition on the \texttt{year} variable, in order to more easily
+track the points on the scatterplot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{duration <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{year =} \DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Note that for accurate interpretation of smooth transitions, the new
+\texttt{key} aesthetic must be specified. The \texttt{key} aesthetic is
+used to match data elements before and after the smooth transition. In
+the World Bank example, we would need to specify
+\texttt{aes(key=country)} for the points and text in the scatterplot.
+
+\hypertarget{compiling-and-rendering}{%
+\subsection{Compiling and rendering}\label{compiling-and-rendering}}
 
 \begin{figure}
 \centering
-\includegraphics{images/figure-design}
+\includegraphics{images/figure-design.pdf}
 \caption{\label{fig:design}A schematic explanation of compilation and
 rendering in the World Bank visualization. Top: the interactive
 animation is a list of 4 R objects: 2 ggplots and 2 option lists.
@@ -780,6 +783,51 @@ are combined with data-independent JavaScript and HTML files which
 render the interactive animation in a web browser
 (\textcolor{blue}{$\rightarrowtriangle$}).}
 \end{figure}
+
+Supplying the \texttt{viz} list of ggplots and rendering options to the
+\texttt{animint2dir()} function will save all the files necessary for
+rendering the visualization:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{animint2dir}\NormalTok{(viz)}
+\end{Highlighting}
+\end{Shaded}
+
+As shown in Figure \ref{fig:design}, the \textbf{animint} system is
+implemented in 2 parts: the compiler and the renderer. The compiler is
+implemented in R code that converts a list of ggplots and options to a
+JSON plot meta-data file and a tab-separated values (TSV) file database.
+The renderer consists of HTML and JavaScript files, which can be easily
+hosted along with the TSV and JSON files on any web server. The
+interactive plots can be viewed by opening the \texttt{index.html} page
+in any modern web browser. Note that our current implementation of
+\textbf{animint} depends on a fork of
+\textbf{ggplot2}\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
+that contains some minor modifications which are needed to support
+interactive rendering on web pages. Additional implementation details
+are available in the supplementary materials.
+
+\hypertarget{performance}{%
+\section{Exploring performance \& scope with
+examples}\label{performance}}
+
+This section attempts to demonstrate the range of visualizations that
+are supported by \textbf{animint} with more examples.
+
+\hypertarget{tornadoes-in-the-united-states}{%
+\subsection{Tornadoes in the United
+States}\label{tornadoes-in-the-united-states}}
+
+Figure \ref{fig:tornado} depicts an interactive animation with data from
+all US tornadoes from 1950 to 2012, but graphical queries restrict focus
+to tornado paths from 1982 and tornado counts within the state of Texas.
+In the interactive version, one may (1) click on any state to view its
+tornado counts throughout the years, (2) click on any bar to view the
+spatial distribution of tornado paths for that year, and (3) press play
+to animate the paths throughout time. These interactive techniques can
+be useful for discovering unusual patterns or even help to suggest a
+reasonable model for describing/predicting tornado paths.
 
 \begin{figure}
 \centering
@@ -803,6 +851,10 @@ perceive/understand how the range has changed from one state to the
 next.}
 \end{figure}
 
+\hypertarget{central-american-climate-data}{%
+\subsection{Central American Climate
+data}\label{central-american-climate-data}}
+
 \begin{figure}
 \centering
 \includegraphics{images/figure-climate}
@@ -818,59 +870,6 @@ time can be changed by clicking a background tallrect on a time series
 or a point on the scatterplot. The selected region can be changed by
 clicking a line on a time series.}
 \end{figure}
-
-The compiler scans the aesthetics in the ggplots to determine how many
-selection variables are present, and which geoms to update after a
-selection variable is updated. It uses \textbf{ggplot2} to automatically
-calculate the axes scales, legends, labels, backgrounds, and borders. It
-outputs this information to the JSON plot meta-data file.
-
-The compiler also uses \textbf{ggplot2} to convert data variables
-(e.g.~life expectancy and region) to visual properties (e.g.~y position
-and color). The data for each layer/geom are saved in several TSV files,
-one for each combination \texttt{showSelected} values. Thus for large
-data sets, the web browser only needs to download the subset of data
-required to render the current selection (Heer 2013).
-
-When repeated data would be saved in each of the TSV files, an extra
-common TSV file is created so that the repeated data only need to be
-stored and downloaded once. In that case, the other TSV files do not
-store the common data, but are merged with the common data after
-downloading. This method for constructing the TSV file database was
-developed to minimize the disk usage of \textbf{animint}, particularly
-for ggplots of spatial maps as in Figure \ref{fig:tornado}.
-
-Finally, the rendering engine (\texttt{index.html}, \texttt{d3.v3.js},
-and \texttt{animint.js} files) is copied to the plot directory. The
-\texttt{animint.js} renderer is implemented in about 2200 lines of
-JavaScript/D3 code that renders the TSV and JSON data files as SVG in a
-web browser. Importantly, animation is achieved by using the JavaScript
-\texttt{setInterval()} function, which updates the \texttt{time}
-selection variable every few seconds. Since the compiled plot is just a
-directory of files, the interactive plots can be hosted on any web
-server. The interactive plots can be viewed by opening the
-\texttt{index.html} page in any modern web browser.
-
-Our current implementation of \textbf{animint} depends on a fork of
-\textbf{ggplot2}\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
-that contains some minor modifications which are needed to support
-interactive rendering on web pages.
-
-\hypertarget{performance}{%
-\section{Exploring performance \& scope with
-examples}\label{performance}}
-
-This section attempts to demonstrate the range of visualizations that
-are supported by \textbf{animint} with more examples. Figure
-\ref{fig:tornado} depicts an interactive animation with data from all US
-tornadoes from 1950 to 2012, but graphical queries restrict focus to
-tornado paths from 1982 and tornado counts within the state of Texas. In
-the interactive version, one may (1) click on any state to view its
-tornado counts throughout the years, (2) click on any bar to view the
-spatial distribution of tornado paths for that year, and (3) press play
-to animate the paths throughout time. These interactive techniques can
-be useful for discovering unusual patterns or even help to suggest a
-reasonable model for describing/predicting tornado paths.
 
 Figure \ref{fig:climate} depicts an interactive animation of climate
 time series data observed in Central America. Two maps display the
@@ -1179,6 +1178,11 @@ Cairo. 2016. ``Cairo: A Vector Graphics Library.''
 Chang, Winston, and Hadley Wickham. 2015. \emph{ggvis: Interactive
 Grammar of Graphics}. \url{https://CRAN.R-project.org/package=ggvis}.
 
+\leavevmode\hypertarget{ref-Cook:2007uk}{}%
+Cook, Dianne, Andreas Buja, and Deborah F Swayne. 2007. ``Interactive
+High-Dimensional Data Visualization.'' \emph{Journal of Computational
+and Graphical Statistics}, December, 1--23.
+
 \leavevmode\hypertarget{ref-ggobi:2007}{}%
 Cook, Dianne, and Deborah F. Swayne. 2007. \emph{Interactive and Dynamic
 Graphics for Data Analysis : With R and Ggobi}. Use R ! New York:
@@ -1188,10 +1192,10 @@ Springer. \url{http://www.ggobi.org/book/}.
 Donoho, David. 2015. ``50 years of Data Science.''
 \url{https://dl.dropboxusercontent.com/u/23421017/50YearsDataScience.pdf}.
 
-\leavevmode\hypertarget{ref-2013-immens}{}%
-Heer, Zhicheng Liu AND Biye Jiang AND Jeffrey. 2013. ``ImMens: Real-Time
-Visual Querying of Big Data.'' \emph{Computer Graphics Forum (Proc.
-EuroVis)} 32 (3). \url{http://vis.stanford.edu/papers/immens}.
+\leavevmode\hypertarget{ref-PRIM9}{}%
+Fisherkeller, Friedman, M. A., and J. W. Tukey. 1988. ``PRIM-9, an
+Interactive Multidimensional Data Display and Analysis System.'' In
+\emph{Dynamic Graphics for Statistics}, 91--109.
 
 \leavevmode\hypertarget{ref-qtbase}{}%
 Lawrence, Michael, and Deepayan Sarkar. 2016. \emph{Interface Between R
@@ -1225,9 +1229,29 @@ ggplot2}. \url{http://github.com/dgrtwo/gganimate}.
 RStudio. 2013. ``Shiny: Easy Web Applications in R.''
 \url{http://www.rstudio.com/shiny/}.
 
+\leavevmode\hypertarget{ref-xgobi}{}%
+Swayne, Cook, D. F., and A. Buja. 1998. ``XGobi: Interactive Dynamic
+Data Visualization in the X Window System.'' \emph{Journal of
+Computational and Graphical Statistics} 7 (1):113--30.
+
+\leavevmode\hypertarget{ref-mondrian}{}%
+Theus, M. 2002. ``Interactive Data Visualization Using Mondrian.''
+\emph{Journal of Statistical Software} 7 (11):1--9.
+\url{http://www.jstatsoft.org/v07/i11}.
+
+\leavevmode\hypertarget{ref-LISP-STAT}{}%
+Tierney, Luke. 1990. \emph{LISP-Stat: An Object Oriented Environment for
+Statistical Computing and Dynamic Graphics.} Wiley-Interscience, New
+York.
+
 \leavevmode\hypertarget{ref-vega}{}%
 Trifacta. 2014. ``Vega: A Declarative Visualization Grammar.''
 \url{http://trifacta.github.io/vega/}.
+
+\leavevmode\hypertarget{ref-MANET}{}%
+Unwin A., Hofmann H., Hawkins G. 1996. ``Interactive Graphics for Data
+Sets with Missing Values - Manet.'' \emph{Journal of Computational and
+Graphical Statistics} 4 (6).
 
 \leavevmode\hypertarget{ref-Urbanek2011}{}%
 Urbanek, Simon. 2011. ``IPlots eXtreme: Next-Generation Interactive

@@ -6,8 +6,8 @@ geometry: margin=1in
 linkcolor: cyan
 citecolor: black
 bibliography: refs.bib
-abstract: The web is the most popular medium for sharing interactive data visualizations thanks to the portability of the web browser and the accessibility of the internet. Unfortunately, creating interactive web graphics often requires a working knowledge of numerous web technologies that are foreign to many people working with data. As a result, web graphics are rarely used for exploratory data analysis where quick iteration between different visualizations is of utmost importance. This is the core strength of **ggplot2**, a popular data visualization package for R, the world's leading open-source statistical programming language. The conceptual framework behind **ggplot2** is based on the grammar of graphics, which lays a foundation for describing any static graphic as a small set of independent components. Perhaps the most fundamental component is the mapping from abstract data to the visual space, sometimes referred to as the aesthetic mapping. We propose adding two new aesthetics to the grammar, which together are sufficient for elegantly describing both animations and certain classes of coordinated linked views. We implement this extension in the open-source R package **animint**, which converts **ggplot2** objects to interactive web visualizations via D3.
-keywords: Animation, Linked Views, Statistical graphics, Exploratory data analysis, Web technologies
+abstract: Interactive web graphics are great for communication and knowledge sharing, but are difficult to leverage during the exploratory phase of a data science workflow. Even before the web, interactive graphics helped data analysts quickly gather insight from data, discover the unexpected, and develop better model diagnostics. Web technologies, however, are not designed to fit inside an exploratory data analysis workflow where rapid iteration between data manipulation, modeling, and visualization must occur. We propose the R package **animint** for rapid creation of linked and animated web graphics through a simple extension of **ggplot2**'s implementation of the Grammar of Graphics. The extension allows users to use their existing **ggplot2** code, then leverage an idomatic API for describing animations and graphical queries between multiple linked views.
+keywords: Animation, Multiple linked views, Statistical graphics, Exploratory data analysis, Web technologies
 output:
   bookdown::pdf_book:
     template: jcgs-template.tex
@@ -15,6 +15,7 @@ output:
     keep_tex: yes
     citation_package: none
 ---
+
 
 # Introduction {#intro}
 
@@ -46,8 +47,23 @@ knitr::knit_theme$set("edit-matlab")
 %%The R package \texttt{ggplot2} is a popular tool for data visualization due in part to its elegant design inspired by the grammar of graphics. The fundamental concept in the grammar of graphics is that any graphic can be described through a set of mappings from data variables to visual space, referred to commonly as \texttt{aesthetic} mappings. The grammar of graphics and ggplot2 were designed for static graphics
 -->
 
+For more than a half century now, statisticians have explored how interactive
+graphics can inform the modeling process and extract information from data.
+In fact, the ASA maintains a thorough video library demonstrating applications
+of influential interactive statistical graphics systems such as 
+`PRIM-9` [@PRIM9], `Dataviewer` [@viewing-pipeline], `XGobi` [@xgobi], 
+`GGobi` [@ggobi:2007], and `Mondrian` [@mondrian]. These, as well as other 
+influential systems, such as `LISP-STAT` [@LISP-STAT] and `MANET` [@MANET], 
+all have a rich environment for accomplishing a wide variety of statistical 
+analysis tasks, and most were developed before the web browser had rich 
+support for graphics.
+
+
+@Cook:2007uk 
+
+
 Interactive graphics are an important part of applied statistical
-practice, because they can help provide a better understanding of
+practice, because they can lead to a better understanding of
 high-dimensional data sets and models. Interactive graphics are useful
 in the context of EDA, model selection/validation, and presenting
 results of an analysis. Interactive graphics toolkits in R have been
@@ -217,7 +233,7 @@ selector.types & global option to specify single or multiple selection for each 
 first & global option to specify first selection.  \\
 time & global option to specify delay between animation frames.  \\
 duration & global option to specify smooth transitions.  \\
-key & aesthetic specifying variable to use for matching data in smooth transitions.
+key & aesthetic specifying variable to use for matching data in smooth transitions. \\
 \hline
 \end{tabularx}
 
@@ -264,8 +280,8 @@ A single **ggplot2** plot can be comprised of multiple layers, and different lay
 can correspond to different data. Since each graphical mark within a **ggplot2** 
 layer corresponds to one (or more) observations in `<DATA>`, aesthetic
 mappings provide a mechanism for mapping graphical selections to the original 
-data (and vice-versa) which is essential to any interactive graphics system
-[@viewing-pipeline] [@plumbing]. Thus, given a way to combine multiple 
+data (and vice-versa) which is essential to any interactive graphics system [@plumbing]. 
+Thus, given a way to combine multiple 
 **ggplot2** plots into a single view, this design can be extended to support a 
 notion of multiple linked views, as those discussed in @Ahlberg:1991 
 and @Buja:1991vh.
