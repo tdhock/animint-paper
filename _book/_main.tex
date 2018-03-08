@@ -183,20 +183,60 @@ analysis, Web technologies
 \hypertarget{intro}{%
 \section{Introduction}\label{intro}}
 
-For more than a half century now, statisticians have explored how
-interactive graphics can inform the modeling process and extract
-information from data. In fact, the ASA maintains a thorough video
-library demonstrating applications of influential interactive
-statistical graphics systems such as \texttt{PRIM-9} (Fisherkeller and
-Tukey 1988), \texttt{Dataviewer} (Andreas Buja and McDonald 1988),
-\texttt{XGobi} (Swayne and Buja 1998), \texttt{GGobi} (D. Cook and
-Swayne 2007), and \texttt{Mondrian} (Theus 2002). These, as well as
-other influential systems, such as \texttt{LISP-STAT} (Tierney 1990) and
-\texttt{MANET} (Unwin A. 1996), all have a rich environment for
-accomplishing a wide variety of statistical analysis tasks, and most
-were developed before the web browser had rich support for graphics.
+For more than a half century now, statisticians have designed, built,
+and used interactive graphics for exploring high-dimensional data and
+better informing their modeling process. In fact, the ASA maintains a
+video library (\url{http://stat-graphics.org/movies/}) to document and
+demonstrate applications of instrumental interactive statistical
+graphics systems such as \texttt{PRIM-9} (Fisherkeller and Tukey 1988),
+\texttt{Dataviewer} (Andreas Buja and McDonald 1988), \texttt{XGobi}
+(Swayne and Buja 1998), \texttt{GGobi} (D. Cook and Swayne 2007), and
+\texttt{Mondrian} (Theus 2002). These, as well as other influential
+systems, such as \texttt{LISP-STAT} (Tierney 1990) and \texttt{MANET}
+(Unwin A. 1996), all have a rich support for accomplishing a wide
+variety of statistical analysis tasks, and most were developed before
+the web browser had rich graphics support.
 
-D. Cook, Buja, and Swayne (2007)
+All of these systems, as well as some more modern systems, such as
+\textbf{rggobi} (Duncan Temple Lang 2016), \textbf{iplots} (Urbanek
+2011), \textbf{loon} (Waddell and Oldford 2018), etc, require a heavy
+set of computational dependencies in order to view or interact with
+graphics. Although this allows the freedom to easily leverage libraries
+with sophicated statistical functionality, it limits the ability to
+share or embed such graphics in a larger document. On the other hand,
+interactive web graphics are now ubiquitous because of their
+accessibility and composability.
+
+Generally speaking, web graphics that use purely ``client-side''
+technologies (i.e., \texttt{HTML}, \texttt{SVG}, \texttt{CSS}, and
+\texttt{JavaScript}) are desired for their sharability, scalabaility,
+and maintainability. This is why many web-based graphing libraries work
+entirely with client-side technologies, like Vega (Trifacta 2014),
+plotly.js, and bokeh.\\
+Unfortunately, client-side technologies are not particularly well-suited
+for statistical computation, which we often want to leverage via dynamic
+controls in an interactive statistical graphics system; but when
+necessary, one can leverage a client-server model.
+
+Table X gives a high-level depiction of the different infrastructure
+required for a purely client-side (i.e.~standalone) webpage versus a
+client-server web application. Focusing just on the R language, there
+are now a number of ways to develop web applications powered by R,
+including \textbf{FastRWeb} (Urbanek and Horner 2015), \textbf{opencpu}
+(Ooms 2014), and \textbf{plumber} (Trestle Technology, LLC 2017), but
+\textbf{shiny} (RStudio 2013) is most widely used since it provides a
+nice reactive programming framework in addition to client-server
+communication.
+
+\begin{itemize}
+\tightlist
+\item
+  Make an argument that we need more R -\textgreater{} HTML interfaces
+  that don't require a callback to R.
+\end{itemize}
+
+D. Cook, Buja, and Swayne (2007) taxonomy motivated by data analysis
+tasks
 
 Interactive graphics are an important part of applied statistical
 practice, because they can lead to a better understanding of
@@ -333,7 +373,7 @@ high-dimensional data which requires interactive and dynamic graphics.
 The open-source software ggobi is currently the most fully-featured
 toolkit for touring data and has support for interactive techniques such
 as linking, zooming, panning, and identifying (D. Cook and Swayne 2007).
-The R package \textbf{rggobi} (Wickham et al. 2008) provides an R
+The R package \textbf{rggobi} (Duncan Temple Lang 2016) provides an R
 interface to ggobi's graphical interface, but unfortunately, the
 software requirements for installation and use of this toolchain are
 heavy and stringent. Furthermore, sharing the interactive versions of
@@ -1192,6 +1232,10 @@ Springer. \url{http://www.ggobi.org/book/}.
 Donoho, David. 2015. ``50 years of Data Science.''
 \url{https://dl.dropboxusercontent.com/u/23421017/50YearsDataScience.pdf}.
 
+\leavevmode\hypertarget{ref-rggobi}{}%
+Duncan Temple Lang, Hadley Wickham, Debby Swayne. 2016. \emph{Interface
+Between R and 'Ggobi'}.
+
 \leavevmode\hypertarget{ref-PRIM9}{}%
 Fisherkeller, Friedman, M. A., and J. W. Tukey. 1988. ``PRIM-9, an
 Interactive Multidimensional Data Display and Analysis System.'' In
@@ -1215,6 +1259,12 @@ Nolan, Deborah, and Duncan Temple Lang. 2012. ``Interactive and Animated
 Scalable Vector Graphics and R Data Displays.'' \emph{Journal of
 Statistical Software} 46 (1):1--88.
 \url{http://www.jstatsoft.org/v46/i01/}.
+
+\leavevmode\hypertarget{ref-opencpu}{}%
+Ooms, Jeroen. 2014. ``The Opencpu System: Towards a Universal Interface
+for Scientific Computing Through Separation of Concerns.''
+\emph{arXiv:1406.4806 {[}stat.CO{]}}.
+\url{http://arxiv.org/abs/1406.4806}.
 
 \leavevmode\hypertarget{ref-RCore}{}%
 R Core Team. 2017. \emph{R: A Language and Environment for Statistical
@@ -1244,6 +1294,10 @@ Tierney, Luke. 1990. \emph{LISP-Stat: An Object Oriented Environment for
 Statistical Computing and Dynamic Graphics.} Wiley-Interscience, New
 York.
 
+\leavevmode\hypertarget{ref-plumber}{}%
+Trestle Technology, LLC. 2017. \emph{Plumber: An Api Generator for R}.
+\url{https://CRAN.R-project.org/package=plumber}.
+
 \leavevmode\hypertarget{ref-vega}{}%
 Trifacta. 2014. ``Vega: A Declarative Visualization Grammar.''
 \url{http://trifacta.github.io/vega/}.
@@ -1263,6 +1317,16 @@ Graphics Design and Implementation of Modern Interactive Graphics.''
 ---------. 2016. \emph{RJava: Low-Level R to Java Interface}.
 \url{https://CRAN.R-project.org/package=rJava}.
 
+\leavevmode\hypertarget{ref-FastRWeb}{}%
+Urbanek, Simon, and Jeffrey Horner. 2015. \emph{FastRWeb: Fast
+Interactive Framework for Web Scripting Using R}.
+\url{https://CRAN.R-project.org/package=FastRWeb}.
+
+\leavevmode\hypertarget{ref-loon}{}%
+Waddell, Adrian, and R. Wayne Oldford. 2018. \emph{Loon: Interactive
+Statistical Data Visualization}.
+\url{https://CRAN.R-project.org/package=loon}.
+
 \leavevmode\hypertarget{ref-ggplot2-book}{}%
 Wickham, Hadley. 2009. \emph{ggplot2: elegant graphics for data
 analysis}. Springer New York. \url{http://had.co.nz/ggplot2/book}.
@@ -1276,11 +1340,6 @@ Projections,'' April, 1--18.
 Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike
 Hofmann, and Deborah F Swayne. 2010. ``The Plumbing of Interactive
 Graphics.'' \emph{Computational Statistics}, April, 1--7.
-
-\leavevmode\hypertarget{ref-rggobi}{}%
-Wickham, Hadley, Michael Lawrence, Duncan Temple Lang, and Deborah F
-Swayne. 2008. ``An Introduction to Rggobi.'' \emph{R-News} 8 (2):3--7.
-\url{http://CRAN.R-project.org/doc/Rnews/Rnews_2008-2.pdf}.
 
 \leavevmode\hypertarget{ref-wilkinson}{}%
 Wilkinson, Leland, D Wills, D Rope, A Norton, and R Dubbs. 2006.
