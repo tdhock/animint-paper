@@ -106,7 +106,7 @@ computing environment is crucial for enabling an efficient EDA workflow.
 
 It is important to acknowledge that **ggplot2** is built on top of the R package 
 **grid**, a low-level graphics system, which is now bundled with R itself 
-[@RCore]. Neither grid, nor base R graphics, have strong support for 
+[@RCore]. Neither **grid**, nor **base** R graphics, have strong support for 
 handling user interaction, which creates a need for add-on packages. There are a 
 number of approaches these packages take to rendering, each with their own 
 benefits and drawbacks. Traditionally, they build on low-level R interfaces 
@@ -117,6 +117,8 @@ due to the heavy software requirements. Although there may be sacrifices in
 performance, using the modern web browser as a canvas is more portable, 
 accessible, and composable (graphics can be embedded within larger 
 frameworks/documents).
+
+
 
 Base R does provide a Scalable Vector Graphics (SVG) device, `svg()`,
 via the Cairo graphics API [@cairo]. The R package **SVGAnnotation**
@@ -129,7 +131,7 @@ not straightforward to extend this system for linked data
 visualizations with advanced functionality (multiple layers, multiple
 plots, multiple selection variables).
 
-The lack of well-structured SVG for R graphics motivated the gridSVG package 
+The lack of well-structured SVG for R graphics motivated the **gridSVG** package 
 which provides sensible structuring of SVG output for grid graphics 
 [@gridSVG]. This package also provides some low-level tools for animating 
 or adding interactive features, where grid objects must be referenced by name.
@@ -174,15 +176,15 @@ desired.
 
 The tour is a useful visualization technique for exploring high-dimensional data
 which requires interactive and dynamic graphics. The open-source software ggobi 
-is currently the most fully-featured tool for touring data and has support
+is currently the most fully-featured toolkit for touring data and has support
 for interactive techniques such as linking, zooming, panning, and identifying 
 [@ggobi:2007]. The R package **rggobi** [@rggobi] provides an R interface 
 to ggobi's graphical interface, but unfortunately, the software requirements 
 for installation and use of this toolchain are heavy and stringent. Furthermore,
 sharing the interactive versions of these graphics are not possible. The R 
-package cranvas aims to be the successor to ggobi, with support for similar
+package **cranvas** aims to be the successor to ggobi, with support for similar
 interactive techniques, but with a more flexible interface for describing 
-plots inspired by the grammar of graphics [@cranvas]. Cranvas also has 
+plots inspired by the grammar of graphics [@cranvas]. **Cranvas** also has 
 heavy and stringent software requirements which limits the portability and
 accessibility of the software. 
 
