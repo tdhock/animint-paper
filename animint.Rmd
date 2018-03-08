@@ -207,7 +207,7 @@ browser.
 \caption{
 New features that animint adds to the grammar of graphics.
 }\label{tab:overview}
-
+\small
 \begin{tabularx}{\textwidth}{rl}
 Feature & Description \\
 \hline
@@ -317,16 +317,26 @@ animint2dir(list(p1 = p1, p2 = p2))
 knitr::include_graphics("images/tips")
 ```
 
-In essense, the R code above allows us to use direct manipulation to dynamically
-perform SQL queries of the form:
+In the R code above, the proposed `showSelected` and `clickSelects`
+aesthetics are used to link the two ggplots, since they refer to a
+common variable, `smoker`. Each variable that is used in a
+`clickSelects` or `showSelected` aesthetic is treated as a selection
+variable with an interactively updated set of selected values that is
+used to dynamically update the plots in response to user input.  In
+the example above, we have used `aes(clickSelects=smoker)` to specify
+a plot in which direct manipulation (mouse clicks on the barplot)
+dynamically changes the `smoker` selection variable. We have used
+`aes(showSelected=smoker)` to designate a scatterplot where we only
+want to show data points for the current selection of the `smoker`
+variable. In essense, this means performing SQL queries of the form:
 
 ```sql
 SELECT total_bill, tip FROM tips
-  WHERE smoker IN clickSelects
+  WHERE smoker IN smoker_selection
 ```
 
-In this example, `clickSelects` is either "Yes" or "No", but as we
-show in later examples, `clickSelects` can also be an array of values.
+In this example, `smoker_selection` is either "Yes" or "No", but as we
+show in later examples, `smoker_selection` can also be an array of values.
 Although the `clickSelects` aesthetic is tied to a mouseclick event,
 other aesthetics could easily be created to support other selection
 events, such as hover or click+drag. Statistically speaking, this type
@@ -497,7 +507,16 @@ Note that any aesthetics containing the substring `showSelected`
 (including `showSelected2`) are interpreted as `showSelected`
 variables, and combined together using the intersection operation. In
 the example above, that means that a point will be drawn for the
-currently selected combination of year and region. Below, the text layer for
+currently selected combination of year and region, as in the following SQL query,
+
+
+```sql
+SELECT * FROM WorldBank
+  WHERE year   IN year_selection
+  AND   region IN region_selection
+```
+
+Below, the text layer for
 annotating selected countries is essentially the same as the point
 layer, except we map the country name to the `label` aesthetic.
 
