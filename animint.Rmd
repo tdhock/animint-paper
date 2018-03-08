@@ -283,7 +283,7 @@ interfaces use widgets (such as buttons or menus) to change the plot.
 @ggobi:2007 use SQL queries to formalize the direct manipulation
 methods discussed in @Ahlberg:1991 and @Buja:1991vh. We propose to
 embed this direct manipulation framework inside the layered grammar of
-graphics with two new aesthetics, clickSelects and showSelected.
+graphics with two new aesthetics, `clickSelects` and `showSelected`. 
 
 * `clickSelects` defines a selection source via a mouse click. For
   example `aes(clickSelects=year)` designates a plot element which,
@@ -300,21 +300,19 @@ among tip amount and total bill amount depends on whether the customer
 is smoker.
 
 ```{r}
-library(animint)
-p1 <- ggplot() + geom_bar(
+gg.bar <- ggplot() + geom_bar(
   data = reshape2::tips, 
   aes(x = smoker, clickSelects = smoker)
 )
-p2 <- ggplot() + geom_point(
+gg.scatter <- ggplot() + geom_point(
   data = reshape2::tips, 
   aes(x = total_bill, y = tip, 
       showSelected = smoker)
 )
-animint2dir(list(p1 = p1, p2 = p2))
 ```
 
-```{r tips, echo = FALSE, eval = TRUE, fig.cap = "Linked dynamic querying via direct manipulation using animint. A video demonstration can be viewed online at <https://vimeo.com/160496419>"}
-knitr::include_graphics("images/tips")
+```{r tips, echo = FALSE, eval = TRUE, fig.cap = "Linked dynamic querying via direct manipulation using animint. The `clickSelects` aesthetic designates a clickable geom that can change a selection variable, and the `showSelected` aesthetic designates a geom that responds by showing only the data which corresponds to the current selection. A video demonstration can be viewed online at <https://vimeo.com/160496419>"}
+knitr::include_graphics("images/figure-tips")
 ```
 
 In the R code above, the proposed `showSelected` and `clickSelects`
@@ -323,21 +321,23 @@ common variable, `smoker`. Each variable that is used in a
 `clickSelects` or `showSelected` aesthetic is treated as a selection
 variable with an interactively updated set of selected values that is
 used to dynamically update the plots in response to user input.  In
-the example above, we have used `aes(clickSelects=smoker)` to specify
-a plot in which direct manipulation (mouse clicks on the barplot)
-dynamically changes the `smoker` selection variable. We have used
-`aes(showSelected=smoker)` to designate a scatterplot where we only
-want to show data points for the current selection of the `smoker`
-variable. In essense, this means performing SQL queries of the form:
+the first plot above, we have used `aes(clickSelects=smoker)` to
+specify a bar with direct manipulation (mouse clicks on the barplot)
+that dynamically changes the `smoker` selection variable. In the
+second plot above, we have used `aes(showSelected=smoker)` to specify
+that we only want to show data points for the current selection of the
+`smoker` variable. In response to a user clicking on the bars in the
+first plot, our system essentially performs the SQL query below in
+order to generate the data to display in the second plot:
 
 ```sql
-SELECT total_bill, tip FROM tips
+SELECT * FROM tips
   WHERE smoker IN smoker_selection
 ```
 
-In this example, `smoker_selection` is either "Yes" or "No", but as we
-show in later examples, `smoker_selection` can also be an array of values.
-Although the `clickSelects` aesthetic is tied to a mouseclick event,
+In this example, `smoker_selection` is either "Yes" or "No" (a single selected value), but as we
+show in later examples, `smoker_selection` can also be an array of values (multiple selected values).
+Although the `clickSelects` aesthetic is tied to a mouse click event,
 other aesthetics could easily be created to support other selection
 events, such as hover or click+drag. Statistically speaking, this type
 of visualization is useful for navigating through joint distributions
@@ -347,39 +347,6 @@ brushing [@brushing-scatterplots]. The major differences are that our
 conditioning is layer-specific (not plot-specific), is not tied to a
 particular geometry, and can be controlled through direct manipulation
 or animation controls.
-
-## Adding animation {#animation}
-
-In some sense, the `showSelected` aesthetic splits the layer into subsets
--- one for every unique value of the `showSelected` variable. The 
-`clickSelects` aesthetics provides a mechanism to alter the visibility 
-of those subset(s) via direct manipulation, but our system also provides a 
-mechanism for automatically looping through selections to produce animation(s).
-We achieve this by reserving the name `time` to specify which variable 
-to select as well as the amount of time to wait before changing the selection 
-(in milliseconds). We also reserve the name `duration` to specify the 
-amount of time used to smoothly transition between frames (with linear easing). 
-The code below was used to generate Figure \@ref(fig:animation) which 
-demonstrates a simple animation with smooth transitions between 10 frames of a
-single point. Note that the resulting web page has controls for interactively
-altering the `time` and `duration` parameters. 
-
-```{r}
-d <- data.frame(v = 1:10)
-plotList <- list(
-  plot = ggplot() + geom_point(
-    data = d, aes(x = v, y = v, showSelected = v)
-  ),
-  time = list(variable = "v", ms = 1000),
-  duration = list(v = 1000)
-)
-animint2dir(plotList)
-```
-
-```{r animation, echo = FALSE, eval = TRUE, fig.cap = "Two frames from an animation of one marker moving from (1, 1) towards (10, 10). A video of the animation with smooth transitions can be viewed online at <https://vimeo.com/160505146>"}
-knitr::include_graphics("images/animation")
-```
-
 
 ## World Bank example {#worldbank}
 
@@ -427,19 +394,6 @@ and fertility rate.
 
 ```{r worldbank, echo = FALSE, eval = TRUE, fig.cap = "An interactive animation of World Bank demographic data of several countries, designed using `clickSelects` and `showSelected` keywords (top).  Left: a multiple time series from 1960 to 2010 of life expectancy, with bold lines showing the selected countries and a vertical grey tallrect showing the selected year. Right: a scatterplot of life expectancy versus fertility rate of all countries. The legend and text elements show the current selection: year=1979, country={United States, Vietnam}, and region={East Asia & Pacific, North America}"}
 knitr::include_graphics("images/figure-1")
-```
-
-When viewing the interactive version of Figure \@ref(fig:worldbank), suppose
-we wish to select Thailand. Direct manipulation is not very useful in 
-this case since it is not easy to identify and select Thailand based
-on graphical marks on a plot. For this reason, **animint** also provides 
-dropdown menu(s) for each selection variable to aid the selection process.
-Figure \@ref(fig:widgets) shows what the user sees after typing ''th'' in 
-the search box. Note that these dropdowns support selection of multiple
-values and coordinate sensibly with selections made via direct manipulation.
-
-```{r widgets, echo = FALSE, eval = TRUE, fig.cap = "Animint provides a menu to update each selection variable. In this example, after typing \"th\" the country menu shows the subset of matching countries."}
-knitr::include_graphics("images/dropdown")
 ```
 
 We anticipate that some **ggplot2** users will be able to reverse engineer the
@@ -571,69 +525,52 @@ viz <- list(
 animint2dir(viz)
 ```
 
+## Adding animation {#animation}
 
-## Implementation details {#implementation}
+In some sense, the `showSelected` aesthetic splits the layer into subsets
+-- one for every unique value of the `showSelected` variable. The 
+`clickSelects` aesthetics provides a mechanism to alter the visibility 
+of those subset(s) via direct manipulation, but our system also provides a 
+mechanism for automatically looping through selections to produce animation(s).
+We achieve this by reserving the name `time` to specify which variable 
+to select as well as the amount of time to wait before changing the selection 
+(in milliseconds). We also reserve the name `duration` to specify the 
+amount of time used to smoothly transition between frames (with linear easing). 
+
 
 As shown in Figure \@ref(fig:design), the **animint** system is implemented
 in 2 parts: the compiler and the renderer. The compiler is implemented in about 
 2000 lines of R code that converts a list of ggplots and options to a JSON 
 plot meta-data file and a tab-separated values (TSV) file database.
 
+## Implementation details
 
 ```{r design, echo = FALSE, eval = TRUE, fig.cap = "A schematic explanation of compilation and rendering in the World Bank visualization. Top: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. Center: **animint** R code compiles data in ggplot geoms to a database of TSV files (\\textcolor{red}{$\\rightarrowtriangle$}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\\rightarrowtriangle$). Bottom: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\\textcolor{blue}{$\\rightarrowtriangle$})."}
 knitr::include_graphics("images/figure-design")
 ```
 
-
-```{r tornado, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of US tornadoes from 1950 to 2012. This diagram depicts a scenario where the user queried Texas (by clicking the map), and the year 1982 (by clicking the bar chart).  In addition to the graphical elements being (automatically) highlighted as a visual clue of what query is being made, this visualization includes dynamic labels reflecting the query. Particular queries may also be stored and shared via a URL, for example: <https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year={1982}state={TX}>. In this link to the interactive version, we also demonstrate the ability to dynamically rescale axes when a new query is triggered. The middle and right panel display the same data, but use different scaling: the middle panel reflects the 'global' range (US) while the right panel reflects the 'local' range (Arkansas). Futhermore, when an axis update is triggered, it smoothly transitions from one state to next (preserving object constancy in the axis ticks). This helps the viewer better perceive/understand how the range has changed from one state to the next."}
-knitr::include_graphics("images/figure-tornado")
-```
-
-```{r climate, echo = FALSE, eval = TRUE, fig.cap = "Visualization containing 6 linked, interactive, animated plots of Central American climate data. Top: for the selected time (December 1997), maps displaying the spatial distribution of two temperature variables, and a scatterplot of these two variables. The selected region is displayed with a black outline, and can be changed by clicking a rect on the map or a point on the scatterplot. Bottom: time series of the two temperature variables with the selected region shown in violet, and a scatterplot of all times for that region. The selected time can be changed by clicking a background tallrect on a time series or a point on the scatterplot. The selected region can be changed by clicking a line on a time series."}
-knitr::include_graphics("images/figure-climate")
-```
-
-The compiler scans the aesthetics in the ggplots to determine
-how many selection variables are present, and which geoms to update
-after a selection variable is updated. It uses **ggplot2** to
-automatically calculate the axes scales, legends, labels, backgrounds,
-and borders. It outputs this information to the JSON plot meta-data
-file.
-
-The compiler also uses **ggplot2** to convert data variables (e.g. life
-expectancy and region) to visual properties (e.g. y position and
-color). The data for each layer/geom are saved in several TSV files,
-one for each combination `showSelected` values. Thus for large data
-sets, the web browser only needs to download the subset of data
-required to render the current selection [@2013-immens].
-
-When repeated data would be saved in each of the TSV files, an extra
-common TSV file is created so that the repeated data only need to be
-stored and downloaded once. In that case, the other TSV files do not
-store the common data, but are merged with the common data after
-downloading. This method for constructing the TSV file database was
-developed to minimize the disk usage of **animint**, particularly
-for ggplots of spatial maps as in Figure \@ref(fig:tornado).
-
-Finally, the rendering engine (`index.html`, `d3.v3.js`,
-and `animint.js` files) is copied to the plot directory. The
-`animint.js` renderer is implemented in about 2200 lines of
-JavaScript/D3 code that renders the TSV and JSON data files as SVG in
-a web browser. Importantly, animation is achieved by using the
-JavaScript `setInterval()` function, which updates the
-`time` selection variable every few seconds. Since the compiled
-plot is just a directory of files, the interactive plots can be hosted
-on any web server. The interactive plots can be viewed by opening the
-`index.html` page in any modern web browser.
-
-Our current implementation of **animint** depends on a fork of **ggplot2**\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
+As shown in Figure \@ref(fig:design), the **animint** system is
+implemented in 2 parts: the compiler and the renderer. The compiler is
+implemented in R code that converts a list of ggplots and options to a
+JSON plot meta-data file and a tab-separated values (TSV) file
+database. The renderer consists of HTML and JavaScript files, which
+can be easily hosted along with the TSV and JSON files on any web
+server. The interactive plots can be viewed by opening the
+`index.html` page in any modern web browser. Note that our current
+implementation of **animint** depends on a fork of
+**ggplot2**\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
-interactive rendering on web pages.
+interactive rendering on web pages. Additional implementation details
+are available in the supplementary materials.
+
 
 # Exploring performance & scope with examples {#performance}
 
 This section attempts to demonstrate the range of visualizations that 
 are supported by **animint** with more examples. 
+
+## Tornadoes in the United States 
+
 Figure \@ref(fig:tornado) depicts an interactive animation with data from 
 all US tornadoes from 1950 to 2012, but graphical queries restrict focus to 
 tornado paths from 1982 and tornado counts within the state of Texas. 
@@ -643,6 +580,16 @@ distribution of tornado paths for that year, and (3) press play to animate
 the paths throughout time. These interactive techniques can be useful for 
 discovering unusual patterns or even help to suggest a reasonable model for 
 describing/predicting tornado paths.
+
+```{r tornado, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of US tornadoes from 1950 to 2012. This diagram depicts a scenario where the user queried Texas (by clicking the map), and the year 1982 (by clicking the bar chart).  In addition to the graphical elements being (automatically) highlighted as a visual clue of what query is being made, this visualization includes dynamic labels reflecting the query. Particular queries may also be stored and shared via a URL, for example: <https://bl.ocks.org/faizan-khan-iit/raw/b3912f21ec2750f96e8d1bd4b66463b2/#year={1982}state={TX}>. In this link to the interactive version, we also demonstrate the ability to dynamically rescale axes when a new query is triggered. The middle and right panel display the same data, but use different scaling: the middle panel reflects the 'global' range (US) while the right panel reflects the 'local' range (Arkansas). Futhermore, when an axis update is triggered, it smoothly transitions from one state to next (preserving object constancy in the axis ticks). This helps the viewer better perceive/understand how the range has changed from one state to the next."}
+knitr::include_graphics("images/figure-tornado")
+```
+
+## Central American Climate data
+
+```{r climate, echo = FALSE, eval = TRUE, fig.cap = "Visualization containing 6 linked, interactive, animated plots of Central American climate data. Top: for the selected time (December 1997), maps displaying the spatial distribution of two temperature variables, and a scatterplot of these two variables. The selected region is displayed with a black outline, and can be changed by clicking a rect on the map or a point on the scatterplot. Bottom: time series of the two temperature variables with the selected region shown in violet, and a scatterplot of all times for that region. The selected time can be changed by clicking a background tallrect on a time series or a point on the scatterplot. The selected region can be changed by clicking a line on a time series."}
+knitr::include_graphics("images/figure-climate")
+```
 
 Figure \@ref(fig:climate) depicts an interactive animation of climate
 time series data observed in Central America. Two maps display the
