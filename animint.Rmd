@@ -7,7 +7,7 @@ linkcolor: cyan
 citecolor: black
 bibliography: refs.bib
 abstract: Interactive web graphics are great for communication and knowledge sharing, but are difficult to leverage during the exploratory phase of a data science workflow. Even before the web, interactive graphics helped data analysts quickly gather insight from data, discover the unexpected, and develop better model diagnostics. Web technologies, however, are not designed to fit inside an exploratory data analysis workflow where rapid iteration between data manipulation, modeling, and visualization must occur. We propose the R package **animint** for rapid creation of linked and animated web graphics through a simple extension of **ggplot2**'s implementation of the Grammar of Graphics. The extension allows users to use their existing **ggplot2** code, then leverage an idomatic API for describing animations and graphical queries between multiple linked views.
-keywords: Animation, Linked Views, Statistical graphics, Exploratory data analysis, Web technologies
+keywords: Animation, Multiple linked views, Statistical graphics, Exploratory data analysis, Web technologies
 output:
   bookdown::pdf_book:
     template: jcgs-template.tex
@@ -15,6 +15,7 @@ output:
     keep_tex: yes
     citation_package: none
 ---
+
 
 # Introduction {#intro}
 
@@ -46,8 +47,23 @@ knitr::knit_theme$set("edit-matlab")
 %%The R package \texttt{ggplot2} is a popular tool for data visualization due in part to its elegant design inspired by the grammar of graphics. The fundamental concept in the grammar of graphics is that any graphic can be described through a set of mappings from data variables to visual space, referred to commonly as \texttt{aesthetic} mappings. The grammar of graphics and ggplot2 were designed for static graphics
 -->
 
+For more than a half century now, statisticians have explored how interactive
+graphics can inform the modeling process and extract information from data.
+In fact, the ASA maintains a thorough video library demonstrating applications
+of influential interactive statistical graphics systems such as 
+`PRIM-9` [@PRIM9], `Dataviewer` [@viewing-pipeline], `XGobi` [@xgobi], 
+`GGobi` [@ggobi:2007], and `Mondrian` [@mondrian]. These, as well as other 
+influential systems, such as `LISP-STAT` [@LISP-STAT] and `MANET` [@MANET], 
+all have a rich environment for accomplishing a wide variety of statistical 
+analysis tasks, and most were developed before the web browser had rich 
+support for graphics.
+
+
+@Cook:2007uk 
+
+
 Interactive graphics are an important part of applied statistical
-practice, because they can help provide a better understanding of
+practice, because they can lead to a better understanding of
 high-dimensional data sets and models. Interactive graphics are useful
 in the context of EDA, model selection/validation, and presenting
 results of an analysis. Interactive graphics toolkits in R have been
@@ -263,8 +279,8 @@ A single **ggplot2** plot can be comprised of multiple layers, and different lay
 can correspond to different data. Since each graphical mark within a **ggplot2** 
 layer corresponds to one (or more) observations in `<DATA>`, aesthetic
 mappings provide a mechanism for mapping graphical selections to the original 
-data (and vice-versa) which is essential to any interactive graphics system
-[@viewing-pipeline] [@plumbing]. Thus, given a way to combine multiple 
+data (and vice-versa) which is essential to any interactive graphics system [@plumbing]. 
+Thus, given a way to combine multiple 
 **ggplot2** plots into a single view, this design can be extended to support a 
 notion of multiple linked views, as those discussed in @Ahlberg:1991 
 and @Buja:1991vh.
@@ -546,7 +562,7 @@ plot meta-data file and a tab-separated values (TSV) file database.
 ## Implementation details
 
 ```{r design, echo = FALSE, eval = TRUE, fig.cap = "A schematic explanation of compilation and rendering in the World Bank visualization. Top: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. Center: **animint** R code compiles data in ggplot geoms to a database of TSV files (\\textcolor{red}{$\\rightarrowtriangle$}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\\rightarrowtriangle$). Bottom: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\\textcolor{blue}{$\\rightarrowtriangle$})."}
-knitr::include_graphics("images/figure-design")
+knitr::include_graphics("images/figure-design.pdf")
 ```
 
 As shown in Figure \@ref(fig:design), the **animint** system is
