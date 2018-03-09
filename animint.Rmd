@@ -648,7 +648,7 @@ The left plot is a map which shows state borders using a polygon with
 semi-transparency, and other states can be selected by clicking
 them. The state map plot uses geoms with `showSelected=year` to show
 tornado paths (segment geom) and endpoints (point geom) for the
-currently selected year (which is emphasized with a text geom). 
+currently selected year (which is emphasized with a text geom above the map). 
 
 The right plot uses several geoms to show details for the currently
 selected state and year. A bar geom shows a time series of tornado
@@ -668,22 +668,40 @@ paths.
 knitr::include_graphics("images/figure-tornado")
 ```
 
-## Central American Climate data
+## Central American climate data
 
 ```{r climate, echo = FALSE, eval = TRUE, fig.cap = "Visualization containing 6 linked, interactive, animated plots of Central American climate data. Top: for the selected time (December 1997), maps displaying the spatial distribution of two temperature variables, and a scatterplot of these two variables. The selected region is displayed with a black outline, and can be changed by clicking a rect on the map or a point on the scatterplot. Bottom: time series of the two temperature variables with the selected region shown in violet, and a scatterplot of all times for that region. The selected time can be changed by clicking a background tallrect on a time series or a point on the scatterplot. The selected region can be changed by clicking a line on a time series."}
 knitr::include_graphics("images/figure-climate")
 ```
 
-Figure \@ref(fig:climate) depicts an interactive animation of climate
-time series data observed in Central America. Two maps display the
-spatial distribution of sea surface temperature as well as its deviation 
-from its monthly norm. Conditioning on a particular cell/region
-highlights that region's corresponding time series below the map, 
-allowing one to assess whether a particularly
-low/high value at one time point remains so over time. Scatterplots
-also show the relationships between the two temperature variables for
-the selected time and region, allowing us to further examine how unusual
-a particular query is with respect to both time and space.
+A more complex map data visualization example is shown in Figure
+\@ref(fig:climate), which depicts climate time series data observed in
+Central America. There are two interaction variables, `time` and `region`. 
+
+Two maps in the upper right display borders of
+the countries in and near Central America. Unlike the previous
+example with US states, the country borders are static (clicking has no effect). For the currently
+selected time, rect geoms with `showSelected=time` show the spatial distribution of sea surface temperature as
+well as its deviation from the monthly norm. Since `clickSelects=region` is specified, 
+clicking a rect changes the currently selected region, 
+which is emphasized with a black border. 
+These plots facilitate visualization of the spatial distribution of the climate variables,
+and how they change over time.n
+
+The plots below the maps use lines to show time series of the climate variables. 
+Since `clickSelects=region` is specified, 
+clicking a line changes the currently selected region, 
+which is emphasized with a purple color. 
+A semi-transparent tallrect shows the currently selected time;
+other tallrects can be clicked to update the time (`clickSelects=time`).
+These plots make it easy to select different times and regions, 
+and to make comparisons between times and regions.
+
+Scatterplots on the right use `showSelected` variables with point and text geoms,
+to show the joint distribution of the two
+temperature variables for the selected time (top) and region (bottom). 
+The plots use `clickSelects` to emphasize the currently selected region (top) and time (bottom), 
+and are useful for visualizing normality and outliers in the joint distribution.
 
 # Comparison study {#compare}
 
