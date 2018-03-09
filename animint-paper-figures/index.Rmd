@@ -288,7 +288,7 @@ structure(viz, class="animint")
   variables, with the currently selected month shown as a grey
   vertical bar. Clicking the background changes the currently selected
   month, and clicking a line changes the currently selected region.
-* Stand-alone figure: http://members.cbio.mines-paristech.fr/~thocking/climate-anim/
+* Stand-alone figure with purple used to show the selected region: http://members.cbio.mines-paristech.fr/~thocking/climate-anim/
 
 ## Tour example
 

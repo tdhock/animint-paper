@@ -410,14 +410,13 @@ graphics}\label{extending-the-layered-grammar-of-graphics}}
 
 In this section, we describe in detail our extension of
 \textbf{ggplot2}'s layered grammar of graphics implementation (Wickham
-2010). Our extensions enable declarative expression of animations and
-dynamic queries via direct manipulation. In \textbf{ggplot2}, there are
-five essential components that define a layer of graphical makings:
-data, mappings (i.e., aesthetics), geometry, statistic, and position.
-These simple components are easily understood in isolation and can be
-combined in many ways to express a wide array of graphics. For a simple
-example, here is one way to create a scatterplot in \textbf{ggplot2} of
-variables named \texttt{\textless{}X\textgreater{}} and
+2010). In \textbf{ggplot2}, there are five essential components that
+define a layer of graphical makings: data, mappings (i.e., aesthetics),
+geometry, statistic, and position. These simple components are easy to
+understand in isolation and can be combined in many ways to express a
+wide array of graphics. For a simple example, here is one way to create
+a scatterplot in \textbf{ggplot2} of variables named
+\texttt{\textless{}X\textgreater{}} and
 \texttt{\textless{}Y\textgreater{}} in
 \texttt{\textless{}DATA\textgreater{}}:
 
@@ -475,29 +474,33 @@ D. Cook and Swayne (2007) use SQL queries to formalize the direct
 manipulation methods discussed in Ahlberg, Williamson, and Shneiderman
 (1991) and Buja et al. (1991). We propose to embed this direct
 manipulation framework inside the layered grammar of graphics with two
-new aesthetics, \texttt{clickSelects} and \texttt{showSelected}.
+new aesthetics, \texttt{clickSelects} and \texttt{showSelected}. We
+introduce their usage using the simple example shown in
+Figure\textasciitilde{}1:
 
 \begin{itemize}
 \tightlist
 \item
   \texttt{clickSelects} defines a selection source via a mouse click.
-  For example \texttt{aes(clickSelects=year)} designates a plot element
-  which, when clicked, will change the selected value of the
-  \texttt{year} variable.
+  For example \texttt{aes(clickSelects=smoker)} designates a plot
+  element which, when clicked, will change the selected value of the
+  \texttt{smoker} variable.
 \item
   \texttt{showSelected} defines a selection target. For example
-  \texttt{aes(showSelected=year)} means to only show a plot element for
-  data with the currently selected value of the \texttt{year} variable.
+  \texttt{aes(showSelected=smoker)} means to only show a plot element
+  for data with the currently selected value of the \texttt{smoker}
+  variable.
 \end{itemize}
 
-Below, we use \textbf{animint} to create a linked view between a bar
-chart and a scatter plot, where the user can click on bars to control
-the points shown in the scatterplot
+Below, we show the R code that creates a linked view between a bar chart
+and a scatter plot, where the user can click on bars to control the
+points shown in the scatterplot
 (\ref{fig:tips}).\footnote{Interactive versions of all of the figures
 mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
-As a result, we can quickly see how the relationship among tip amount
-and total bill amount depends on whether the customer is smoker.
+As a result, we can interactively explore how the relationship between
+tip amount and total bill amount depends on whether the customer is
+smoker.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -514,8 +517,8 @@ and total bill amount depends on whether the customer is smoker.
 \begin{figure}
 \centering
 \includegraphics{images/figure-tips}
-\caption{\label{fig:tips}Linked dynamic querying via direct manipulation
-using animint. Left: the \texttt{clickSelects} aesthetic designates a
+\caption{\label{fig:tips}Linked dynamic querying of tips data set via direct
+manipulation. Left: the \texttt{clickSelects} aesthetic designates a
 clickable geom bar that can change a selection variable. Right: the
 \texttt{showSelected} aesthetic designates a geom point that responds by
 showing only the data which corresponds to the current selection.}
@@ -562,17 +565,17 @@ or animation controls.
 \hypertarget{worldbank}{%
 \subsection{World Bank example}\label{worldbank}}
 
-Figure \ref{fig:worldbank} shows an interactive animation of the World
-Bank data set created with our \textbf{animint} implementation (World
-Bank 2012). The visualization helps us explore the change in the
-relationship between life expectancy and fertility over time for 205
-countries. By default, the year 1979 and the countries United States and
-Vietnam are selected, but readers are encouraged to watch the video of
-the animation and/or interact the visualization using a web browser. In
-the interactive version, the selected value of the year variable is
-automatically incremented every few seconds, using animation to
-visualize yearly changes in the relationship between life expectancy and
-fertility rate.
+We will use a visualization of the World Bank data set to explain how
+the features we propose generalize to multi-layer plots (Figure
+\ref{fig:worldbank}). The visualization allows interactive exploration
+of the relationship between life expectancy and fertility over time for
+205 countries. In this paper, the year 1979 and the countries United
+States and Vietnam are selected, but readers are encouraged to change
+the selection by clicking on the interactive version, which is provided
+in the supplementary materials. In the interactive version, the selected
+value of the year variable is automatically incremented every few
+seconds, using animation to visualize yearly changes in the relationship
+between life expectancy and fertility rate.
 
 \begin{figure}
 \centering
@@ -589,17 +592,17 @@ Vietnam\}, and region=\{East Asia \& Pacific, North America\}}
 \end{figure}
 
 We anticipate that some \textbf{ggplot2} users will be able to reverse
-engineer the \textbf{animint} code which creates Figure
-\ref{fig:worldbank}, simply by looking at it. In fact, this is a big
-reason why \textbf{ggplot2} is so widely used: it helps minimize the
-amount of time required to translate an idea for a figure into computer
-code. Note that, in the left hand plot of Figure \ref{fig:worldbank}, we
-have a time series of the life expectancy where each line is a country
-(i.e., we \texttt{group} by country) and lines are colored by region. By
-clicking on a line, we also want the country label to appear in the
-right hand plot, so we also need to set \texttt{clickSelects=country}.
-Lastly, by setting \texttt{showSelected=region}, we can hide/show lines
-by clicking on the color legend entries.
+engineer the code which creates Figure \ref{fig:worldbank}, simply by
+looking at it. In fact, this is a big reason why \textbf{ggplot2} is so
+widely used: it helps minimize the amount of time required to translate
+an idea for a figure into computer code. Note that, in the left hand
+plot of Figure \ref{fig:worldbank}, we have a time series of the life
+expectancy where each line is a country (i.e., we \texttt{group} by
+country) and lines are colored by region. By clicking on a line, we also
+want the country label to appear in the right hand plot, so we also need
+to set \texttt{clickSelects=country}. Lastly, by setting
+\texttt{showSelected=region}, we can hide/show lines by clicking on the
+color legend entries.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -701,28 +704,48 @@ we add another layer of text at a fixed location.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{animation}{%
-\subsection{Linking, animation and other options}\label{animation}}
+In summary, this section shows an example of how the proposed
+\texttt{clickSelects} and \texttt{showSelected} aesthetics can be used
+with several different geoms (line, point, text, tallrect), each of
+which can potentially display a different data set. In each case we use
+\texttt{clickSelects} to declare a geom for which clicking changes the
+value of a selection variable, and we use \texttt{showSelected} to
+declare a geom which responds to such changes by updating the set of
+displayed data. In the next sections, we further explain how to link
+ggplots and add animation.
 
-Linking is declared by putting ggplots with common \texttt{clickSelects}
-and \texttt{showSelected} aesthetics together in a list. For example, we
-can link the ggplots from the previous section by including them
-together as the first two elements of the following list:
+\hypertarget{linking}{%
+\subsection{Linking and multiple selection}\label{linking}}
+
+Linking is declared in R code by putting ggplots with common
+\texttt{clickSelects} and \texttt{showSelected} aesthetics together in a
+list. For example, we can link the ggplots from the previous section by
+including them together in the following list:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{viz <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}
   \DataTypeTok{timeSeries =}\NormalTok{ timeSeries,}
   \DataTypeTok{scatterPlot =}\NormalTok{ scatterPlot}
-\NormalTok{  )}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-Note that the animint \texttt{viz} list above can also contain rendering
+Linking is accomplished because the two ggplots declared
+\texttt{clickSelects} and \texttt{showSelected} aesthetics that refer to
+common variable names (\texttt{region}, \texttt{year},
+\texttt{country}). For each such selection variable, our interactive
+renderer updates the set of selected values in response to mouse clicks
+on \texttt{clickSelects} geoms, and then updates the corresponding data
+which is displayed for \texttt{showSelected} geoms.
+
+Note that the \texttt{viz} list above can also contain rendering
 options, as we discuss below (see Table\textasciitilde{}1 for a summary
-of new interactive features in \textbf{animint}). For example, the
+of proposed interactive features). For example, the
 \texttt{selector.types} option controls whether or not selections for a
-given variable can accumulate (single or multiple selected values).
+given variable can accumulate (single or multiple selected values). This
+difference is also sometimes referred to as transient versus persistent
+selection (D. Cook and Swayne 2007).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -743,16 +766,8 @@ selected values at a time (clicking a geom with
 \texttt{clickSelects=country} will add/remove that country to/from the
 selection set).
 
-Another example is the \texttt{first} option, which controls selected
-values when the visualization is first rendered. The code below declares
-that the first selection of the \texttt{country} variable is the set of
-two countries, United States and Vietnam.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{viz}\OperatorTok{$}\NormalTok{first <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{country =} \KeywordTok{c}\NormalTok{(}\StringTok{"United States"}\NormalTok{, }\StringTok{"Vietnam"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
+\hypertarget{animation}{%
+\subsection{Animation and smooth transitions}\label{animation}}
 
 Animation is declared using the \texttt{time} option, which specifies a
 selection variable which will be automatically updated over time, as
@@ -793,13 +808,15 @@ the World Bank example, we would need to specify
 \hypertarget{compiling-and-rendering}{%
 \subsection{Compiling and rendering}\label{compiling-and-rendering}}
 
-Supplying the \texttt{viz} list of ggplots and rendering options to the
-\texttt{animint2dir()} function will save all the files necessary for
-rendering the visualization:
+We have implemented the \textbf{animint} R package which enables viewing
+the linked interactive ggplots that we proposed in the previous
+sections. Supplying the \texttt{viz} list of ggplots and rendering
+options to the \texttt{animint2dir()} function will save all the files
+necessary for rendering the visualization:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{animint2dir}\NormalTok{(viz)}
+\NormalTok{animint}\OperatorTok{::}\KeywordTok{animint2dir}\NormalTok{(viz)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -821,21 +838,41 @@ are available in the supplementary materials.
 \section{Exploring scope with examples}\label{performance}}
 
 This section attempts to demonstrate the range of visualizations that
-are supported by \textbf{animint} with more examples.
+are supported by the system we propose. In particular because of its
+support for interaction and animation, it excels at display of
+interactive maps with time-varying data. We give two such examples
+below.
 
 \hypertarget{tornadoes-in-the-united-states}{%
 \subsection{Tornadoes in the United
 States}\label{tornadoes-in-the-united-states}}
 
-Figure \ref{fig:tornado} depicts an interactive animation with data from
-all US tornadoes from 1950 to 2012, but graphical queries restrict focus
-to tornado paths from 1982 and tornado counts within the state of Texas.
-In the interactive version, one may (1) click on any state to view its
-tornado counts throughout the years, (2) click on any bar to view the
-spatial distribution of tornado paths for that year, and (3) press play
-to animate the paths throughout time. These interactive techniques can
-be useful for discovering unusual patterns or even help to suggest a
-reasonable model for describing/predicting tornado paths.
+One of the strong points of the system we propose is display of
+multi-layer plots such as maps with time-varying data. For example,
+Figure \ref{fig:tornado} shows a visualization of US tornado data from
+1950 to 2012. This data visualization consists of two multi-layer plots
+with two interaction variables, \texttt{year}, and \texttt{state}.
+
+The left plot is a map which shows state borders using a polygon with
+\texttt{clickSelects=state}. The currently selected state is shown using
+semi-transparency, and other states can be selected by clicking them.
+The state map plot uses geoms with \texttt{showSelected=year} to show
+tornado paths (segment geom) and endpoints (point geom) for the
+currently selected year (which is emphasized with a text geom above the
+map).
+
+The right plot uses several geoms to show details for the currently
+selected state and year. A bar geom shows a time series of tornado
+counts for the selected state (\texttt{showSelected=state}), which can
+be clicked to change the currently selected year
+(\texttt{clickSelects=year}). A text geom at the top of the plot shows
+the currently selected state (\texttt{showSelected=state}), and a text
+geom at the bottom emphasizes the tornado count for the selected year
+(using \texttt{showSelected} variables for both \texttt{state} and
+\texttt{year}).
+
+These interactions can be useful for discovering patterns in the data,
+and for suggesting models that can describe or predict tornado paths.
 
 \begin{figure}
 \centering
@@ -843,13 +880,13 @@ reasonable model for describing/predicting tornado paths.
 \caption{\label{fig:tornado}Interactive animation of US tornadoes from 1950
 to 2012. This diagram depicts a scenario where the user queried Texas
 (by clicking the map), and the year 1982 (by clicking the bar chart). In
-addition to the graphical elements being (automatically) highlighted as
-a visual clue of what query is being made, this visualization includes
-dynamic labels reflecting the query.}
+addition to the graphical elements being highlighted as a visual clue of
+what query is being made, this visualization includes dynamic text
+labels reflecting the query.}
 \end{figure}
 
 \hypertarget{central-american-climate-data}{%
-\subsection{Central American Climate
+\subsection{Central American climate
 data}\label{central-american-climate-data}}
 
 \begin{figure}
@@ -868,16 +905,37 @@ or a point on the scatterplot. The selected region can be changed by
 clicking a line on a time series.}
 \end{figure}
 
-Figure \ref{fig:climate} depicts an interactive animation of climate
-time series data observed in Central America. Two maps display the
-spatial distribution of sea surface temperature as well as its deviation
-from its monthly norm. Conditioning on a particular cell/region
-highlights that region's corresponding time series below the map,
-allowing one to assess whether a particularly low/high value at one time
-point remains so over time. Scatterplots also show the relationships
-between the two temperature variables for the selected time and region,
-allowing us to further examine how unusual a particular query is with
-respect to both time and space.
+A more complex map data visualization example is shown in Figure
+\ref{fig:climate}, which depicts climate time series data observed in
+Central America. There are two interaction variables, \texttt{time} and
+\texttt{region}.
+
+Two maps in the upper right display borders of the countries in and near
+Central America. Unlike the previous example with US states, the country
+borders are static (clicking has no effect). For the currently selected
+time, rect geoms with \texttt{showSelected=time} show the spatial
+distribution of sea surface temperature as well as its deviation from
+the monthly norm. Since \texttt{clickSelects=region} is specified,
+clicking a rect changes the currently selected region, which is
+emphasized with a black border. These plots facilitate visualization of
+the spatial distribution of the climate variables, and how they change
+over time.n
+
+The plots below the maps use lines to show time series of the climate
+variables. Since \texttt{clickSelects=region} is specified, clicking a
+line changes the currently selected region, which is emphasized with a
+purple color. A semi-transparent tallrect shows the currently selected
+time; other tallrects can be clicked to update the time
+(\texttt{clickSelects=time}). These plots make it easy to select
+different times and regions, and to make comparisons between times and
+regions.
+
+Scatterplots on the right use \texttt{showSelected} variables with point
+and text geoms, to show the joint distribution of the two temperature
+variables for the selected time (top) and region (bottom). The plots use
+\texttt{clickSelects} to emphasize the currently selected region (top)
+and time (bottom), and are useful for visualizing normality and outliers
+in the joint distribution.
 
 \hypertarget{compare}{%
 \section{Comparison study}\label{compare}}
@@ -1235,10 +1293,6 @@ Projections,'' April, 1--18.
 Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike
 Hofmann, and Deborah F Swayne. 2010. ``The Plumbing of Interactive
 Graphics.'' \emph{Computational Statistics}, April, 1--7.
-
-\leavevmode\hypertarget{ref-WorldBank}{}%
-World Bank. 2012. ``World Development Indicators.''
-\url{http://data.worldbank.org/data-catalog/world-development-indicators}.
 
 \leavevmode\hypertarget{ref-animation}{}%
 Xie, Yihui. 2013. ``animation: An R Package for Creating Animations and
