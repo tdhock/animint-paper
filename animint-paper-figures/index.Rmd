@@ -16,30 +16,31 @@ Each section below contains
 * A rendering of the interactive figure.
 * Instructions about how to interpret and interact with the figure.
 
-## Smoker figure
-
-```{r smoker-viz}
-options(width=200)
-knitr::opts_chunk$set(message=FALSE)
-library(animint)
-smoker.viz <- list(
-  bar = ggplot() + geom_bar(
-    data = reshape2::tips,
-    aes(x = smoker, clickSelects = smoker)
-    ),
-  scatter = ggplot() + geom_point(
-    data = reshape2::tips,
-    aes(x =  total_bill, y = tip,
-        showSelected = smoker)
-    )
-  )
-structure(smoker.viz, class="animint")
+```{r, include = FALSE}
+options(width = 200)
+knitr::opts_chunk$set(
+  message = FALSE,
+  comment = "#>",
+  collapse = TRUE
+)
 ```
 
-* Click the bars in the left plot above to select smoker status (either Yes or No).
+## Tips figure
+
+```{r tips}
+library(animint)
+data(tips, package = "reshape2")
+bar <- ggplot(tips) + 
+  geom_bar(aes(x = sex, clickSelects = sex))
+scatter <- ggplot(tips) +
+  geom_point(aes(x = total_bill, y = tip), alpha = 0.3) +
+  geom_point(aes(x = total_bill, y = tip, showSelected = sex))
+structure(list(bar = bar, scatter = scatter), class = "animint")
+```
+
+* Click the bars in the left plot to change the selection.
 * The plot on the right shows the subset of data corresponding to the
   currently selected smoker status.
-* Video https://vimeo.com/160496419
 
 ## World Bank figure
 
