@@ -97,7 +97,6 @@ plot meta-data file and a tab-separated values (TSV) file database.
 knitr::include_graphics("images/figure-design")
 ```
 
-
 The compiler scans the aesthetics in the ggplots to determine
 how many selection variables are present, and which geoms to update
 after a selection variable is updated. It uses **ggplot2** to
@@ -134,6 +133,17 @@ on any web server. The interactive plots can be viewed by opening the
 Our current implementation of **animint** depends on a fork of **ggplot2**\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages.
+
+## Other rendering options
+
+The `first` option controls selected values
+when the visualization is first rendered. The code below declares that
+the first selection of the `country` variable is the set of two
+countries, United States and Vietnam.
+
+```{r}
+viz$first = list(country = c("United States", "Vietnam"))
+```
 
 ## Caption of Tornadoes figure
 
