@@ -289,6 +289,13 @@ structure(viz, class="animint")
   month, and clicking a line changes the currently selected region.
 * Stand-alone figure: http://members.cbio.mines-paristech.fr/~thocking/climate-anim/
 
+## Tour example
+
+<https://gist.github.com/cpsievert/f154e4cd807b99789417>
+
+```{r}
+```
+
 ## Additional interactive figures 
 
 * A demonstration of using animint inside a shiny app is mentioned in

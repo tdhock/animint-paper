@@ -89,7 +89,8 @@ in addition to client-server communication.
 * Make an argument that we need more R -> HTML interfaces that don't require
 a callback to R.
 
-@Cook:2007uk taxonomy motivated by data analysis tasks
+* Frame our extension within @Cook:2007uk taxonomy which is motivated 
+by data analysis tasks
 
 
 Interactive graphics are an important part of applied statistical
