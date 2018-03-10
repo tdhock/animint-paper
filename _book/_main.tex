@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
-            pdftitle={Extending ggplot2 for linked and animated web graphics on the client},
+            pdftitle={Extending ggplot2 for linked and animated web graphics},
             pdfkeywords={Animation, Multiple linked views, Statistical graphics, Exploratory data
 analysis, Web technologies},
             colorlinks=true,
@@ -133,7 +133,7 @@ analysis, Web technologies},
 \def\spacingset#1{\renewcommand{\baselinestretch}%
 {#1}\small\normalsize} \spacingset{1}
 
-\title{\bf Extending ggplot2 for linked and animated web graphics on the client}
+\title{\bf Extending ggplot2 for linked and animated web graphics}
 \author{
   Carson Sievert \\ 
   Department of Statistics, Iowa State University \\
@@ -189,7 +189,7 @@ better informing their modeling process. In fact, the ASA maintains a
 video library (\url{http://stat-graphics.org/movies/}) to document and
 demonstrate applications of instrumental interactive statistical
 graphics systems such as \texttt{PRIM-9} (Fisherkeller and Tukey 1988),
-\texttt{Dataviewer} (Andreas Buja and McDonald 1988), \texttt{XGobi}
+\texttt{Data\ Viewer} (Andreas Buja and McDonald 1988), \texttt{XGobi}
 (Swayne and Buja 1998), \texttt{GGobi} (D. Cook and Swayne 2007), and
 \texttt{Mondrian} (Theus 2002). These, as well as other influential
 systems, such as \texttt{LISP-STAT} (Tierney 1990) and \texttt{MANET}
@@ -205,15 +205,15 @@ graphics. These requirements grant the freedom to leverage libraries
 with sophisticated statistical functionality on-demand, but it limits
 the ability to share or embed such graphics in a larger document. Some
 of these systems allow users to create the graphics from the
-command-line, which allows power users to combine the strengths of a
-programming interface (e.g., precise, repeatable, fast, and extensible)
-with the strengths of a graphical interface (e.g., intuitive, forgiving,
-and easy-to-use) (Unwin and Hofmann 2009). Web technologies can
-certainly be used to build a similar class of system, but in order to
-capitalize on the key strength of web technologies (e.g., accessible,
-portable, and composable), we should be more mindful about what
-technologies are actually required to accomplish a particular set of
-data analysis tasks.
+command-line, which as Unwin and Hofmann (2009) points out, allows power
+users to combine the strengths of a programming interface (e.g.,
+precise, repeatable, fast, and extensible) with the strengths of a
+graphical interface (e.g., intuitive, forgiving, and easy-to-use). Web
+technologies can certainly be used to build a similar class of system,
+but in order to capitalize on the key strength of web technologies
+(e.g., accessible, portable, and composable), we must be mindful if
+which technologies we're requiring in such a system, and minimize thosee
+requirements whenever possible.
 
 Generally speaking, web graphics that use purely client-side
 technologies (i.e., \texttt{HTML}, \texttt{SVG}, \texttt{CSS}, and
@@ -240,16 +240,17 @@ framework is used to implement linked and animated graphics that could
 more easily be described with an idiomatic R interface which produces a
 purely client-side result.
 
-There are now a large number of R packages that interface to purely
+There are now a large number of R packages that interface with purely
 client-side graphing libraries and give users the option of embedding
-these graphics in a larger web application, if need be. In fact, this is
-a large enough use case that the R package \textbf{htmlwidgets}
-(Vaidyanathan et al. 2018) was created to make it easier to get these
-interfaces to work seamlessly in any context (e.g., \textbf{shiny},
-\textbf{rmarkdown}, RStudio, R prompt, Jupyter notebook, etc). In our
-experience, these R packages rarely provide a way to describe linked
-views in R and produce a purely client-side result, which we view as a
-powerful workflow for ``production-ready'' exploratory web graphics.
+these graphics in a larger web application. In fact, this is a large
+enough use case that the R package \textbf{htmlwidgets} (Vaidyanathan et
+al. 2018) was created to make it easier to get these interfaces to work
+seamlessly in any context (e.g., \textbf{shiny}, \textbf{rmarkdown},
+RStudio, R prompt, Jupyter notebook, etc). In our experience, these R
+packages rarely provide a way to describe linked views in R and produce
+a purely client-side result, which we view as a powerful workflow for
+``production-ready'' exploratory web graphics. The R package
+\textbf{crosstalk} is a nice step in this direction
 
 We propose an extension of \textbf{ggplot2}'s layered Grammar of
 Graphics API to create interactive web graphics that don't require
@@ -263,18 +264,18 @@ for mapping data to visual attributes (e.g., color, shape, x, y, etc).
 Typically aesthetic mappings are visual, meaning they can be easily seen
 in a static graphic, but our proposed variable mappings are more
 conceptual, meaning that they can't easily be seen, but can be used to
-control certain interactive properties. To give a small example,
-Figure\textasciitilde{}\ref{fig:tips} depicts a graphical query made by
-assigning sensible metadata to graphical marks via the
-\texttt{clickSelects} and \texttt{showSelected} aesthetics.
+control certain interactive properties. To give a small example, Figure
+\ref{fig:tips} depicts a graphical query made by assigning sensible
+metadata to graphical marks via the \texttt{clickSelects} and
+\texttt{showSelected} aesthetics.
 
 In addition to graphical queries, our extension supports a number of
 other interactive features, including animation, tooltips, and
 hyperlinks. A summary of these extensions and relevant additional
-options are provided in Table\textasciitilde{}\ref{tab:overview}. There
-are a number of other options that can be used to control things
-specific to our implementation in the R package \textbf{animint} which
-is described in the supplemental materials.
+options are provided in Table \ref{tab:overview}. There are a number of
+other options that can be used to control things specific to our
+implementation in the R package \textbf{animint} which is described in
+the supplemental materials.
 
 \begin{table}
 
@@ -458,49 +459,38 @@ discussed in Ahlberg, Williamson, and Shneiderman (1991) and Buja et al.
 (1991).
 
 \hypertarget{extension}{%
-\subsection{Direct manipulation of dynamic queries}\label{extension}}
+\subsection{Linking views via aesthetic mappings}\label{extension}}
 
-Direct manipulation, as discussed in Ahlberg, Williamson, and
-Shneiderman (1991), is a graphical interface for interacting with
-databases. Direct manipulation interfaces include a graphical
-representation of queries to the database, which can be manipulated
-using the mouse. In the context of statistical graphics, direct
-manipulation refers to interfaces in which clicking the plotted
-representation of the data (such as lines or points) changes the plot.
-In contrast, indirect manipulation interfaces use widgets (such as
-buttons or menus) to change the plot.
+D. Cook and Swayne (2007) use \texttt{SQL} queries to formalize the
+linked views infrastructure discussed in Ahlberg, Williamson, and
+Shneiderman (1991) and Buja et al. (1991). We use a similar approach to
+show how aesthetic mappings can be used to assign data values to
+graphical marks via \textbf{ggplot2} to support similar graphical
+queries. It's worth noting that, since these aesthetics effectively
+define a set of database queries that are known at print time, these
+queries can be made by directly manipulating graphical marks and/or
+indirectly via a dropdown widget, as discussed in Section
+\ref{direction}. It's also worth noting that these aesthetics could be
+defined in such a way that they are not solely restricted to any
+particular user event (e.g.~mouse click), but for sake of demonstration,
+we restrict focus to our \textbf{animint} implementation, which has
+\texttt{clickSelects} and \texttt{showSelected} aesthetics.
 
-D. Cook and Swayne (2007) use SQL queries to formalize the direct
-manipulation methods discussed in Ahlberg, Williamson, and Shneiderman
-(1991) and Buja et al. (1991). We propose to embed this direct
-manipulation framework inside the layered grammar of graphics with two
-new aesthetics, \texttt{clickSelects} and \texttt{showSelected}. We
-introduce their usage using the simple example shown in
-Figure\textasciitilde{}1:
-
-\begin{itemize}
-\tightlist
-\item
-  \texttt{clickSelects} defines a selection source via a mouse click.
-  For example \texttt{aes(clickSelects=smoker)} designates a plot
-  element which, when clicked, will change the selected value of the
-  \texttt{smoker} variable.
-\item
-  \texttt{showSelected} defines a selection target. For example
-  \texttt{aes(showSelected=smoker)} means to only show a plot element
-  for data with the currently selected value of the \texttt{smoker}
-  variable.
-\end{itemize}
-
-Below, we show the R code that creates a linked view between a bar chart
-and a scatter plot, where the user can click on bars to control the
-points shown in the scatterplot
-(\ref{fig:tips}).\footnote{Interactive versions of all of the figures
-mentioned in this paper can be found at
+As demonstrated in Figure \ref{fig:tips}, the \texttt{R} code used to
+generate it, and the corresponding \texttt{SQL} queries,
+\texttt{clickSelects} assigns data to graphical marks, which when
+clicked, sets selection value(s).\footnote{Interactive versions
+of all of the figures mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
-As a result, we can interactively explore how the relationship between
-tip amount and total bill amount depends on whether the customer is
-smoker.
+For this example, we refer to the current set of selection value(s)
+(i.e., the selection set) as \texttt{selected\_sex}. The value of
+\texttt{selected\_sex} can take on any subset of the unique values of
+\texttt{sex}, and in this case, the unique values are \texttt{Male} and
+\texttt{Female}. The selection set, \texttt{selected\_sex}, is then
+matched against graphical marks containing a \texttt{showSelected}
+property. As a result, by clicking on a bar in Figure \ref{fig:tips},
+one may highlight the relationship between \texttt{tip} and
+\texttt{total\_bill} for either gender.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -511,71 +501,67 @@ smoker.
 \NormalTok{scatter <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(tips) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ total_bill, }\DataTypeTok{y =}\NormalTok{ tip), }\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ total_bill, }\DataTypeTok{y =}\NormalTok{ tip, }\DataTypeTok{showSelected =}\NormalTok{ sex))}
+\KeywordTok{animint2dir}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DataTypeTok{bar =}\NormalTok{ bar, }\DataTypeTok{scatter =}\NormalTok{ scatter))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}
 \centering
-\includegraphics{images/figure-tips}
-\caption{\label{fig:tips}Linked dynamic querying of tips data set via direct
-manipulation. Left: the \texttt{clickSelects} aesthetic designates a
-clickable geom bar that can change a selection variable. Right: the
-\texttt{showSelected} aesthetic designates a geom point that responds by
-showing only the data which corresponds to the current selection.}
+\includegraphics{images/tips}
+\caption{\label{fig:tips}A graphical query of tips data set. Left: the
+\texttt{clickSelects} aesthetic designates a clickable geom bar that can
+change a selection variable. Right: the \texttt{showSelected} aesthetic
+designates a geom point that responds by showing only the data which
+corresponds to the current selection.}
 \end{figure}
 
-In the R code above, the proposed \texttt{showSelected} and
-\texttt{clickSelects} aesthetics are used to link the two ggplots, since
-they refer to a common variable, \texttt{smoker}. Each variable that is
-used in a \texttt{clickSelects} or \texttt{showSelected} aesthetic is
-treated as a selection variable with an interactively updated set of
-selected values that is used to dynamically update the plots in response
-to user input. In the first plot above, we have used
-\texttt{aes(clickSelects=smoker)} to specify a bar with direct
-manipulation (mouse clicks on the barplot) that dynamically changes the
-\texttt{smoker} selection variable. In the second plot above, we have
-used \texttt{aes(showSelected=smoker)} to specify that we only want to
-show data points for the current selection of the \texttt{smoker}
-variable. In response to a user clicking on the bars in the first plot,
-our system essentially performs the SQL query below in order to generate
-the data to display in the second plot:
+In the R code above, the \texttt{geom\_bar()} layer in the left-hand
+plot is linked to the 2nd \texttt{geom\_point()} layer in the right-hand
+plot since the \texttt{clickSelects} and \texttt{showSelected}
+aesthetics are mapped to a common variable, \texttt{sex}. Note how the
+first \texttt{geom\_point()} layer does not have a \texttt{showSelected}
+mapping, but has a bit of alpha transparency, so all the data is shown
+in light gray, and the current selection is portrayed in black. In other
+words, when a bar is clicked, in order to update the second layer of
+points, our system performs an SQL query of the form:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{SELECT}\NormalTok{ * }\KeywordTok{FROM}\NormalTok{ tips}
-  \KeywordTok{WHERE}\NormalTok{ smoker }\KeywordTok{IN}\NormalTok{ smoker_selection}
+  \KeywordTok{WHERE}\NormalTok{ sex }\KeywordTok{IN}\NormalTok{ selected_sex}
 \end{Highlighting}
 \end{Shaded}
 
-In this example, \texttt{smoker\_selection} is either ``Yes'' or ``No''
-(a single selected value), but as we show in later examples,
-\texttt{smoker\_selection} can also be an array of values (multiple
-selected values). Although the \texttt{clickSelects} aesthetic is tied
-to a mouse click event, other aesthetics could easily be created to
-support other selection events, such as hover or click+drag.
-Statistically speaking, this type of visualization is useful for
-navigating through joint distributions conditional upon discrete values.
-In this sense, our extension is closely related to trellis displays
-(Becker, Cleveland, and Shyu 2010) and linked scatterplot brushing
-(Becker and Cleveland 1987). The major differences are that our
-conditioning is layer-specific (not plot-specific), is not tied to a
-particular geometry, and can be controlled through direct manipulation
-or animation controls.
+In this example, \texttt{selected\_sex} is either \texttt{Male} or
+\texttt{Female} (a single selected value), but as we show in later
+examples, a selection set can also can multiple values. Although the
+\texttt{clickSelects} aesthetic is tied to a mouse click event, other
+aesthetics could easily be created to support other selection events,
+such as hover or click+drag. Statistically speaking, this type of
+interaction is useful for navigating through joint distributions
+conditional upon discrete values. In this sense, our extension is
+closely related to trellis displays (Becker, Cleveland, and Shyu 2010)
+and linked scatterplot brushing (Becker and Cleveland 1987). The major
+differences are that our conditioning is layer-specific (not
+plot-specific), is not tied to a particular geometry, and can be
+controlled through direct manipulation or animation controls.
 
 \hypertarget{worldbank}{%
 \subsection{World Bank example}\label{worldbank}}
 
-We will use a visualization of the World Bank data set to explain how
-the features we propose generalize to multi-layer plots (Figure
-\ref{fig:worldbank}). The visualization allows interactive exploration
-of the relationship between life expectancy and fertility over time for
-205 countries. In this paper, the year 1979 and the countries United
-States and Vietnam are selected, but readers are encouraged to change
-the selection by clicking on the interactive version, which is provided
-in the supplementary materials. In the interactive version, the selected
-value of the year variable is automatically incremented every few
-seconds, using animation to visualize yearly changes in the relationship
-between life expectancy and fertility rate.
+This section uses the linking framework introduced in the previous
+section to a more complex data set provided by the World Bank. The
+interactive version of Figure \ref{fig:worldbank} fosters exploration of
+the relationship between life expectancy and fertility over time for 205
+countries. The year 1979 and the countries United States and Vietnam are
+selected in the static version of Figure \ref{fig:worldbank}, but
+readers are encouraged to change the selection by clicking on the
+interactive version, which is provided in the supplementary materials.
+The interactive version also makes use of additional animation options
+to automatically increment the selected year every few seconds, allowing
+us to visualize the evolution of the relationship between life
+expectancy and fertility rate. These options are explained in detail in
+Section \ref{animation}.
 
 \begin{figure}
 \centering
@@ -766,6 +752,9 @@ selected values at a time (clicking a geom with
 \texttt{clickSelects=country} will add/remove that country to/from the
 selection set).
 
+\hypertarget{direction}{%
+\subsection{Direct versus indirect manipulation}\label{direction}}
+
 \hypertarget{animation}{%
 \subsection{Animation and smooth transitions}\label{animation}}
 
@@ -781,7 +770,7 @@ well as a time delay in milliseconds. The code below declares the
 \end{Shaded}
 
 Animation is useful in the World Bank data visualization because it
-shows how the bivariate relationship between fertility rate and life
+shows how the bi-variate relationship between fertility rate and life
 expectancy changes over time. Animation clearly shows how many countries
 progress from low life expectancy and high fertility rate in early
 years, to high life expectancy and low fertility rate in later years.
