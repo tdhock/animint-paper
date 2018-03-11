@@ -314,7 +314,7 @@ Another R package for interactive graphics is **iplots** [@Urbanek2011],
 which has several important differences compared to  **animint**. 
 Brushing/highlighting of linked iplots is supported for
 single-layer plots such as scatterplots or barplots, but it is not
-easy to define new multi-layer interactive plots. Futhermore since
+easy to define new multi-layer interactive plots. Furthermore since
 iplots does not use the grammar of graphics, it is difficult to create
 legends and multi-panel plots. Finally since iplots requires compiled
 C++ code for rendering on the local machine, its graphics are not as
