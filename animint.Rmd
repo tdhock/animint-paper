@@ -208,9 +208,9 @@ benefits and drawbacks. Traditionally, they build on low-level `R` interfaces
 to graphical systems such as GTK+ [@RGtk2], Qt [@qtbase], or Java GUI frameworks 
 [@rJava]. In general, the resulting system can be 
 very fast and flexible, but sharing and reproducing output is usually a problem 
-due to the heavy software requirements. Although there may be sacrifices in
-performance, using the modern web browser as a canvas is more portable, 
-accessible, and composable (graphics can be embedded within larger 
+due to the heavy software requirements. Although there may be some sacrifices in
+performance, using the modern web browser as a rendering platform is more portable, 
+accessible, and composable (i.e., graphics can be embedded within larger 
 frameworks/documents).
 
 Base `R` does provide a Scalable Vector Graphics (SVG) device, `svg()`,
@@ -230,11 +230,10 @@ which provides sensible structuring of SVG output for grid graphics
 or adding interactive features, where grid objects must be referenced by name.
 As a result, use of this interface to add interactivity to a 
 **ggplot2** plot requires understanding of the grid naming scheme **ggplot2** uses 
-internally. An interface where 
-interactivity can be expressed by referencing the data to be visualized, 
-rather than the building blocks of the graphics system, would be preferable 
-since the former interface is decoupled from the implementation and does not 
-require knowledge of grid.
+internally. An interface where interactivity can be expressed by referencing 
+the data to be visualized, rather than the building blocks of the graphics 
+system, would be preferable since the former interface is decoupled from the 
+implementation and does not require knowledge of **grid**.
 
 In terms of the animation API, the `R` package **gganimate** is very similar to our
 system [@gganimate]. It directly extends **ggplot2** by adding a new aesthetic,
@@ -247,25 +246,24 @@ Either system has the ability to control the amount of time that a given frame
 is displayed, but our system can also animate the transition between frames via
 the `d3.transition()` API [@d3]. Smooth transitions help the animation viewer track
 positions between frames, which is useful in many scenarios, such as the 
-touring example discussed in Section \@ref(tour). 
-The **tweenr** package provides similar smooth transitions, 
-by computing data values in `R` that interpolate between 
-animation frames (in **animint**, these calculations are performed in the web browser).
+World Bank example in Section \@ref(worldbank). 
+The **tweenr** package is similar in scope to `d3.transition()`, 
+but operates on data frames instead of SVG elements [@tweenr]. One could actually use
+**tweenr** to implement smooth transitions in **animint**, but it would require
+precomputing, storing, and loading an unnecessarily large amount of data.
 
 The **ggvis** package is similar to our system in that is also inspired
 by the Grammar of Graphics [@ggvis]. It does not directly extend
 **ggplot2**, but instead provides a brand new purely functional interface
 which is designed with interactive graphics in mind. It currently
-relies on Vega to render the SVG graphics from JSON [@vega], and the `R`
+relies on `Vega` to render the SVG graphics from JSON, and the `R`
 package **shiny** to enable many of its interactive capabilities
 [@shiny]. The interface gives tremendous power to `R` users, as it
-allows one to write `R` functions to handle user events. This power does
-come with a cost, though, as sharing and hosting **ggvis** graphics
-typically require special web server softwares, even when the
-interaction logic could be handled entirely client-side. As we outline
-in Section \@ref(implementation), our system does not require a web
-server, but can also be used inside **shiny** web applications, when
-desired.
+allows one to write `R` functions to handle user events. This power often
+comes with a cost, though, as **ggvis** uses callbacks to `R` via **shiny** 
+to accomplish interactivity such as linked brushing. As we outline
+in our supplemental materials, our system does not require server-side `R`, 
+but it can also be used inside **shiny** web applications.
 
 The tour is a useful visualization technique for exploring high-dimensional data
 which requires interactive and dynamic graphics. The open-source software ggobi 
@@ -282,7 +280,7 @@ accessibility.
 
 Another `R` package for interactive graphics is **iplots** [@Urbanek2011],
 which has several important differences compared to  **animint**. 
-Brushing/highlighting of linked iplots is supported for
+Brushing of linked iplots is supported for
 single-layer plots such as scatterplots or barplots, but it is not
 easy to define new multi-layer interactive plots. Furthermore since
 iplots does not use the Grammar of Graphics, it is difficult to create
@@ -803,7 +801,8 @@ materials.
 It's possible that future implementations could dynamically recompute
 statistical aggregated specified via a **ggplot2** layer, but it would be an 
 immense amount of work to translate so many `R` functions to `JavaScript`. 
-At this point,
+In this scenario, it may be worthwhile to try compile `R` functions so that
+the web browser can run them using a technlogy like `WebAssembly`
 
 
 Our current implementation provides a visual indication of the current selection

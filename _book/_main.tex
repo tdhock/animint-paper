@@ -343,9 +343,9 @@ as GTK+ (Lawrence and Temple Lang 2010), Qt (Lawrence and Sarkar 2016),
 or Java GUI frameworks (Urbanek 2016). In general, the resulting system
 can be very fast and flexible, but sharing and reproducing output is
 usually a problem due to the heavy software requirements. Although there
-may be sacrifices in performance, using the modern web browser as a
-canvas is more portable, accessible, and composable (graphics can be
-embedded within larger frameworks/documents).
+may be some sacrifices in performance, using the modern web browser as a
+rendering platform is more portable, accessible, and composable (i.e.,
+graphics can be embedded within larger frameworks/documents).
 
 Base \texttt{R} does provide a Scalable Vector Graphics (SVG) device,
 \texttt{svg()}, via the Cairo graphics API (Cairo 2016). The \texttt{R}
@@ -369,7 +369,7 @@ internally. An interface where interactivity can be expressed by
 referencing the data to be visualized, rather than the building blocks
 of the graphics system, would be preferable since the former interface
 is decoupled from the implementation and does not require knowledge of
-grid.
+\textbf{grid}.
 
 In terms of the animation API, the \texttt{R} package \textbf{gganimate}
 is very similar to our system (Robinson 2016). It directly extends
@@ -384,27 +384,28 @@ time that a given frame is displayed, but our system can also animate
 the transition between frames via the \texttt{d3.transition()} API
 (Bostock, Oglevetsky, and Heer 2011). Smooth transitions help the
 animation viewer track positions between frames, which is useful in many
-scenarios, such as the touring example discussed in Section \ref{tour}.
-The \textbf{tweenr} package provides similar smooth transitions, by
-computing data values in \texttt{R} that interpolate between animation
-frames (in \textbf{animint}, these calculations are performed in the web
-browser).
+scenarios, such as the World Bank example in Section \ref{worldbank}.
+The \textbf{tweenr} package is similar in scope to
+\texttt{d3.transition()}, but operates on data frames instead of SVG
+elements (Pedersen 2016). One could actually use \textbf{tweenr} to
+implement smooth transitions in \textbf{animint}, but it would require
+precomputing, storing, and loading an unnecessarily large amount of
+data.
 
 The \textbf{ggvis} package is similar to our system in that is also
 inspired by the Grammar of Graphics (Chang and Wickham 2015). It does
 not directly extend \textbf{ggplot2}, but instead provides a brand new
 purely functional interface which is designed with interactive graphics
-in mind. It currently relies on Vega to render the SVG graphics from
-JSON (Trifacta 2014), and the \texttt{R} package \textbf{shiny} to
-enable many of its interactive capabilities (RStudio 2013). The
-interface gives tremendous power to \texttt{R} users, as it allows one
-to write \texttt{R} functions to handle user events. This power does
-come with a cost, though, as sharing and hosting \textbf{ggvis} graphics
-typically require special web server softwares, even when the
-interaction logic could be handled entirely client-side. As we outline
-in Section \ref{implementation}, our system does not require a web
-server, but can also be used inside \textbf{shiny} web applications,
-when desired.
+in mind. It currently relies on \texttt{Vega} to render the SVG graphics
+from JSON, and the \texttt{R} package \textbf{shiny} to enable many of
+its interactive capabilities (RStudio 2013). The interface gives
+tremendous power to \texttt{R} users, as it allows one to write
+\texttt{R} functions to handle user events. This power often comes with
+a cost, though, as \textbf{ggvis} uses callbacks to \texttt{R} via
+\textbf{shiny} to accomplish interactivity such as linked brushing. As
+we outline in our supplemental materials, our system does not require
+server-side \texttt{R}, but it can also be used inside \textbf{shiny}
+web applications.
 
 The tour is a useful visualization technique for exploring
 high-dimensional data which requires interactive and dynamic graphics.
@@ -423,14 +424,13 @@ its portability and accessibility.
 
 Another \texttt{R} package for interactive graphics is \textbf{iplots}
 (Urbanek 2011), which has several important differences compared to
-\textbf{animint}. Brushing/highlighting of linked iplots is supported
-for single-layer plots such as scatterplots or barplots, but it is not
-easy to define new multi-layer interactive plots. Furthermore since
-iplots does not use the Grammar of Graphics, it is difficult to create
-legends and multi-panel plots. Finally since iplots requires compiled
-C++ code for rendering on the local machine, its graphics are not as
-easy to share as \textbf{animint} graphics which can be viewed in a web
-browser.
+\textbf{animint}. Brushing of linked iplots is supported for
+single-layer plots such as scatterplots or barplots, but it is not easy
+to define new multi-layer interactive plots. Furthermore since iplots
+does not use the Grammar of Graphics, it is difficult to create legends
+and multi-panel plots. Finally since iplots requires compiled C++ code
+for rendering on the local machine, its graphics are not as easy to
+share as \textbf{animint} graphics which can be viewed in a web browser.
 
 \hypertarget{extending-the-layered-grammar-of-graphics}{%
 \section{Extending the layered grammar of
@@ -1004,7 +1004,9 @@ materials.
 It's possible that future implementations could dynamically recompute
 statistical aggregated specified via a \textbf{ggplot2} layer, but it
 would be an immense amount of work to translate so many \texttt{R}
-functions to \texttt{JavaScript}. At this point,
+functions to \texttt{JavaScript}. In this scenario, it may be worthwhile
+to try compile \texttt{R} functions so that the web browser can run them
+using a technlogy like \texttt{WebAssembly}
 
 Our current implementation provides a visual indication of the current
 selection via semi-transparency of \texttt{clickSelects} geoms. In
@@ -1163,6 +1165,10 @@ Nolan, Deborah, and Duncan Temple Lang. 2012. ``Interactive and Animated
 Scalable Vector Graphics and R Data Displays.'' \emph{Journal of
 Statistical Software} 46 (1):1--88.
 \url{http://www.jstatsoft.org/v46/i01/}.
+
+\leavevmode\hypertarget{ref-tweenr}{}%
+Pedersen, Thomas Lin. 2016. \emph{Tweenr: Interpolate Data for Smooth
+Animations}. \url{https://CRAN.R-project.org/package=tweenr}.
 
 \leavevmode\hypertarget{ref-plotly}{}%
 Plotly. 2015. ``Collaborative Data Science.'' Montreal, QC: Plotly
