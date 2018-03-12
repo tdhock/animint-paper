@@ -27,7 +27,7 @@
 \hypersetup{unicode=true,
             pdftitle={Extending ggplot2 for linked and animated web graphics},
             pdfkeywords={Animation, Multiple linked views, Statistical graphics, Exploratory data
-analysis, Web technologies},
+analysis, Web technologies, Grammar of graphics},
             colorlinks=true,
             linkcolor=cyan,
             citecolor=black,
@@ -163,14 +163,14 @@ iteration between data manipulation, modeling, and visualization must
 occur. We propose the R package \textbf{animint} for rapid creation of
 linked and animated web graphics through a simple extension of
 \textbf{ggplot2}'s implementation of the Grammar of Graphics. The
-extension allows users to use their existing \textbf{ggplot2} code, then
-leverage an idomatic API for describing animations and graphical queries
-between multiple linked views in a standalone web page.
+extension uses the existing \textbf{ggplot2} code, and leverages a
+simple API for describing animations and graphical queries between
+multiple linked views in a standalone web page.
 \end{abstract}
 
 \noindent
 {\it Keywords:}  Animation, Multiple linked views, Statistical graphics, Exploratory data
-analysis, Web technologies
+analysis, Web technologies, Grammar of graphics
 \vfill
 
 \newpage
@@ -190,8 +190,8 @@ video library (\url{http://stat-graphics.org/movies/}) to document and
 demonstrate applications of instrumental interactive statistical
 graphics systems such as \texttt{PRIM-9} (Fisherkeller and Tukey 1988),
 \texttt{Data\ Viewer} (Andreas Buja and McDonald 1988), \texttt{XGobi}
-(Swayne and Buja 1998), \texttt{GGobi} (D. Cook and Swayne 2007), and
-\texttt{Mondrian} (Theus 2002). These, as well as other influential
+(Swayne, Cook, and Buja 1998), \texttt{GGobi} (D. Cook and Swayne 2007),
+and \texttt{Mondrian} (Theus 2002). These, as well as other influential
 systems, such as \texttt{LISP-STAT} (Tierney 1990) and \texttt{MANET}
 (Unwin A. 1996), all have a rich support for accomplishing a wide
 variety of statistical analysis tasks, and most were developed before
@@ -212,7 +212,7 @@ graphical interface (e.g., intuitive, forgiving, and easy-to-use). Web
 technologies can certainly be used to build a similar class of system,
 but in order to capitalize on the key strength of web technologies
 (e.g., accessible, portable, and composable), we must be mindful if
-which technologies we're requiring in such a system, and minimize thosee
+which technologies we're requiring in such a system, and minimize those
 requirements whenever possible.
 
 Generally speaking, web graphics that use purely client-side
@@ -220,13 +220,13 @@ technologies (i.e., \texttt{HTML}, \texttt{SVG}, \texttt{CSS}, and
 \texttt{JavaScript}) are desired over client-server web applications
 because of their relative ease of distribution and maintenance. This is
 why many web-based graphing libraries work entirely with client-side
-technologies, like Vega (Trifacta 2014) and plotly.js (Inc. 2015).\\
+technologies, like Vega (Trifacta 2014) and plotly.js (Plotly 2015).\\
 Unfortunately, client-side technologies are not particularly well-suited
 for statistical computation, which we often want to leverage via dynamic
 controls in an interactive statistical graphics system. In this
 scenario, it often makes sense to introduce a client-server
 infrastructure to leverage functionality that is not natively supported
-by web browsers (e.g., \texttt{R}, \texttt{python}, etc).
+by web browsers (e.g., R, python, etc).
 
 Focusing just on the R language, there are now numerous ways to develop
 web applications, including the R package \textbf{shiny} (RStudio 2013),
@@ -249,15 +249,14 @@ seamlessly in any context (e.g., \textbf{shiny}, \textbf{rmarkdown},
 RStudio, R prompt, Jupyter notebook, etc). In our experience, these R
 packages rarely provide a way to describe linked views in R and produce
 a purely client-side result, which we view as a powerful workflow for
-``production-ready'' exploratory web graphics. The R package
-\textbf{crosstalk} is a nice step in this direction
+exploratory web graphics.
 
 We propose an extension of \textbf{ggplot2}'s layered Grammar of
 Graphics API to create interactive web graphics that don't require
 server-side technologies. The core idea lies in attaching metadata to
 graphical marks that can be used to hide/show subsets of data. The
 resulting framework is quite similar to what D. Cook, Buja, and Swayne
-(2007) describes as brushing in multiple linked views as a database
+(2007) describe as brushing in multiple linked views as a database
 query. The assignment of data to graphical marks is done through
 \emph{aesthetic mappings}, which is a term the Grammar of Graphics uses
 for mapping data to visual attributes (e.g., color, shape, x, y, etc).
@@ -274,7 +273,7 @@ other interactive features, including animation, tooltips, and
 hyperlinks. A summary of these extensions and relevant additional
 options are provided in Table \ref{tab:overview}. There are a number of
 other options that can be used to control things specific to our
-implementation in the R package \textbf{animint} which is described in
+implementation in the R package \textbf{animint} which are included with
 the supplemental materials.
 
 \begin{table}
@@ -289,13 +288,13 @@ Feature & Type & Description \\
 \hline
 \texttt{clickSelects} & aesthetic & value(s) to select on click \\
 \texttt{showSelected} & aesthetic & value(s) attached to mark(s) that determine when they are shown  \\
+\texttt{key} & aesthetic & value(s) attached to mark(s) for smooth transitions. \\
 \texttt{tooltip} & aesthetic & information to display on hover \\
 \texttt{href} & aesthetic & URL link to open on click \\
-\texttt{selector.types} & option & should selections accumulate?  \\
 \texttt{first} & option & what value(s) should be selected by default?  \\
 \texttt{time} & option & delay between animation frames.  \\
 \texttt{duration} & option & to specify smooth transitions.  \\
-\texttt{key} & aesthetic & value(s) attached to mark(s) for smooth transitions. \\
+\texttt{selector.types} & option & should selections accumulate?  \\
 \texttt{selectize} & option & include a dropdown widget to set selection value(s) indirectly? \\
 \hline
 \end{tabularx}
@@ -350,21 +349,21 @@ similar to our system (Robinson 2016). It directly extends
 \textbf{ggplot2} by adding a new aesthetic, named \texttt{frame}, which
 splits the data into subsets (one for each unique value of the frame
 variable), produces a static plot for each subset, and uses the
-animation package to combine the images into a key frame animation (Xie
-2013). This is quite similar but not as flexible as our system's support
-for animation, which we fully describe in Section \ref{animation}.
-Either system has the ability to control the amount of time that a given
-frame is displayed, but our system can also animate the transition
-between frames via the \texttt{d3.transition()} API (Bostock,
-Oglevetsky, and Heer 2011). Smooth transitions help the animation viewer
-track positions between frames, which is useful in many scenarios, such
-as the touring example discussed in Section \ref{tour}. The
-\textbf{tweenr} package provides similar smooth transitions, by
+\textbf{animation} package to combine the images into a key frame
+animation (Xie 2013). This is quite similar but not as flexible as our
+system's support for animation, which we fully describe in Section
+\ref{animation}. Either system has the ability to control the amount of
+time that a given frame is displayed, but our system can also animate
+the transition between frames via the \texttt{d3.transition()} API
+(Bostock, Oglevetsky, and Heer 2011). Smooth transitions help the
+animation viewer track positions between frames, which is useful in many
+scenarios, such as the touring example discussed in Section \ref{tour}.
+The \textbf{tweenr} package provides similar smooth transitions, by
 computing data values in R that interpolate between animation frames (in
 \textbf{animint}, these calculations are performed in the web browser).
 
-The \textbf{ggvis} package is similar to our system in that is is also
-inspired by the grammar of graphics (Chang and Wickham 2015). It does
+The \textbf{ggvis} package is similar to our system in that is also
+inspired by the Grammar of Graphics (Chang and Wickham 2015). It does
 not directly extend \textbf{ggplot2}, but instead provides a brand new
 purely functional interface which is designed with interactive graphics
 in mind. It currently relies on Vega to render the SVG graphics from
@@ -372,11 +371,9 @@ JSON (Trifacta 2014), and the R package \textbf{shiny} to enable many of
 its interactive capabilities (RStudio 2013). The interface gives
 tremendous power to R users, as it allows one to write R functions to
 handle user events. This power does come with a cost, though, as sharing
-and hosting \textbf{ggvis} graphics typically requires special web
-server softwares, even when the interaction logic could be handled
-entirely client-side. As we outline in Section \ref{implementation}, our
-system does not require a web server, but can also be used inside
-\textbf{shiny} web applications, when desired.
+and hosting \textbf{ggvis} graphics typically require special web server
+softwares, even when the interaction logic could be handled entirely
+client-side.
 
 The tour is a useful visualization technique for exploring
 high-dimensional data which requires interactive and dynamic graphics.
@@ -384,22 +381,21 @@ The open-source software ggobi is currently the most fully-featured
 toolkit for touring data and has support for interactive techniques such
 as linking, zooming, panning, and identifying (D. Cook and Swayne 2007).
 The R package \textbf{rggobi} (Duncan Temple Lang 2016) provides an R
-interface to ggobi's graphical interface, but unfortunately, the
-software requirements for installation and use of this toolchain are
-heavy and stringent. Furthermore, sharing the interactive versions of
+interface to ggobi's graphical interface, but it unfortunately has many
+software requirements. Furthermore, sharing the interactive versions of
 these graphics are not possible. The R package \textbf{cranvas} aims to
 be the successor to ggobi, with support for similar interactive
 techniques, but with a more flexible interface for describing plots
-inspired by the grammar of graphics (Xie et al. 2013). \textbf{Cranvas}
-also has heavy and stringent software requirements which limits the
-portability and accessibility of the software.
+inspired by the Grammar of Graphics (Xie et al. 2013). \textbf{Cranvas}
+also has many software requirements which limits its portability and
+accessibility.
 
 Another R package for interactive graphics is \textbf{iplots} (Urbanek
 2011), which has several important differences compared to
 \textbf{animint}. Brushing/highlighting of linked iplots is supported
 for single-layer plots such as scatterplots or barplots, but it is not
-easy to define new multi-layer interactive plots. Futhermore since
-iplots does not use the grammar of graphics, it is difficult to create
+easy to define new multi-layer interactive plots. Furthermore since
+iplots does not use the Grammar of Graphics, it is difficult to create
 legends and multi-panel plots. Finally since iplots requires compiled
 C++ code for rendering on the local machine, its graphics are not as
 easy to share as \textbf{animint} graphics which can be viewed in a web
@@ -455,7 +451,7 @@ original data (and vice-versa) which is essential to any interactive
 graphics system (Wickham et al. 2010). Thus, given a way to combine
 multiple \textbf{ggplot2} plots into a single view, this design can be
 extended to support a notion of multiple linked views, as those
-discussed in Ahlberg, Williamson, and Shneiderman (1991) and Buja et al.
+discussed by Ahlberg, Williamson, and Shneiderman (1991) and Buja et al.
 (1991).
 
 \hypertarget{extension}{%
@@ -468,42 +464,41 @@ show how aesthetic mappings can be used to assign data values to
 graphical marks via \textbf{ggplot2} to support similar graphical
 queries. It's worth noting that, since these aesthetics effectively
 define a set of database queries that are known at print time, these
-queries can be made by directly manipulating graphical marks and/or
-indirectly via a dropdown widget, as discussed in Section
+queries can be made by direct manipulation of graphical marks and/or
+indirect manipulation via a dropdown widget, as discussed in Section
 \ref{direction}. It's also worth noting that these aesthetics could be
 defined in such a way that they are not solely restricted to any
 particular direct manipulation event (e.g.~mouse click), but for sake of
 demonstration, we restrict focus to our \textbf{animint} implementation,
 which has \texttt{clickSelects} and \texttt{showSelected} aesthetics.
-
-As demonstrated in Figure \ref{fig:tips}, the \texttt{R} code used to
-generate it, and the corresponding \texttt{SQL} queries,
-\texttt{clickSelects} assigns data to graphical marks, which when
-clicked, sets selection value(s).\footnote{Interactive versions
+Consider the R code below which uses these aesthetics to describe the
+interactive graphic shown in
+Figure\textasciitilde{}\ref{fig:tips}.\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
-For this example, we refer to the current set of selection value(s)
-(i.e., the selection set) as \texttt{selected\_sex}. The value of
-\texttt{selected\_sex} can take on any subset of the unique values of
-\texttt{sex}, and in this case, the unique values are \texttt{Male} and
-\texttt{Female}. The selection set, \texttt{selected\_sex}, is then
-matched against graphical marks containing a \texttt{showSelected}
-property. As a result, by clicking on a bar in Figure \ref{fig:tips},
-one may highlight the relationship between \texttt{tip} and
-\texttt{total\_bill} for either gender.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(animint)}
 \KeywordTok{data}\NormalTok{(tips, }\DataTypeTok{package =} \StringTok{"reshape2"}\NormalTok{)}
 \NormalTok{bar <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(tips) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ sex, }\DataTypeTok{clickSelects =}\NormalTok{ sex))}
 \NormalTok{scatter <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(tips) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ total_bill, }\DataTypeTok{y =}\NormalTok{ tip), }\DataTypeTok{alpha =} \FloatTok{0.3}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ total_bill, }\DataTypeTok{y =}\NormalTok{ tip, }\DataTypeTok{showSelected =}\NormalTok{ sex))}
-\KeywordTok{animint2dir}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DataTypeTok{bar =}\NormalTok{ bar, }\DataTypeTok{scatter =}\NormalTok{ scatter))}
 \end{Highlighting}
 \end{Shaded}
+
+The \texttt{clickSelects} aesthetic is used to declare a geom which can
+be clicked to set selection value(s). For the example in
+Figure\textasciitilde{}\ref{fig:tips}, we declare a bar with
+\texttt{clickSelects=sex} and refer to the current set of selection
+value(s) as \texttt{selected\_sex}. The value of \texttt{selected\_sex}
+can take on any subset of the unique values of \texttt{sex}, and in this
+case, the unique values are \texttt{Male} and \texttt{Female}. The
+selection set, \texttt{selected\_sex}, is then used to select subsets of
+data for geoms with the \texttt{showSelected=sex} aesthetic. In this
+case there is a geom point with \texttt{showSelected=sex}, so clicking
+on a bar results in an update to the displayed subset of points.
 
 \begin{figure}
 \centering
@@ -550,18 +545,18 @@ controlled through direct manipulation or animation controls.
 \subsection{World Bank example}\label{worldbank}}
 
 This section uses the linking framework introduced in the previous
-section to a more complex data set provided by the World Bank. The
-interactive version of Figure \ref{fig:worldbank} fosters exploration of
-the relationship between life expectancy and fertility over time for 205
-countries. The year 1979 and the countries United States and Vietnam are
-selected in the static version of Figure \ref{fig:worldbank}, but
-readers are encouraged to change the selection by clicking on the
-interactive version, which is provided in the supplementary materials.
-The interactive version also makes use of additional options to
-automatically increment the selected year every few seconds, allowing us
-to visualize the evolution of the relationship between life expectancy
-and fertility rate through animation. These options are explained in
-detail in Section \ref{animation}.
+section to visualize a more complex data set provided by the World Bank.
+The interactive version of Figure \ref{fig:worldbank} fosters
+exploration of the relationship between life expectancy and fertility
+over time for 205 countries. The year 1979 and the countries United
+States and Vietnam are selected in the static version of Figure
+\ref{fig:worldbank}, but readers are encouraged to change the selection
+by clicking on the interactive version, which is provided in the
+supplementary materials. The interactive version also makes use of
+additional animation options (explained later in
+Section\textasciitilde{}\ref{animation}), allowing us to visualize the
+evolution of the relationship between life expectancy and fertility
+rate.
 
 \begin{figure}
 \centering
@@ -751,9 +746,6 @@ are declared as multiple selection variables, which can have multiple
 selected values at a time (clicking a geom with
 \texttt{clickSelects=country} will add/remove that country to/from the
 selection set).
-
-\hypertarget{direction}{%
-\subsection{Direct versus indirect manipulation}\label{direction}}
 
 When viewing the interactive version of Figure \ref{fig:worldbank},
 suppose we wish to select Thailand. Direct manipulation is not very
@@ -1109,10 +1101,6 @@ Fisherkeller, Friedman, M. A., and J. W. Tukey. 1988. ``PRIM-9, an
 Interactive Multidimensional Data Display and Analysis System.'' In
 \emph{Dynamic Graphics for Statistics}, 91--109.
 
-\leavevmode\hypertarget{ref-plotly}{}%
-Inc., Plotly Technologies. 2015. ``Collaborative Data Science.''
-Montreal, QC: Plotly Technologies Inc. 2015. \url{https://plot.ly}.
-
 \leavevmode\hypertarget{ref-qtbase}{}%
 Lawrence, Michael, and Deepayan Sarkar. 2016. \emph{Interface Between R
 and Qt}. \url{https://github.com/ggobi/qtbase}.
@@ -1132,6 +1120,10 @@ Scalable Vector Graphics and R Data Displays.'' \emph{Journal of
 Statistical Software} 46 (1):1--88.
 \url{http://www.jstatsoft.org/v46/i01/}.
 
+\leavevmode\hypertarget{ref-plotly}{}%
+Plotly. 2015. ``Collaborative Data Science.'' Montreal, QC: Plotly
+Technologies Inc. 2015. \url{https://plot.ly}.
+
 \leavevmode\hypertarget{ref-RCore}{}%
 R Core Team. 2017. \emph{R: A Language and Environment for Statistical
 Computing}. Vienna, Austria: R Foundation for Statistical Computing.
@@ -1146,9 +1138,9 @@ RStudio. 2013. ``Shiny: Easy Web Applications in R.''
 \url{http://www.rstudio.com/shiny/}.
 
 \leavevmode\hypertarget{ref-xgobi}{}%
-Swayne, Cook, D. F., and A. Buja. 1998. ``XGobi: Interactive Dynamic
-Data Visualization in the X Window System.'' \emph{Journal of
-Computational and Graphical Statistics} 7 (1):113--30.
+Swayne, DF, D Cook, and A Buja. 1998. ``XGobi: Interactive Dynamic Data
+Visualization in the X Window System.'' \emph{Journal of Computational
+and Graphical Statistics} 7 (1):113--30.
 
 \leavevmode\hypertarget{ref-mondrian}{}%
 Theus, M. 2002. ``Interactive Data Visualization Using Mondrian.''
