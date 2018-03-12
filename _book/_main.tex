@@ -468,20 +468,12 @@ queries can be made by direct manipulation of graphical marks and/or
 indirect manipulation via a dropdown widget, as discussed in Section
 \ref{direction}. It's also worth noting that these aesthetics could be
 defined in such a way that they are not solely restricted to any
-<<<<<<< HEAD
-particular user event (e.g.~mouse click), but for sake of demonstration,
-we restrict focus to our \textbf{animint} implementation, which has
-\texttt{clickSelects} and \texttt{showSelected} aesthetics. Consider the
-R code below which uses these aesthetics to describe the interactive
-graphic shown in Figure \ref{fig:tips}\footnote{Interactive versions
-=======
 particular direct manipulation event (e.g.~mouse click), but for sake of
 demonstration, we restrict focus to our \textbf{animint} implementation,
 which has \texttt{clickSelects} and \texttt{showSelected} aesthetics.
 Consider the R code below which uses these aesthetics to describe the
-interactive graphic shown in
-Figure\textasciitilde{}\ref{fig:tips}.\footnote{Interactive versions
->>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
+interactive graphic shown in Figure
+\ref{fig:tips}\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}.
 
@@ -728,14 +720,8 @@ the set of selected values in response to mouse clicks on
 \texttt{clickSelects} geoms, and then updates the corresponding data
 which is displayed for \texttt{showSelected} geoms.
 
-<<<<<<< HEAD
-Note that the \texttt{viz} list above can also contain rendering
-options, as we discuss below (see Table \ref{tab:overview} for a summary
-of proposed interactive features). For example, the
-=======
 Note that the \texttt{viz} list above can also contain numerous options
 which are listed in Table \ref{tab:overview}. For example, the
->>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 \texttt{selector.types} option controls whether or not selections for a
 given variable accumulate (single or multiple selected values). This
 sort of logic has also been interpreted as transient versus persistent
@@ -847,17 +833,6 @@ rendering the visualization:
 \end{Highlighting}
 \end{Shaded}
 
-<<<<<<< HEAD
-As shown in supplementary Figure 1, the \textbf{animint} system is
-implemented in 2 parts: the compiler and the renderer. The compiler is
-implemented in R code that converts a list of ggplots and options to a
-JSON plot meta-data file and a tab-separated values (TSV) file database.
-The renderer consists of HTML and JavaScript files, which can be easily
-hosted along with the TSV and JSON files on any web server. The
-interactive plots can be viewed by opening the \texttt{index.html} page
-in any modern web browser. Note that our current implementation of
-\textbf{animint} depends on a fork of
-=======
 As shown in Supplementary Figure 1, the \textbf{animint} system consists
 of 2 parts: the compiler and the renderer. The compiler is R code that
 converts a list of ggplots and options to a JSON plot meta-data file and
@@ -866,7 +841,6 @@ HTML and JavaScript files, which can be easily hosted along with the TSV
 and JSON files on any web server. The interactive plots can be viewed by
 opening the \texttt{index.html} page in any modern web browser. Note
 that \textbf{animint} currently depends on a fork of
->>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 \textbf{ggplot2}\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages. Additional implementation details
@@ -975,124 +949,6 @@ variables for the selected time (top) and region (bottom). The plots use
 and time (bottom), and are useful for visualizing normality and outliers
 in the joint distribution.
 
-<<<<<<< HEAD
-\hypertarget{compare}{%
-\section{Comparison study}\label{compare}}
-
-In this section we compare our \textbf{animint} implementation with
-other similar leading systems by creating a given visualization in each
-system and discussing the pros and cons of the different approaches.
-
-\hypertarget{tour}{%
-\subsection{The Grand Tour}\label{tour}}
-
-The Grand Tour is a well-known method for viewing high dimensional data
-which requires interactive and dynamic graphics (Asimov 1985). Figure
-\ref{fig:tour} shows a grand tour of 300 observations sampled from a
-correlated tri-variate normal distribution. The left-hand view shows the
-marginal density of each point while the right-hand view ``tours''
-through 2D projections of the 3D data. There are many ways to choose
-projections in a tour, and many ways to interpolate between projections,
-most of which can be programmed fairly easily using R and relevant
-add-on packages. In this case, we used the R package \textbf{tourr},
-which uses the geodesic random walk (i.e., random 2D projection with
-geodesic interpolation) in its grand tour algorithm (Wickham et al.
-2011).
-
-\begin{figure}
-\centering
-\includegraphics{images/tour}
-\caption{\label{fig:tour}Linked selection in a grand tour with
-\textbf{animint}. A video demonstration can be viewed online at
-\url{https://vimeo.com/160720834}}
-\end{figure}
-
-When touring data, it is generally useful to link low-dimensional
-displays with the tour itself. The video in Figure \ref{fig:tour} was
-generated with our current \textbf{animint} implementation, and points
-are selected via mouse click which reveals that points with high
-marginal density are located in the ellipsoid center while points with a
-low marginal density appear near the ellipsoid border. In this case, it
-would be convenient to also have brush selection, as we demonstrate in
-Figure \ref{fig:tourbrush} which implements the same touring example
-using the R packages \textbf{ggvis} and \textbf{shiny}. The brush in
-Figure \ref{fig:tourbrush} is implemented with \textbf{shiny}'s support
-for brushing static images, which currently does not support multiple
-brushes, making it difficult to select non-contiguous regions.
-
-\begin{figure}
-\centering
-\includegraphics{images/tourbrush}
-\caption{\label{fig:tourbrush}Linked selection in a grand tour with
-\textbf{ggvis} and \textbf{shiny}. A video demonstration can be viewed
-online at \url{https://vimeo.com/160825528}}
-\end{figure}
-
-This example helps point out a few other important differences in using
-\textbf{animint} versus \textbf{ggvis}+\textbf{shiny} to implement
-``multiple linked and dynamic views'' as described in Ahlberg,
-Williamson, and Shneiderman (1991) and Buja et al. (1991). Maintaining
-state of the linked brush in Figure \ref{fig:tourbrush} requires both
-knowledge and clever use of some sophicated programming techniques such
-as closures and reactivity. It also requires knowledge of the
-\textbf{shiny} web application framework and a new approach to the
-Grammar of Graphics. On the other hand, maintaining state in Figure
-\ref{fig:tour} requires a few different
-\texttt{clickSelects}/\texttt{showSelected} mappings. As a result, we
-believe \textbf{animint} provides a more elegant user interface for this
-application.
-
-The touring example also helps point out important consequences of the
-design and implementation of these two different systems. As mentioned
-in Section \ref{implementation}, our current \textbf{animint}
-implementation requires every subset of data to be precomputed before
-render time. For visualizations such as tours, where it is more
-efficient to perform statistical computations on-the-fly, this can be a
-harsh restriction, but this is a restriction of our current
-implementation (not a restriction of the framework itself). As a result,
-when touring a large high-dimensional space, where many projections are
-needed, \textbf{ggvis}+\textbf{shiny} may be desirable since the
-projections are computed on the server and sent to the browser in
-real-time. This works fine when the application is running and viewed on
-the same host machine, but viewing such an application hosted on a
-remote machine can produce staggered animations since client-server
-requests must be performed, processed, and rendered roughly 30 times a
-second. Also, generally speaking, the \textbf{animint} system results a
-more pleasant experience when it comes to hosting and sharing
-applications since it doesn't require a Web Server with R and special
-software already installed.
-
-\hypertarget{world-bank-example}{%
-\subsection{World Bank example}\label{world-bank-example}}
-
-We also recreated Figure \ref{fig:worldbank} using
-\textbf{ggvis}+\textbf{shiny} and Tableau. Even as experienced
-\textbf{ggvis}+\textbf{shiny} users, we found it quite difficult to
-replicate this example, and were not able to completely replicate it due
-to a lack of a mechanism for coordinating indirect and direct
-manipulations. Overall the visualization is pretty similar, but lacks a
-few important features. In particular, there is no way to control the
-selected year using both the slider (indirect) and clicking on the
-\textbf{ggvis} plot (direct). It also lacks the ability to click on a
-country time series and label the corresponding point on the
-scatterplot. This might be possible, but we could not find a way to
-update a plot based on a click event on a different plot. Even with this
-lack of functionality, the \textbf{ggvis}+\textbf{shiny} is
-significantly more complicated and requires more code (about 100 lines
-of code compared to 30).
-
-It was also impossible to completely replicate Figure
-\ref{fig:worldbank} using Tableau essentially because the example
-requires a \emph{layered} approach to the Grammar of Graphics. In
-particular, since graphical marks and interaction source/target(s) must
-derive from the same table in Tableau, it was impossible to control the
-clickable multiple time series and the clickable tallrects in different
-ways based on the two different selection variables. In other words, in
-Tableau, selections are managed on the plot level, but in
-\textbf{animint}, selections are specific to each graphical layer.
-
-=======
->>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 \hypertarget{limitations}{%
 \section{Limitations and future work}\label{limitations}}
 
