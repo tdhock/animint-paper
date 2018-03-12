@@ -6,7 +6,7 @@ geometry: margin=1in
 linkcolor: cyan
 citecolor: black
 bibliography: refs.bib
-abstract: Interactive web graphics are great for communication and knowledge sharing, but are difficult to leverage during the exploratory phase of a data science workflow. Even before the web, interactive graphics helped data analysts quickly gather insight from data, discover the unexpected, and develop better model diagnostics. Web technologies, however, are not designed to fit inside an exploratory data analysis workflow where rapid iteration between data manipulation, modeling, and visualization must occur. We propose the R package **animint** for rapid creation of linked and animated web graphics through a simple extension of **ggplot2**'s implementation of the Grammar of Graphics. The extension uses the existing **ggplot2** code, and leverages a simple API for describing animations and graphical queries between multiple linked views in a standalone web page.
+abstract: Interactive web graphics are great for communication and knowledge sharing, but are difficult to leverage during the exploratory phase of a data science workflow. Even before the web, interactive graphics helped data analysts quickly gather insight from data, discover the unexpected, and develop better model diagnostics. Web technologies, however, are not designed to fit inside an exploratory data analysis (EDA) workflow where rapid iteration between data manipulation, modeling, and visualization must occur. We propose the R package **animint** for rapid creation of linked and animated web graphics through a simple extension of **ggplot2**'s implementation of the Grammar of Graphics. The extension uses the existing **ggplot2** code, and leverages a simple API for describing animations and graphical queries between multiple linked views in a standalone web page.
 keywords: Animation, Multiple linked views, Statistical graphics, Exploratory data analysis, Web technologies, Grammar of graphics
 output:
   bookdown::pdf_book:
@@ -390,9 +390,9 @@ aesthetics could be defined in such a way that they are not solely restricted
 to any particular user event (e.g. mouse click), but for sake of demonstration,
 we restrict focus to our **animint** implementation, which has `clickSelects` 
 and `showSelected` aesthetics. 
-Consider the R code below which uses these aesthetics to describe the interactive graphic shown in Figure~\@ref(fig:tips).\footnote{Interactive versions
+Consider the R code below which uses these aesthetics to describe the interactive graphic shown in Figure \@ref(fig:tips)\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
-\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}} 
+\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}. 
 
 ```{r}
 data(tips, package = "reshape2")
@@ -411,7 +411,7 @@ animint::animint2dir(list(bar = bar, scatter = scatter))
 
 The 
 `clickSelects` aesthetic is used to declare a geom which can be clicked to set selection value(s).
-For the example in Figure~\@ref(fig:tips), we declare a bar with `clickSelects=sex` and refer to the current set of selection value(s) as `selected_sex`. The value of `selected_sex` can take on
+For the example in Figure \@ref(fig:tips), we declare a bar with `clickSelects=sex` and refer to the current set of selection value(s) as `selected_sex`. The value of `selected_sex` can take on
 any subset of the unique values of `sex`, and in this case, the unique values 
 are `Male` and `Female`. The selection set, `selected_sex`, is then used
 to select subsets of data for geoms with the `showSelected=sex` aesthetic. In this case there is a geom point with `showSelected=sex`, so clicking on a bar results in an update to the displayed subset of points.
@@ -436,7 +436,7 @@ SELECT * FROM tips
 ```
 
 In this example, `selected_sex` is either `Male` or `Female` (a single selected value), 
-but as we show in later examples, a selection set can also can multiple values.
+but as we show in later examples, a selection set can also be multiple values.
 Although the `clickSelects` aesthetic is tied to a mouse click event,
 other aesthetics could easily be created to support other selection
 events, such as hover or click+drag. Statistically speaking, this type
@@ -488,16 +488,16 @@ This section uses the linking framework introduced in the previous section
 to visualize a more complex data set provided by the World Bank. 
 The interactive version of Figure \@ref(fig:worldbank) fosters
 exploration of the relationship between life expectancy and fertility
-over time for 205 countries. The year 1979 and the
+rate over time for 205 countries. The year 1979 and the
 countries United States and Vietnam are selected in the static version of 
 Figure \@ref(fig:worldbank), but readers are
 encouraged to change the selection by clicking on the interactive
 version, which is provided in the supplementary materials. The
-interactive version also makes use of additional animation options (explained later in Section~\@ref(animation)), allowing
+interactive version also makes use of additional animation options (explained later in Section \@ref(animation)), allowing
 us to visualize the evolution of the relationship between life expectancy
 and fertility rate. 
 
-```{r worldbank, echo = FALSE, eval = TRUE, fig.cap = "An interactive animation of World Bank demographic data of several countries, designed using `clickSelects` and `showSelected` keywords (top).  Left: a multiple time series from 1960 to 2010 of life expectancy, with bold lines showing the selected countries and a vertical grey tallrect showing the selected year. Right: a scatterplot of life expectancy versus fertility rate of all countries. The legend and text elements show the current selection: year=1979, country={United States, Vietnam}, and region={East Asia & Pacific, North America}"}
+```{r worldbank, echo = FALSE, eval = TRUE, fig.cap = "An interactive animation of World Bank demographic data of several countries, designed using `clickSelects` and `showSelected` aesthetics (top).  Left: a multiple time series from 1960 to 2010 of life expectancy, with bold lines showing the selected countries and a vertical grey tallrect showing the selected year. Right: a scatterplot of life expectancy versus fertility rate of all countries. The legend and text elements show the current selection: year=1979, country={United States, Vietnam}, and region={East Asia & Pacific, North America}"}
 knitr::include_graphics("images/figure-1")
 ```
 
@@ -505,11 +505,11 @@ We anticipate that some **ggplot2** users will be able to reverse engineer the
 code which creates Figure \@ref(fig:worldbank), simply by looking at it.
 In fact, this is a big reason why **ggplot2** is so widely used: 
 it helps minimize the amount of time required to translate an idea for a figure into computer code. 
-Note that, in the left hand plot of 
+Note that, in the left-hand plot of 
 Figure \@ref(fig:worldbank), we have a time series 
 of the life expectancy where each line is a country (i.e., we `group` by
 country) and lines are colored by region. By clicking on a line, we also want 
-the country label to appear in the right hand plot, so we also need to set 
+the country label to appear in the right-hand plot, so we also need to set 
 `clickSelects=country`. Lastly, by setting `showSelected=region`,
 we can hide/show lines by clicking on the color legend entries.
 
@@ -542,11 +542,11 @@ timeSeries <- timeSeries + geom_tallrect(
 )
 ```
 
-As for the right hand plot in Figure \@ref(fig:worldbank), there are 
+As for the right-hand plot in Figure \@ref(fig:worldbank), there are 
 three layers: a point layer for countries, a text layer for countries, 
 and a text layer to display the selected year. By clicking on a point,
 we want to display the country text label and highlight the corresponding
-time series on the left hand plot, so we set `clickSelects=country`
+time series on the left-hand plot, so we set `clickSelects=country`
 in this layer. Furthermore, we only want to show the points for the 
 selected year and region, so we also need `showSelected=year` and 
 `showSelected2=region`. 
@@ -571,8 +571,8 @@ currently selected combination of year and region, as in the following SQL query
 
 ```sql
 SELECT * FROM WorldBank
-  WHERE year   IN year_selection
-  AND   region IN region_selection
+  WHERE year   IN selected_year
+  AND   region IN selected_region
 ```
 
 Below, the text layer for
@@ -634,7 +634,7 @@ geoms.
 
 
 Note that the `viz` list above can also contain
-rendering options, as we discuss below (see Table~1 for a summary of
+rendering options, as we discuss below (see Table \ref{tab:overview} for a summary of
 proposed interactive features). For example, the
 `selector.types` option controls whether or not selections for a given
 variable can accumulate (single or multiple selected values). This difference
@@ -670,7 +670,7 @@ I would recommend moving discussion of direct/indirect manipulation to supplemen
 ## Animation and smooth transitions  {#animation}
 
 Animation is declared using the `time` option, which specifies a
-selection variable which will be automatically updated over time, as
+selection variable that will be automatically updated over time, as
 well as a time delay in milliseconds. The code below declares the
 `year` variable to be animated every 3 seconds. 
 
@@ -711,7 +711,7 @@ rendering the visualization:
 ```{r}
 animint::animint2dir(viz)
 ```
-As shown in Supplementary Figure 1, the **animint** system is
+As shown in supplementary Figure 1, the **animint** system is
 implemented in 2 parts: the compiler and the renderer. The compiler is
 implemented in R code that converts a list of ggplots and options to a
 JSON plot meta-data file and a tab-separated values (TSV) file
@@ -739,7 +739,7 @@ One of the strong points of the system we propose is display of
 multi-layer plots such as maps with time-varying data. For example,
 Figure \@ref(fig:tornado) shows a visualization of US tornado data
 from 1950 to 2012. This data visualization consists of two multi-layer
-plots with two interaction variables, `year`, and `state`. 
+plots with two interaction variables, `year` and `state`. 
 
 The left plot is a map which shows state borders using a polygon with
 `clickSelects=state`. The currently selected state is shown using
@@ -762,7 +762,7 @@ the data, and for suggesting models that can describe or predict tornado
 paths.
 
 
-```{r tornado, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of US tornadoes from 1950 to 2012. This diagram depicts a scenario where the user queried Texas (by clicking the map), and the year 1982 (by clicking the bar chart).  In addition to the graphical elements being highlighted as a visual clue of what query is being made, this visualization includes dynamic text labels reflecting the query."}
+```{r tornado, echo = FALSE, eval = TRUE, fig.cap = "Interactive animation of US tornadoes from 1950 to 2012. This figure depicts a scenario where the user queried Texas (by clicking the map), and the year 1982 (by clicking the bar chart).  In addition to the graphical elements being highlighted as a visual clue of what query is being made, this visualization includes dynamic text labels reflecting the query."}
 knitr::include_graphics("images/figure-tornado")
 ```
 
@@ -776,7 +776,7 @@ A more complex map data visualization example is shown in Figure
 \@ref(fig:climate), which depicts climate time series data observed in
 Central America. There are two interaction variables, `time` and `region`. 
 
-Two maps in the upper right display borders of
+Two maps in the upper left display borders of
 the countries in and near Central America. Unlike the previous
 example with US states, the country borders are static (clicking has no effect). For the currently
 selected time, rect geoms with `showSelected=time` show the spatial distribution of sea surface temperature as
@@ -784,7 +784,7 @@ well as its deviation from the monthly norm. Since `clickSelects=region` is spec
 clicking a rect changes the currently selected region, 
 which is emphasized with a black border. 
 These plots facilitate visualization of the spatial distribution of the climate variables,
-and how they change over time.n
+and how they change over time.
 
 The plots below the maps use lines to show time series of the climate variables. 
 Since `clickSelects=region` is specified, 
@@ -812,8 +812,8 @@ discussing the pros and cons of the different approaches.
 The Grand Tour is a well-known method for viewing high dimensional data which
 requires interactive and dynamic graphics [@grand-tour]. 
 Figure \@ref(fig:tour) shows a grand tour of 300 observations sampled
-from a correlated tri-variate normal distribution. The left hand view
-shows the marginal density of each point while the right hand view "tours"
+from a correlated tri-variate normal distribution. The left-hand view
+shows the marginal density of each point while the right-hand view "tours"
 through 2D projections of the 3D data. There are many ways to
 choose projections in a tour, and many ways to interpolate
 between projections, most of which can be programmed fairly easily
@@ -849,7 +849,7 @@ Maintaining state of the linked brush in Figure \@ref(fig:tourbrush)
 requires both knowledge and clever use of some sophicated programming 
 techniques such as closures and reactivity. 
 It also requires knowledge of the **shiny** web application framework and 
-a new approach to the grammar of graphics. 
+a new approach to the Grammar of Graphics. 
 On the other hand, maintaining state in Figure \@ref(fig:tour) requires
 a few different `clickSelects`/`showSelected` mappings. As a
 result, we believe **animint** provides a more elegant user interface for 
@@ -883,7 +883,7 @@ due to a lack of a mechanism for coordinating indirect and direct
 manipulations. Overall the visualization is pretty similar, but 
 lacks a few important features. 
 In particular, there is no way to control the selected
-year using both the slider (indirect) and clicking on the ggvis plot (direct).
+year using both the slider (indirect) and clicking on the **ggvis** plot (direct).
 It also lacks the ability to click on a country time series and label
 the corresponding point on the scatterplot. This might be possible, but we
 could not find a way to update a plot based on a click event on a different
@@ -925,7 +925,7 @@ more complicated and requires more code
 
 It was also impossible to completely replicate Figure \@ref(fig:worldbank)
 using Tableau essentially because the example requires a \emph{layered} 
-approach to the grammar of graphics. In particular, since graphical
+approach to the Grammar of Graphics. In particular, since graphical
 marks and interaction source/target(s) must derive from the same table
 in Tableau, it was impossible to control the clickable multiple time 
 series and the clickable tallrects in different ways based on the two 
@@ -979,14 +979,14 @@ elements (`showSelected`). However, the framework described in
 Section \@ref(extension) is not restricted to a particular event type, 
 so `hoverSelects` and `brushSelects` aesthetics could be 
 added, for instance. There are other types of interaction that could be
-added, that wouldn't require additional extensions to the grammar of graphics,
+added, that wouldn't require additional extensions to the Grammar of Graphics,
 such as: zooming, panning, and plot resizing.
 
 # Conclusion
 
 We have proposed several extensions to **ggplot2**'s layered grammar of graphics 
 in order to support a declarative approach to producing interactive
-and dynamic web graphics. By adding clickSelects and showSelected aesthetics to specify selection
+and dynamic web graphics. By adding `clickSelects` and `showSelected` aesthetics to specify selection
 source(s) and target(s), **ggplot2** users can quickly and easily create 
 animations with smooth transitions and perform dynamic queries via direct
 manipulation of linked views. As a result, **animint** is a useful tool 
