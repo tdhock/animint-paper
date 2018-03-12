@@ -80,8 +80,8 @@ whenever possible.
 Generally speaking, web graphics that use purely client-side
 technologies (i.e., `HTML`, `SVG`, `CSS`, and `JavaScript`) are desired over 
 client-server web applications because of their relative ease of distribution
-and maintenance. This is why many web-based graphing libraries work entirely 
-with client-side technologies, like `Vega` [@vega] and `plotly.js` [@plotly].  
+and maintenance. This is why many web-based graphing libraries like `Vega` [@vega] 
+work entirely with client-side technologies.  
 Unfortunately, client-side technologies are not particularly well-suited for 
 statistical computation, which we often want to leverage via dynamic controls 
 in an interactive statistical graphics system. In this scenario, it often makes

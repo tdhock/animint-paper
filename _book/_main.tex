@@ -222,9 +222,8 @@ Generally speaking, web graphics that use purely client-side
 technologies (i.e., \texttt{HTML}, \texttt{SVG}, \texttt{CSS}, and
 \texttt{JavaScript}) are desired over client-server web applications
 because of their relative ease of distribution and maintenance. This is
-why many web-based graphing libraries work entirely with client-side
-technologies, like \texttt{Vega} (Trifacta 2014) and \texttt{plotly.js}
-(Plotly 2015).\\
+why many web-based graphing libraries like \texttt{Vega} (Trifacta 2014)
+work entirely with client-side technologies.\\
 Unfortunately, client-side technologies are not particularly well-suited
 for statistical computation, which we often want to leverage via dynamic
 controls in an interactive statistical graphics system. In this
@@ -263,7 +262,7 @@ restricted (e.g., 1-to-1 transient linking) since it's very difficult to
 standardize an API for linking arbitrary libraries. We think this is a
 great direction for `production-ready' exploratory graphics, but also
 hope to see more opinionated approaches to this idea, like
-\textbf{plotly} (Plotly 2015), that focus more on statistical
+\textbf{plotly} (Sievert et al., n.d.), that focus more on statistical
 aggregations, missing values, and selection sequences (Hofmann and Theus
 1998).
 
@@ -1176,10 +1175,6 @@ Statistical Software} 46 (1):1--88.
 Pedersen, Thomas Lin. 2016. \emph{Tweenr: Interpolate Data for Smooth
 Animations}. \url{https://CRAN.R-project.org/package=tweenr}.
 
-\leavevmode\hypertarget{ref-plotly}{}%
-Plotly. 2015. ``Collaborative Data Science.'' Montreal, QC: Plotly
-Technologies Inc. 2015. \url{https://plot.ly}.
-
 \leavevmode\hypertarget{ref-RCore}{}%
 R Core Team. 2017. \emph{R: A Language and Environment for Statistical
 Computing}. Vienna, Austria: R Foundation for Statistical Computing.
@@ -1192,6 +1187,11 @@ ggplot2}. \url{http://github.com/dgrtwo/gganimate}.
 \leavevmode\hypertarget{ref-shiny}{}%
 RStudio. 2013. ``Shiny: Easy Web Applications in R.''
 \url{http://www.rstudio.com/shiny/}.
+
+\leavevmode\hypertarget{ref-plotly}{}%
+Sievert, Carson, Chris Parmer, Toby Hocking, Scott Chamberlain, Karthik
+Ram, Marianne Corvellec, and Pedro Despouy. n.d. \emph{Plotly: Create
+Interactive Web Graphics via 'Plotly.js'}.
 
 \leavevmode\hypertarget{ref-xgobi}{}%
 Swayne, DF, D Cook, and A Buja. 1998. ``XGobi: Interactive Dynamic Data
