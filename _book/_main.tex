@@ -779,15 +779,18 @@ selection set).
 \hypertarget{direction}{%
 \subsection{Direct versus indirect manipulation}\label{direction}}
 
-When viewing the interactive version of Figure \ref{fig:worldbank},
-suppose we wish to select Thailand. Direct manipulation is not very
-useful in this case since it is not easy to identify and select Thailand
-based on graphical marks on a plot. For this reason, \textbf{animint}
-also provides dropdown menu(s) for each selection variable to aid the
-selection process. Figure \ref{fig:widgets} shows what the user sees
-after typing `'th'' in the search box. Note that these dropdowns support
-selection of multiple values and coordinate sensibly with selections
-made via direct manipulation.
+Graphical queries via direct manipulation require direct user
+interaction with graphical elements, but it is not necessarily easy to
+find value(s) of interest in the graphical space. For this reason,
+\textbf{animint} also provides dropdown widgets for executing graphical
+queries via indirect manipulation. For example, when viewing the
+interactive version of Figure \ref{fig:worldbank}, suppose our goal is
+to compare the United States to Thailand. Direct manipulation is not
+very useful in this case since it is not necessaily easy to identify and
+select these countries based solely on the graphics. Figure
+\ref{fig:widgets} shows what the user sees after typing `'th'' in the
+search box. Note that these dropdowns support selection of multiple
+values and are coordinated with selections made via direct manipulation.
 
 \begin{figure}
 \centering
@@ -986,82 +989,62 @@ in the joint distribution.
 \hypertarget{limitations}{%
 \section{Limitations and future work}\label{limitations}}
 
-The system we have proposed enables graphical queries and animation via
-an extension to \textbf{ggplot2} using entirely client-side web
-technologies. Often times in interactive statistical graphics, we wish
-to dynamically compute a statistical aggregation(s) as a function of a
-user selection (e.g., compute a new linear model based on a set of newly
-brushed points). Using such a client-side linking framework requires one
-to pre-compute every possible aggregation ahead of time. If the number
-of states is fairly small, this isn't much of a problem, but it doesn't
-scale very well. For an example of pre-computing states and exploring
-those limitations, see the touring example in the supplementary
-materials.
+Our implementation of the \textbf{ggplot2} extension proposed in Section
+\ref{extension} has a number of limitations. Most notably, an
+interactive statistical graphics system should be able to dynamically
+compute statistical aggregations based on new user input (e.g., compute
+a new linear model based on a set of newly brushed points). In theory
+the extension can support dynamic statistical aggregations specified via
+a \textbf{ggplot2} layer, but it is not yet clear to us how one would
+translate every possible \texttt{R} function to \texttt{JavaScript}, so
+this is not currently implemented in \textbf{animint}. It may be
+worthwhile exploring compilation of \texttt{R} functions using a
+technology like \texttt{WebAssembly} so that the web browser can run
+them without an external web server running R. Nevertheless, it is
+currently possible to workaround this problem somewhat by pre-computing
+every possible aggregation ahead of time.\footnote{If the total 
+number of selection states is fairly small, this approach works, but it does not 
+scale very well. For an example of pre-computing states and exploring those limitations, 
+see the supplementary materials.}
 
-It's possible that future implementations could dynamically recompute
-statistical aggregated specified via a \textbf{ggplot2} layer, but it
-would be an immense amount of work to translate so many \texttt{R}
-functions to \texttt{JavaScript}. In this scenario, it may be worthwhile
-to try compile \texttt{R} functions so that the web browser can run them
-using a technology like \texttt{WebAssembly}
-
-Our current implementation provides a visual indication of the current
-selection via semi-transparency of \texttt{clickSelects} geoms. In
-future work we would like to explore more obvious visual cues that can
-be used to quickly show the user the links between plots and possible
-interactions.
-
-A number of limitations in our current implementation derive from the
+Numerous other limitations in our current implementation derive from the
 fact that some plot features are computed once during the compilation
-step, and remain static on a rendered plot. For example, users are
-unable to change variable mappings after compilation. Also, when
-different data subsets have very different ranges of values, it may be
-preferable to recompute scales when \texttt{clickSelects} selection(s)
-change. Some of these limitations can be resolved by adding interactive
-widgets to ``recompile'' components hard-coded in the plot meta
-information. In fact, \textbf{animint} makes it easy to embed
-visualizations inside of \textbf{shiny} web applications, and we have an
-example of interactively redefining variable mappings.
+step, and remain static on a rendered plot. For example, users are not
+able to dynamically alter variable mappings, transformations, or axis
+scaling. Most of these limitations can be resolved by adding interactive
+widgets to recompile plot(s) via a callback to R. For this reason,
+\textbf{animint} makes it easy to embed visualizations inside of
+\textbf{shiny} web applications, and we've provided some examples on
+\href{http://members.cbio.ensmp.fr/~thocking/animint-paper-figures/}{our
+site} that hosts all the interactive figures for this paper.
 
-Our compiler also currently takes advantage of \textbf{ggplot2}
-internals to compute statistics and positional adjustments before
-rendering. As a result, statistics/positions will not dynamically
-recompute based on selections. In other words, using
-\texttt{clickSelects}/\texttt{showSelected} with non-identity
-statistic(s)/position(s) may not generate a sensible result. It would be
-possible, but a significant amount of work, to transfer these
-computations from the compiler to the renderer.
-
-Another set of limitations derive from our current restriction that all
-subsets (corresponding to each possible selection) must be precomputed
-before render time. As elucidated in our supplementary materials, if
-there is a large space of possible selections, it is impractical to
-precompute every subset before viewing. Therefore, for future work it
-would be useful if the renderer could dynamically compute subsets when
-new selections are made.
-
-Our implementation is also limited to two specific types of direct
-manipulation: selecting graphical elements via mouse click
-(\texttt{clickSelects}), and showing/hiding related elements
-(\texttt{showSelected}). However, the framework described in Section
-\ref{extension} is not restricted to a particular event type, so
-\texttt{hoverSelects} and \texttt{brushSelects} aesthetics could be
-added, for instance. There are other types of interaction that could be
-added, that wouldn't require additional extensions to the Grammar of
-Graphics, such as: zooming, panning, and plot re-sizing.
+Other limitations could also be addressed by adding a few other
+aesthetics or options to the list provided in Table \ref{tab:overview}.
+More specifically, one could add support for more forms of direct
+manipulation by adding \texttt{hoverSelects} and \texttt{brushSelects}
+aesthetics, option(s) for more control over the selection styling
+(e.g.~color, opacity, etc), and options for providing more visual cues
+for graphical objects that trigger graphical queries (currently,
+hovering on such objects will change their transparency). There are
+other types of interaction that could be added without adding to the
+extention at all (e.g., zooming, panning, and plot re-sizing).
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
 
-We have proposed several extensions to \textbf{ggplot2}'s layered
-grammar of graphics in order to support a declarative approach to
-producing interactive and dynamic web graphics. By adding
-\texttt{clickSelects} and \texttt{showSelected} aesthetics to specify
-selection source(s) and target(s), \textbf{ggplot2} users can quickly
-and easily create animations with smooth transitions and perform dynamic
-queries via direct manipulation of linked views. As a result,
-\textbf{animint} is a useful tool not only for EDA, but also for the
-presentation and distribution of interactive statistical graphics.
+Interactive graphics can augment data exploration, and lead to better
+understanding by allowing one to quickly answer follow-up questions; but
+in order to be practically useful, one should be able to iterate quickly
+and share easily. Interactive statistical graphics have traditionally
+had heavy software requirements since it's common to dynamically execute
+statistical aggregations based on user input. However, if we wish to
+bring interactive statistical graphics to the web in a responsible way,
+we should explore how we can enable common tasks such as animation and
+linked views without a complex client-server infrastructure. Our simple
+extension of \textbf{ggplot2}'s layered grammar of graphics enables a
+set of common interactive tasks (e.g., graphical queries in multiple
+views, animation, tooltips, hyperlinks, etc) without requiring a complex
+client-server infrastructure.
 
 \section*{Interactive figures and reproducible research statement}
 
