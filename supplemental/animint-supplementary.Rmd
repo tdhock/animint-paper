@@ -1,26 +1,20 @@
+
+
 ## Supplementary Table 1: additional examples
 
-Summary statistics describing complexity and performance of 
-examples in this paper, as well as other **animint** examples, 
-are displayed in Table \@ref(tab:examples). The climate data 
+Summary statistics describing complexity and performance of a variety of
+examples are displayed in Table \@ref(tab:examples). The climate data 
 visualization has noticeably slow animations, 
 since it displays about 88,980 geometric elements at once. We observed
 this slowdown across all browsers, which suggested that there is an
 inherent bottleneck when rendering large interactive plots in web
-browsers using JavaScript and SVG. Another **animint** with a similar
-amount of total rows is based on the evolution data, but since it shows less data onscreen
-(about 2,703 elements), it exhibits faster responses to interactivity
+browsers using JavaScript and SVG. This performance could be improved
+by leveraging canvas-based (rather than vector-based) rendering, but at the
+time of writing, **animint** does not support canvas-based rendering.
+Another **animint** visualization with a similar
+amount of total rows is based on the evolution data, but since it shows less data 
+onscreen (about 2,703 elements), it exhibits faster responses to interactivity
 and animation.
-
-**animint** is still useful for creating interactive but
-non-animated plots when there is not a time variable in the data.
-In fact, 7 of the 11 examples in
-Table \@ref(tab:examples) are not animated. For example, linked plots
-are useful to illustrate complex concepts such as a change point
-detection model in the breakpoints data. The user can explore different model
-parameters and data sets since these are encoded as **animint**
-interaction variables.
-
 
 \begin{table}
 
@@ -64,23 +58,6 @@ Characteristics of 11 interactive visualizations designed with
 \end{table}
 
 
-
-
-## Indirect manipulation
-
-When viewing the interactive version of Figure \@ref(fig:worldbank), suppose
-we wish to select Thailand. Direct manipulation is not very useful in 
-this case since it is not easy to identify and select Thailand based
-on graphical marks on a plot. For this reason, **animint** also provides 
-dropdown menu(s) for each selection variable to aid the selection process.
-Figure \@ref(fig:widgets) shows what the user sees after typing ''th'' in 
-the search box. Note that these dropdowns support selection of multiple
-values and coordinate sensibly with selections made via direct manipulation.
-
-```{r widgets, echo = FALSE, eval = TRUE, fig.cap = "Animint provides a menu to update each selection variable. In this example, after typing \"th\" the country menu shows the subset of matching countries."}
-knitr::include_graphics("images/dropdown")
-```
-
 ## Additional implementation details {#implementation}
 
 ```{r design, echo = FALSE, eval = TRUE, fig.cap = "A schematic explanation of compilation and rendering in the World Bank visualization. Top: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. Center: **animint** R code compiles data in ggplot geoms to a database of TSV files (\\textcolor{red}{$\\rightarrowtriangle$}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\\rightarrowtriangle$). Bottom: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\\textcolor{blue}{$\\rightarrowtriangle$})."}
@@ -91,7 +68,6 @@ As shown in Figure \@ref(fig:design), the **animint** system is implemented
 in 2 parts: the compiler and the renderer. The compiler is implemented in about 
 2000 lines of R code that converts a list of ggplots and options to a JSON 
 plot meta-data file and a tab-separated values (TSV) file database.
-
 
 ```{r design2, echo = FALSE, eval = TRUE, fig.cap = "A schematic explanation of compilation and rendering in the World Bank visualization. Top: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. Center: **animint** R code compiles data in ggplot geoms to a database of TSV files (\\textcolor{red}{$\\rightarrowtriangle$}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\\rightarrowtriangle$). Bottom: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\\textcolor{blue}{$\\rightarrowtriangle$})."}
 knitr::include_graphics("images/figure-design")
@@ -134,16 +110,6 @@ Our current implementation of **animint** depends on a fork of **ggplot2**\footn
 that contains some minor modifications which are needed to support
 interactive rendering on web pages.
 
-## Other rendering options
-
-The `first` option controls selected values
-when the visualization is first rendered. The code below declares that
-the first selection of the `country` variable is the set of two
-countries, United States and Vietnam.
-
-```{r}
-viz$first = list(country = c("United States", "Vietnam"))
-```
 
 ## Caption of Tornadoes figure
 
@@ -159,3 +125,136 @@ is triggered, it smoothly transitions from one state to next
 (preserving object constancy in the axis ticks). This helps the viewer
 better perceive/understand how the range has changed from one state to
 the next.
+
+
+# Comparison study {#compare}
+
+In this section we compare our **animint** implementation with other similar
+leading systems by creating a given visualization in each system and
+discussing the pros and cons of the different approaches.
+
+## The Grand Tour {#tour}
+
+The Grand Tour is a well-known method for viewing high dimensional data which
+requires interactive and dynamic graphics [@grand-tour]. 
+Figure \@ref(fig:tour) shows a grand tour of 300 observations sampled
+from a correlated tri-variate normal distribution. The left hand view
+shows the marginal density of each point while the right hand view "tours"
+through 2D projections of the 3D data. There are many ways to
+choose projections in a tour, and many ways to interpolate
+between projections, most of which can be programmed fairly easily
+using R and relevant add-on packages. In this case, we used the R package **tourr**,
+which uses the geodesic random walk (i.e., random 2D projection with geodesic
+interpolation) in its grand tour algorithm [@tourr].
+
+```{r tour, echo = FALSE, eval = TRUE, fig.cap = "Linked selection in a grand tour with **animint**. A video demonstration can be viewed online at <https://vimeo.com/160720834>"}
+knitr::include_graphics("images/tour")
+```
+
+When touring data, it is generally useful to link low-dimensional displays with
+the tour itself. The video in Figure \@ref(fig:tour) was generated with our
+current **animint** implementation, and points are selected via mouse click which
+reveals that points with high marginal density are located in the
+ellipsoid center while points with a low marginal density appear near the 
+ellipsoid border. In this case, it would be convenient to also have brush 
+selection, as we demonstrate in
+Figure \@ref(fig:tourbrush) which implements the same touring example using the
+R packages **ggvis** and **shiny**. The brush in Figure \@ref(fig:tourbrush) is 
+implemented with **shiny**'s support for brushing static images, which currently 
+does not support multiple brushes, making it difficult to select
+non-contiguous regions. 
+
+```{r tourbrush, echo = FALSE, eval = TRUE, fig.cap = "Linked selection in a grand tour with **ggvis** and **shiny**.  A video demonstration can be viewed online at <https://vimeo.com/160825528>"}
+knitr::include_graphics("images/tourbrush")
+```
+
+This example helps point out a few other important differences in using 
+**animint** versus **ggvis**+**shiny** to implement "multiple linked and dynamic views"
+as described in @Ahlberg:1991 and @Buja:1991vh. 
+Maintaining state of the linked brush in Figure \@ref(fig:tourbrush)
+requires both knowledge and clever use of some sophicated programming 
+techniques such as closures and reactivity. 
+It also requires knowledge of the **shiny** web application framework and 
+a new approach to the grammar of graphics. 
+On the other hand, maintaining state in Figure \@ref(fig:tour) requires
+a few different `clickSelects`/`showSelected` mappings. As a
+result, we believe **animint** provides a more elegant user interface for 
+this application.
+
+The touring example also helps point out important consequences of the
+design and implementation of these two different systems. As mentioned in 
+Section \@ref(implementation), our current **animint** implementation requires 
+every subset of data to be precomputed before render time.
+For visualizations such as tours, where it is more efficient to 
+perform statistical computations on-the-fly, this can be a harsh restriction, 
+but this is a restriction of our current implementation 
+(not a restriction of the framework itself).
+As a result, when touring a large high-dimensional space, where many 
+projections are needed, **ggvis**+**shiny** may be desirable since the projections are 
+computed on the server and sent to the browser in real-time. This works fine
+when the application is running and viewed on the same host machine, but
+viewing such an application hosted on a remote machine can produce
+staggered animations since client-server requests must be performed, processed,
+and rendered roughly 30 times a second. Also, generally speaking, 
+the **animint** system results a more pleasant experience when it comes to hosting 
+and sharing applications since it doesn't require a Web Server with R and 
+special software already installed.
+
+## World Bank example
+
+We also recreated Figure \@ref(fig:worldbank) using **ggvis**+**shiny** and Tableau. 
+Even as experienced **ggvis**+**shiny** users, we found it quite difficult to
+replicate this example, and were not able to completely replicate it 
+due to a lack of a mechanism for coordinating indirect and direct
+manipulations. Overall the visualization is pretty similar, but 
+lacks a few important features. 
+In particular, there is no way to control the selected
+year using both the slider (indirect) and clicking on the ggvis plot (direct).
+It also lacks the ability to click on a country time series and label
+the corresponding point on the scatterplot. This might be possible, but we
+could not find a way to update a plot based on a click event on a different
+plot. Even with this lack of functionality, the **ggvis**+**shiny** is significantly
+more complicated and requires more code 
+(about 100 lines of code compared to 30).
+
+<!--
+% TODO: redo performance comparison
+%We quantified speed differences between the two systems by timing web
+%page loading using DevTools in the Chromium web browser Version
+%33.0.1750.152, on Ubuntu 12.04 (256984). We also used \texttt{getTime()}
+%in JavaScript to record timings for interactive plot updates (on a
+%desktop computer with a 2.8GHz Intel Core i7 CPU). Using ggvis with a
+%local web server and the World Bank data resulted in a web page that
+%loaded quickly (about 1.4s), but updated the plot with a noticeable
+%lag after each mouse click (500--1000ms). Note that since we used a
+%local web server, these times represent the overhead of the web server
+%system, and would be larger with a remote web server.
+%
+%When we used animint to make the World Bank data visualization, the
+%compilation from R objects to 2.1MB of uncompressed TSV data files
+%took 2.3s. Using a local web server, the animint JavaScript rendered
+%the plot very quickly (100--200ms). We also observed very fast plot
+%updates after mouse clicks in animint: 20--30ms response times for
+%selecting the year, and 60--70ms response times for selecting the
+%country.
+%
+%The conclusion of our speed comparison is that the overhead of waiting
+%for a web server to perform computations results in significant
+%slowdowns for interactive animations. It is clear that for quick
+%response times, it is preferable to use an entirely JavaScript-based
+%system like animint.
+
+%% TDH 20 Nov 2014: When I click on a country on the scatterplot it
+%% does not select that country's time series --- is that an inherent
+%% limitation of Tableau that we should discuss?
+-->
+
+It was also impossible to completely replicate Figure \@ref(fig:worldbank)
+using Tableau essentially because the example requires a \emph{layered} 
+approach to the grammar of graphics. In particular, since graphical
+marks and interaction source/target(s) must derive from the same table
+in Tableau, it was impossible to control the clickable multiple time 
+series and the clickable tallrects in different ways based on the two 
+different selection variables. In other words, in Tableau, selections 
+are managed on the plot level, but in **animint**, selections are specific
+to each graphical layer.

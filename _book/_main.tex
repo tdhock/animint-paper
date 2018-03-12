@@ -272,8 +272,9 @@ In addition to graphical queries, our extension supports a number of
 other interactive features, including animation, tooltips, and
 hyperlinks. A summary of these extensions and relevant additional
 options are provided in Table \ref{tab:overview}. There are a number of
-other options specific to our implementation in the R package
-\textbf{animint} which are described in the supplemental materials.
+other options that can be used to control things specific to our
+implementation in the R package \textbf{animint} which are included with
+the supplemental materials.
 
 \begin{table}
 
@@ -467,11 +468,20 @@ queries can be made by direct manipulation of graphical marks and/or
 indirect manipulation via a dropdown widget, as discussed in Section
 \ref{direction}. It's also worth noting that these aesthetics could be
 defined in such a way that they are not solely restricted to any
+<<<<<<< HEAD
 particular user event (e.g.~mouse click), but for sake of demonstration,
 we restrict focus to our \textbf{animint} implementation, which has
 \texttt{clickSelects} and \texttt{showSelected} aesthetics. Consider the
 R code below which uses these aesthetics to describe the interactive
 graphic shown in Figure \ref{fig:tips}\footnote{Interactive versions
+=======
+particular direct manipulation event (e.g.~mouse click), but for sake of
+demonstration, we restrict focus to our \textbf{animint} implementation,
+which has \texttt{clickSelects} and \texttt{showSelected} aesthetics.
+Consider the R code below which uses these aesthetics to describe the
+interactive graphic shown in
+Figure\textasciitilde{}\ref{fig:tips}.\footnote{Interactive versions
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 of all of the figures mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}.
 
@@ -579,8 +589,8 @@ expectancy where each line is a country (i.e., we \texttt{group} by
 country) and lines are colored by region. By clicking on a line, we also
 want the country label to appear in the right-hand plot, so we also need
 to set \texttt{clickSelects=country}. Lastly, by setting
-\texttt{showSelected=region}, we can hide/show lines by clicking on the
-color legend entries.
+\texttt{showSelected=region} and \texttt{color=region}, we can hide/show
+lines by clicking on the color legend entries.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -594,12 +604,12 @@ color legend entries.
 \end{Highlighting}
 \end{Shaded}
 
-We want to provide a visual cue for the selected year in the time
-series, so in the code below we add some tall rectangles to the time
-series plot. These tall rectangles will also serve as a way to directly
-modify the selected year. The tallrect geometry is a special case of a
-rectangle that automatically spans the entire vertical range, so we just
-have to specify the horizontal range via \texttt{xmin} and \texttt{xmax}
+To help point out the currently selected year, we also provide a visual
+cue in the form of tall rectangles to the time series plot. These tall
+rectangles will also serve as a way to directly modify the selected
+year. The tallrect geometry is a special case of a rectangle that
+automatically spans the entire vertical range, so we just have to
+specify the horizontal range via \texttt{xmin} and \texttt{xmax}
 aesthetics. Also, since the layered grammar of graphics allows for
 different data in each layer, we supply a data frame with just the
 unique years in the entire data for this layer.
@@ -653,7 +663,7 @@ as in the following SQL query,
 \end{Shaded}
 
 Below, the text layer for annotating selected countries is essentially
-the same as the point layer, except we map the country name to the
+the same as the point layer, except we assign the country name to the
 \texttt{label} aesthetic.
 
 \begin{Shaded}
@@ -686,11 +696,12 @@ In summary, this section shows an example of how the proposed
 \texttt{clickSelects} and \texttt{showSelected} aesthetics can be used
 with several different geoms (line, point, text, tallrect), each of
 which can potentially display a different data set. In each case we use
-\texttt{clickSelects} to declare a geom for which clicking changes the
-value of a selection variable, and we use \texttt{showSelected} to
-declare a geom which responds to such changes by updating the set of
-displayed data. In the next sections, we further explain how to link
-ggplots and add animation.
+\texttt{clickSelects} to declare a geom that when clicked updates the
+current selection, and we use \texttt{showSelected} to declare a geom
+which responds to such changes by updating the set of displayed data. In
+the next sections, we further options that allow us to accumulate
+selections, update selections indirectly, and automate selection
+updates.
 
 \hypertarget{linking}{%
 \subsection{Linking and multiple selection}\label{linking}}
@@ -712,17 +723,22 @@ including them together in the following list:
 Linking is accomplished because the two ggplots declared
 \texttt{clickSelects} and \texttt{showSelected} aesthetics that refer to
 common variable names (\texttt{region}, \texttt{year},
-\texttt{country}). For each such selection variable, our interactive
-renderer updates the set of selected values in response to mouse clicks
-on \texttt{clickSelects} geoms, and then updates the corresponding data
+\texttt{country}). For each such selection variable, our system updates
+the set of selected values in response to mouse clicks on
+\texttt{clickSelects} geoms, and then updates the corresponding data
 which is displayed for \texttt{showSelected} geoms.
 
+<<<<<<< HEAD
 Note that the \texttt{viz} list above can also contain rendering
 options, as we discuss below (see Table \ref{tab:overview} for a summary
 of proposed interactive features). For example, the
+=======
+Note that the \texttt{viz} list above can also contain numerous options
+which are listed in Table \ref{tab:overview}. For example, the
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 \texttt{selector.types} option controls whether or not selections for a
-given variable can accumulate (single or multiple selected values). This
-difference is also sometimes referred to as transient versus persistent
+given variable accumulate (single or multiple selected values). This
+sort of logic has also been interpreted as transient versus persistent
 selection (D. Cook and Swayne 2007).
 
 \begin{Shaded}
@@ -743,6 +759,24 @@ are declared as multiple selection variables, which can have multiple
 selected values at a time (clicking a geom with
 \texttt{clickSelects=country} will add/remove that country to/from the
 selection set).
+
+When viewing the interactive version of Figure \ref{fig:worldbank},
+suppose we wish to select Thailand. Direct manipulation is not very
+useful in this case since it is not easy to identify and select Thailand
+based on graphical marks on a plot. For this reason, \textbf{animint}
+also provides dropdown menu(s) for each selection variable to aid the
+selection process. Figure \ref{fig:widgets} shows what the user sees
+after typing `'th'' in the search box. Note that these dropdowns support
+selection of multiple values and coordinate sensibly with selections
+made via direct manipulation.
+
+\begin{figure}
+\centering
+\includegraphics{images/dropdown}
+\caption{\label{fig:widgets}Animint provides a menu to update each selection
+variable. In this example, after typing ``th'' the country menu shows
+the subset of matching countries.}
+\end{figure}
 
 \hypertarget{animation}{%
 \subsection{Animation and smooth transitions}\label{animation}}
@@ -783,14 +817,29 @@ used to match data elements before and after the smooth transition. In
 the World Bank example, we would need to specify
 \texttt{aes(key=country)} for the points and text in the scatterplot.
 
+\hypertarget{storing-and-re-storing-state}{%
+\subsection{Storing and re-storing
+state}\label{storing-and-re-storing-state}}
+
+When sharing an interactive visualization with others, it can often be
+helpful to share interesting state(s) of the visualization. In
+\textbf{animint}, states can be serialized in a URL link and/or
+specified at the command line via the \texttt{first} option. The code
+below declares that the first selection of the \texttt{country} variable
+is the set of two countries, United States and Vietnam.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{viz}\OperatorTok{$}\NormalTok{first <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{country =} \KeywordTok{c}\NormalTok{(}\StringTok{"United States"}\NormalTok{, }\StringTok{"Vietnam"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{compiling-and-rendering}{%
 \subsection{Compiling and rendering}\label{compiling-and-rendering}}
 
-We have implemented the \textbf{animint} R package which enables viewing
-the linked interactive ggplots that we proposed in the previous
-sections. Supplying the \texttt{viz} list of ggplots and rendering
-options to the \texttt{animint2dir()} function will save all the files
-necessary for rendering the visualization:
+Supplying the \texttt{viz} list of ggplots and rendering options to the
+\texttt{animint2dir()} function will save all the files necessary for
+rendering the visualization:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -798,6 +847,7 @@ necessary for rendering the visualization:
 \end{Highlighting}
 \end{Shaded}
 
+<<<<<<< HEAD
 As shown in supplementary Figure 1, the \textbf{animint} system is
 implemented in 2 parts: the compiler and the renderer. The compiler is
 implemented in R code that converts a list of ggplots and options to a
@@ -807,6 +857,16 @@ hosted along with the TSV and JSON files on any web server. The
 interactive plots can be viewed by opening the \texttt{index.html} page
 in any modern web browser. Note that our current implementation of
 \textbf{animint} depends on a fork of
+=======
+As shown in Supplementary Figure 1, the \textbf{animint} system consists
+of 2 parts: the compiler and the renderer. The compiler is R code that
+converts a list of ggplots and options to a JSON plot meta-data file and
+a tab-separated values (TSV) file database. The renderer consists of
+HTML and JavaScript files, which can be easily hosted along with the TSV
+and JSON files on any web server. The interactive plots can be viewed by
+opening the \texttt{index.html} page in any modern web browser. Note
+that \textbf{animint} currently depends on a fork of
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 \textbf{ggplot2}\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages. Additional implementation details
@@ -915,6 +975,7 @@ variables for the selected time (top) and region (bottom). The plots use
 and time (bottom), and are useful for visualizing normality and outliers
 in the joint distribution.
 
+<<<<<<< HEAD
 \hypertarget{compare}{%
 \section{Comparison study}\label{compare}}
 
@@ -1030,17 +1091,33 @@ ways based on the two different selection variables. In other words, in
 Tableau, selections are managed on the plot level, but in
 \textbf{animint}, selections are specific to each graphical layer.
 
+=======
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 \hypertarget{limitations}{%
 \section{Limitations and future work}\label{limitations}}
 
-The system we have proposed provides linked interactive plots via the
-new \texttt{showSelected} and \texttt{clickSelects} aesthetics. The
-linking between plots is rather flexible, but is limited to interactions
-which are specified by the plot designer at compile-time. Our current
-implementation provides a visual indication of the current selection via
-semi-transparency of \texttt{clickSelects} geoms. In future work we
-would like to explore more obvious visual cues that can be used to
-quickly show the user the links between plots and possible interactions.
+The system we have proposed enables graphical queries and animation via
+an extension to \textbf{ggplot2} using entirely client-side web
+technologies. Often times in interactive statistical graphics, we wish
+to dynamically compute a statistical aggregation(s) as a function of a
+user selection (e.g., compute a new linear model based on a set of newly
+brushed points). Using such a client-side linking framework requires one
+to pre-compute every possible aggregation ahead of time. If the number
+of states is fairly small, this isn't much of a problem, but it doesn't
+scale very well. For an example of pre-computing states and exploring
+those limitations, see the touring example in the supplementary
+materials.
+
+It's possible that future implementations could dynamically recompute
+statistical aggregated specified via a \textbf{ggplot2} layer, but it
+would be an immense amount of work to translate so many \texttt{R}
+functions to \texttt{JavaScript}. At this point,
+
+Our current implementation provides a visual indication of the current
+selection via semi-transparency of \texttt{clickSelects} geoms. In
+future work we would like to explore more obvious visual cues that can
+be used to quickly show the user the links between plots and possible
+interactions.
 
 A number of limitations in our current implementation derive from the
 fact that some plot features are computed once during the compilation
@@ -1120,12 +1197,6 @@ Andreas Buja, Catherine Hurley, Daniel Asimov, and John A. McDonald.
 1988. ``Elements of a Viewing Pipeline for Data Analysis.'' In
 \emph{Dynamic Graphics for Statistics}, edited by William S. Cleveland
 and Marylyn E. McGill. Belmont, California: Wadsworth, Inc.
-
-\leavevmode\hypertarget{ref-grand-tour}{}%
-Asimov, Daniel. 1985. ``The Grand Tour: A Tool for Viewing
-Multidimensional Data.'' \emph{SIAM J. Sci. Stat. Comput.} 6 (1).
-Philadelphia, PA, USA: Society for Industrial; Applied
-Mathematics:128--43. \url{https://doi.org/10.1137/0906011}.
 
 \leavevmode\hypertarget{ref-brushing-scatterplots}{}%
 Becker, RA, and WS Cleveland. 1987. ``Brushing Scatterplots.''
@@ -1262,11 +1333,6 @@ Statistical Data Visualization}.
 Wickham, Hadley. 2010. ``A Layered Grammar of Graphics.'' \emph{Journal
 of Computational and Graphical Statistics} 19 (1). Taylor \&
 Francis:3--28.
-
-\leavevmode\hypertarget{ref-tourr}{}%
-Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2011.
-``tourr: An R Package for Exploring Multivariate Data with
-Projections,'' April, 1--18.
 
 \leavevmode\hypertarget{ref-plumbing}{}%
 Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike

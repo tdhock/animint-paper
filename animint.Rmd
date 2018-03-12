@@ -133,15 +133,16 @@ the Grammar of Graphics uses for mapping data to visual attributes (e.g., color,
 shape, x, y, etc). Typically aesthetic mappings are visual, meaning they can be
 easily seen in a static graphic, but our proposed variable mappings are more 
 conceptual, meaning that they can't easily be seen, but can be used to control 
-certain interactive properties. To give a small example, Figure \ref{fig:tips} 
+certain interactive properties. To give a small example, Figure \@ref(fig:tips) 
 depicts a graphical query made by assigning sensible metadata to graphical marks 
 via the `clickSelects` and `showSelected` aesthetics.
 
 In addition to graphical queries, our extension supports a number of other
 interactive features, including animation, tooltips, and hyperlinks.
 A summary of these extensions and relevant additional options are provided 
-in Table \ref{tab:overview}. There are a number of other options specific to our implementation in the R package
-**animint** which are described in the supplemental materials.
+in Table \@ref(tab:overview). There are a number of other options that can 
+be used to control things specific to our implementation in the R package
+**animint** which are included with the supplemental materials.
 
 \begin{table}
 
@@ -387,7 +388,7 @@ that are known at print time, these queries can be made by direct
 manipulation of graphical marks and/or indirect manipulation via a dropdown widget, 
 as discussed in Section \@ref(direction). It's also worth noting that these 
 aesthetics could be defined in such a way that they are not solely restricted 
-to any particular user event (e.g. mouse click), but for sake of demonstration,
+to any particular direct manipulation event (e.g. mouse click), but for sake of demonstration,
 we restrict focus to our **animint** implementation, which has `clickSelects` 
 and `showSelected` aesthetics. 
 Consider the R code below which uses these aesthetics to describe the interactive graphic shown in Figure \@ref(fig:tips)\footnote{Interactive versions
@@ -509,9 +510,15 @@ Note that, in the left-hand plot of
 Figure \@ref(fig:worldbank), we have a time series 
 of the life expectancy where each line is a country (i.e., we `group` by
 country) and lines are colored by region. By clicking on a line, we also want 
+<<<<<<< HEAD
 the country label to appear in the right-hand plot, so we also need to set 
 `clickSelects=country`. Lastly, by setting `showSelected=region`,
 we can hide/show lines by clicking on the color legend entries.
+=======
+the country label to appear in the right hand plot, so we also need to set 
+`clickSelects=country`. Lastly, by setting `showSelected=region` and 
+`color=region`, we can hide/show lines by clicking on the color legend entries.
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 
 ```{r}
 timeSeries <- ggplot() + geom_line(
@@ -523,8 +530,8 @@ timeSeries <- ggplot() + geom_line(
 )
 ```
 
-We want to provide a visual cue for the selected year in the time
-series, so in the code below we add some tall rectangles to the time series plot.
+To help point out the currently selected year, we also provide a visual cue in 
+the form of tall rectangles to the time series plot.
 These tall rectangles will also serve as a way to directly modify the
 selected year. The tallrect geometry is a special case of a rectangle
 that automatically spans the entire vertical range, so we just have to
@@ -568,7 +575,6 @@ variables, and combined together using the intersection operation. In
 the example above, that means that a point will be drawn for the
 currently selected combination of year and region, as in the following SQL query,
 
-
 ```sql
 SELECT * FROM WorldBank
   WHERE year   IN selected_year
@@ -577,7 +583,7 @@ SELECT * FROM WorldBank
 
 Below, the text layer for
 annotating selected countries is essentially the same as the point
-layer, except we map the country name to the `label` aesthetic.
+layer, except we assign the country name to the `label` aesthetic.
 
 ```{r}
 scatterPlot <- scatterPlot + geom_text(
@@ -605,10 +611,11 @@ In summary, this section shows an example of how the proposed
 `clickSelects` and `showSelected` aesthetics can be used with several
 different geoms (line, point, text, tallrect), each of which can potentially
 display a different data set. In each case we use `clickSelects` to
-declare a geom for which clicking changes the value of a selection
-variable, and we use `showSelected` to declare a geom which responds
+declare a geom that when clicked updates the current selection, 
+and we use `showSelected` to declare a geom which responds
 to such changes by updating the set of displayed data. In the next
-sections, we further explain how to link ggplots and add animation.
+sections, we further options that allow us to accumulate selections,
+update selections indirectly, and automate selection updates.
 
 ## Linking and multiple selection {#linking}
 
@@ -626,19 +633,24 @@ viz <- list(
 Linking is accomplished because the two ggplots declared
 `clickSelects` and `showSelected` aesthetics that refer to common
 variable names (`region`, `year`, `country`). For each such selection
-variable, our interactive renderer updates the set of selected values
+variable, our system updates the set of selected values
 in response to mouse clicks on `clickSelects` geoms, and then updates
 the corresponding data which is displayed for `showSelected`
 geoms.
 
+<<<<<<< HEAD
 
 
 Note that the `viz` list above can also contain
 rendering options, as we discuss below (see Table \ref{tab:overview} for a summary of
 proposed interactive features). For example, the
+=======
+Note that the `viz` list above can also contain numerous
+options which are listed in Table \@ref(tab:overview). For example, the
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 `selector.types` option controls whether or not selections for a given
-variable can accumulate (single or multiple selected values). This difference
-is also sometimes referred to as transient versus persistent selection [@ggobi:2007].
+variable accumulate (single or multiple selected values). This sort of logic
+has also been interpreted as transient versus persistent selection [@ggobi:2007].
 
 ```{r}
 viz$selector.types <- list(
@@ -664,8 +676,18 @@ I would recommend moving discussion of direct/indirect manipulation to supplemen
 ## Direct versus indirect manipulation {#direction}
 -->
 
+When viewing the interactive version of Figure \@ref(fig:worldbank), suppose
+we wish to select Thailand. Direct manipulation is not very useful in 
+this case since it is not easy to identify and select Thailand based
+on graphical marks on a plot. For this reason, **animint** also provides 
+dropdown menu(s) for each selection variable to aid the selection process.
+Figure \@ref(fig:widgets) shows what the user sees after typing ''th'' in 
+the search box. Note that these dropdowns support selection of multiple
+values and coordinate sensibly with selections made via direct manipulation.
 
-
+```{r widgets, echo = FALSE, eval = TRUE, fig.cap = "Animint provides a menu to update each selection variable. In this example, after typing \"th\" the country menu shows the subset of matching countries."}
+knitr::include_graphics("images/dropdown")
+```
 
 ## Animation and smooth transitions  {#animation}
 
@@ -701,25 +723,45 @@ match data elements before and after the smooth transition. In the
 World Bank example, we would need to specify `aes(key=country)` for
 the points and text in the scatterplot.
 
+## Storing and re-storing state
+
+When sharing an interactive visualization with others, it can often be helpful
+to share interesting state(s) of the visualization. In **animint**, states can
+be serialized in a URL link and/or specified at the command line via the `first`
+option. The code below declares that the first selection of the `country` 
+variable is the set of two countries, United States and Vietnam.
+
+```{r}
+viz$first <- list(country = c("United States", "Vietnam"))
+```
+
 ## Compiling and rendering
 
-We have implemented the **animint** R package which enables viewing the
-linked interactive ggplots that we proposed in the previous
-sections. Supplying the `viz` list of ggplots and rendering options to
+Supplying the `viz` list of ggplots and rendering options to
 the `animint2dir()` function will save all the files necessary for
 rendering the visualization:
+
 ```{r}
 animint::animint2dir(viz)
 ```
+<<<<<<< HEAD
 As shown in supplementary Figure 1, the **animint** system is
 implemented in 2 parts: the compiler and the renderer. The compiler is
 implemented in R code that converts a list of ggplots and options to a
 JSON plot meta-data file and a tab-separated values (TSV) file
 database. The renderer consists of HTML and JavaScript files, which
+=======
+
+As shown in Supplementary Figure 1, the **animint** system consists of 
+2 parts: the compiler and the renderer. The compiler is R code that 
+converts a list of ggplots and options to a JSON plot meta-data file 
+and a tab-separated values (TSV) file database. The renderer consists 
+of HTML and JavaScript files, which
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 can be easily hosted along with the TSV and JSON files on any web
 server. The interactive plots can be viewed by opening the
-`index.html` page in any modern web browser. Note that our current
-implementation of **animint** depends on a fork of
+`index.html` page in any modern web browser. Note that **animint** 
+currently depends on a fork of
 **ggplot2**\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages. Additional implementation details
@@ -801,6 +843,7 @@ temperature variables for the selected time (top) and region (bottom).
 The plots use `clickSelects` to emphasize the currently selected region (top) and time (bottom), 
 and are useful for visualizing normality and outliers in the joint distribution.
 
+<<<<<<< HEAD
 # Comparison study {#compare}
 
 In this section we compare our **animint** implementation with other similar
@@ -890,39 +933,22 @@ could not find a way to update a plot based on a click event on a different
 plot. Even with this lack of functionality, the **ggvis**+**shiny** is significantly
 more complicated and requires more code 
 (about 100 lines of code compared to 30).
+=======
+# Limitations and future work {#limitations}
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 
-<!--
-% TODO: redo performance comparison
-%We quantified speed differences between the two systems by timing web
-%page loading using DevTools in the Chromium web browser Version
-%33.0.1750.152, on Ubuntu 12.04 (256984). We also used \texttt{getTime()}
-%in JavaScript to record timings for interactive plot updates (on a
-%desktop computer with a 2.8GHz Intel Core i7 CPU). Using ggvis with a
-%local web server and the World Bank data resulted in a web page that
-%loaded quickly (about 1.4s), but updated the plot with a noticeable
-%lag after each mouse click (500--1000ms). Note that since we used a
-%local web server, these times represent the overhead of the web server
-%system, and would be larger with a remote web server.
-%
-%When we used animint to make the World Bank data visualization, the
-%compilation from R objects to 2.1MB of uncompressed TSV data files
-%took 2.3s. Using a local web server, the animint JavaScript rendered
-%the plot very quickly (100--200ms). We also observed very fast plot
-%updates after mouse clicks in animint: 20--30ms response times for
-%selecting the year, and 60--70ms response times for selecting the
-%country.
-%
-%The conclusion of our speed comparison is that the overhead of waiting
-%for a web server to perform computations results in significant
-%slowdowns for interactive animations. It is clear that for quick
-%response times, it is preferable to use an entirely JavaScript-based
-%system like animint.
+The system we have proposed enables graphical queries and animation via an 
+extension to **ggplot2** using entirely client-side web technologies. Often times
+in interactive statistical graphics, we wish to dynamically compute a statistical 
+aggregation(s) as a function of a user selection (e.g., compute a new 
+linear model based on a set of newly brushed points). Using such a client-side 
+linking framework requires one to pre-compute every 
+possible aggregation ahead of time. If the number of states is fairly small, this isn't 
+much of a problem, but it doesn't scale very well. For an example of pre-computing
+states and exploring those limitations, see the touring example in the supplementary 
+materials.
 
-%% TDH 20 Nov 2014: When I click on a country on the scatterplot it
-%% does not select that country's time series --- is that an inherent
-%% limitation of Tableau that we should discuss?
--->
-
+<<<<<<< HEAD
 It was also impossible to completely replicate Figure \@ref(fig:worldbank)
 using Tableau essentially because the example requires a \emph{layered} 
 approach to the Grammar of Graphics. In particular, since graphical
@@ -932,14 +958,15 @@ series and the clickable tallrects in different ways based on the two
 different selection variables. In other words, in Tableau, selections 
 are managed on the plot level, but in **animint**, selections are specific
 to each graphical layer.
+=======
+It's possible that future implementations could dynamically recompute
+statistical aggregated specified via a **ggplot2** layer, but it would be an 
+immense amount of work to translate so many `R` functions to `JavaScript`. 
+At this point,
+>>>>>>> b47584922dccc0e6585ef78aa55790b3d1c470dd
 
-# Limitations and future work {#limitations}
 
-The system we have proposed provides linked interactive plots via the
-new `showSelected` and `clickSelects` aesthetics. The linking between
-plots is rather flexible, but is limited to interactions which are
-specified by the plot designer at compile-time. Our current
-implementation provides a visual indication of the current selection
+Our current implementation provides a visual indication of the current selection
 via semi-transparency of `clickSelects` geoms. In future work we would
 like to explore more obvious visual cues that can be used to quickly
 show the user the links between plots and possible interactions.
