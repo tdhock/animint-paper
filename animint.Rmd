@@ -365,12 +365,20 @@ manipulation of graphical marks and/or indirect manipulation via a dropdown widg
 as discussed in Section \@ref(direction). It's also worth noting that these 
 aesthetics could be defined in such a way that they are not solely restricted 
 to any particular direct manipulation event (e.g. mouse click), but for sake of demonstration,
-we restrict focus to our **animint** implementation, which has `clickSelects` 
-and `showSelected` aesthetics. 
+we restrict focus to our current **animint** implementation, which has 
+`clickSelects` and `showSelected` aesthetics. 
 
-Consider the `R` code below which uses these aesthetics to describe the interactive graphic shown in Figure~\@ref(fig:tips).\footnote{Interactive versions
+Consider the `R` code below which uses these aesthetics to create the interactive 
+graphic depicted in Figure \@ref(fig:tips).\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
-\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}. 
+\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}.
+The `geom_bar()` layer in the left-hand panel is linked to 
+the 2nd `geom_point()` layer in the right-hand panel since the `clickSelects` and
+`showSelected` aesthetics are mapped to a common variable, `sex`. This effectively
+creates a primary key relationship between the two tables used to render these 
+graphical layers. The first `geom_point()` layer intentionally does not have 
+a `showSelected` mapping, but has a bit of alpha transparency, so all the data is 
+shown in light-gray, and the current selection is portrayed in black.
 
 ```{r}
 data(tips, package = "reshape2")
@@ -381,26 +389,13 @@ scatter <- ggplot(tips) +
   geom_point(aes(x = total_bill, y = tip, showSelected = sex))
 ```
 
-The 
-`clickSelects` aesthetic is used to declare a geom which can be clicked to set selection value(s).
-For the example in Figure \@ref(fig:tips), we declare a bar with `clickSelects=sex` and refer to the current set of selection value(s) as `selected_sex`. The value of `selected_sex` can take on
-any subset of the unique values of `sex`, and in this case, the unique values 
-are `Male` and `Female`. The selection set, `selected_sex`, is then used
-to select subsets of data for geoms with the `showSelected=sex` aesthetic. In this case there is a geom point with `showSelected=sex`, so clicking on a bar results in an update to the displayed subset of points.
-
-
 ```{r tips, echo = FALSE, eval = TRUE, fig.cap = "A graphical query of tips data set. Left: the `clickSelects` aesthetic designates a clickable geom bar that can change a selection variable. Right: the `showSelected` aesthetic designates a geom point that responds by showing only the data which corresponds to the current selection."}
 knitr::include_graphics("images/tips")
 ```
 
-In the `R` code above, the `geom_bar()` layer in the left-hand plot is linked to 
-the 2nd `geom_point()` layer in the right-hand plot since the `clickSelects` and
-`showSelected` aesthetics are mapped to a common variable, `sex`. Note how the 
-first `geom_point()` layer does not have a `showSelected` mapping, but has
-a bit of alpha transparency, so all the data is shown in light gray, and the
-current selection is portrayed in black. In other words, when a bar is clicked, 
-in order to update the second layer of points, our system performs an SQL query 
-of the form:
+In Figure \@ref(fig:tips), there is only one selection variable which we refer to as
+`selected_sex`. This variable is updated whenever a bar is clicked which triggers
+our system to perform an SQL query of the form:
 
 ```sql
 SELECT * FROM tips

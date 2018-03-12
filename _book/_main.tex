@@ -262,7 +262,7 @@ restricted (e.g., 1-to-1 transient linking) since it's very difficult to
 standardize an API for linking arbitrary libraries. We think this is a
 great direction for `production-ready' exploratory graphics, but also
 hope to see more opinionated approaches to this idea, like
-\textbf{plotly} (Sievert et al., n.d.), that focus more on statistical
+\textbf{plotly} (Sievert et al. 2018), that focus more on statistical
 aggregations, missing values, and selection sequences (Hofmann and Theus
 1998).
 
@@ -505,14 +505,24 @@ indirect manipulation via a dropdown widget, as discussed in Section
 \ref{direction}. It's also worth noting that these aesthetics could be
 defined in such a way that they are not solely restricted to any
 particular direct manipulation event (e.g.~mouse click), but for sake of
-demonstration, we restrict focus to our \textbf{animint} implementation,
-which has \texttt{clickSelects} and \texttt{showSelected} aesthetics.
+demonstration, we restrict focus to our current \textbf{animint}
+implementation, which has \texttt{clickSelects} and
+\texttt{showSelected} aesthetics.
 
-Consider the \texttt{R} code below which uses these aesthetics to
-describe the interactive graphic shown in
-Figure\textasciitilde{}\ref{fig:tips}.\footnote{Interactive versions
+Consider the \texttt{R} code below which uses these aesthetics to create
+the interactive graphic depicted in Figure
+\ref{fig:tips}.\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}.
+The \texttt{geom\_bar()} layer in the left-hand panel is linked to the
+2nd \texttt{geom\_point()} layer in the right-hand panel since the
+\texttt{clickSelects} and \texttt{showSelected} aesthetics are mapped to
+a common variable, \texttt{sex}. This effectively creates a primary key
+relationship between the two tables used to render these graphical
+layers. The first \texttt{geom\_point()} layer intentionally does not
+have a \texttt{showSelected} mapping, but has a bit of alpha
+transparency, so all the data is shown in light-gray, and the current
+selection is portrayed in black.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -525,18 +535,6 @@ of all of the figures mentioned in this paper can be found at
 \end{Highlighting}
 \end{Shaded}
 
-The \texttt{clickSelects} aesthetic is used to declare a geom which can
-be clicked to set selection value(s). For the example in Figure
-\ref{fig:tips}, we declare a bar with \texttt{clickSelects=sex} and
-refer to the current set of selection value(s) as
-\texttt{selected\_sex}. The value of \texttt{selected\_sex} can take on
-any subset of the unique values of \texttt{sex}, and in this case, the
-unique values are \texttt{Male} and \texttt{Female}. The selection set,
-\texttt{selected\_sex}, is then used to select subsets of data for geoms
-with the \texttt{showSelected=sex} aesthetic. In this case there is a
-geom point with \texttt{showSelected=sex}, so clicking on a bar results
-in an update to the displayed subset of points.
-
 \begin{figure}
 \centering
 \includegraphics{images/tips}
@@ -547,16 +545,10 @@ designates a geom point that responds by showing only the data which
 corresponds to the current selection.}
 \end{figure}
 
-In the \texttt{R} code above, the \texttt{geom\_bar()} layer in the
-left-hand plot is linked to the 2nd \texttt{geom\_point()} layer in the
-right-hand plot since the \texttt{clickSelects} and
-\texttt{showSelected} aesthetics are mapped to a common variable,
-\texttt{sex}. Note how the first \texttt{geom\_point()} layer does not
-have a \texttt{showSelected} mapping, but has a bit of alpha
-transparency, so all the data is shown in light gray, and the current
-selection is portrayed in black. In other words, when a bar is clicked,
-in order to update the second layer of points, our system performs an
-SQL query of the form:
+In Figure \ref{fig:tips}, there is only one selection variable which we
+refer to as \texttt{selected\_sex}. This variable is updated whenever a
+bar is clicked which triggers our system to perform an SQL query of the
+form:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1190,7 +1182,7 @@ RStudio. 2013. ``Shiny: Easy Web Applications in R.''
 
 \leavevmode\hypertarget{ref-plotly}{}%
 Sievert, Carson, Chris Parmer, Toby Hocking, Scott Chamberlain, Karthik
-Ram, Marianne Corvellec, and Pedro Despouy. n.d. \emph{Plotly: Create
+Ram, Marianne Corvellec, and Pedro Despouy. 2018. \emph{Plotly: Create
 Interactive Web Graphics via 'Plotly.js'}.
 
 \leavevmode\hypertarget{ref-xgobi}{}%
