@@ -158,11 +158,11 @@ sharing, but are difficult to leverage during the exploratory phase of a
 data science workflow. Even before the web, interactive graphics helped
 data analysts quickly gather insight from data, discover the unexpected,
 and develop better model diagnostics. Web technologies, however, are not
-designed to fit inside an exploratory data analysis workflow where rapid
-iteration between data manipulation, modeling, and visualization must
-occur. We propose the \texttt{R} package \textbf{animint} for rapid
-creation of linked and animated web graphics through a simple extension
-of \textbf{ggplot2}'s implementation of the Grammar of Graphics. The
+designed to fit inside an exploratory data analysis (EDA) workflow where
+rapid iteration between data manipulation, modeling, and visualization
+must occur. We propose the R package \textbf{animint} for rapid creation
+of linked and animated web graphics through a simple extension of
+\textbf{ggplot2}'s implementation of the Grammar of Graphics. The
 extension uses the existing \textbf{ggplot2} code, and leverages a
 simple API for describing animations and graphical queries between
 multiple linked views in a standalone web page.
@@ -265,21 +265,26 @@ aggregations, missing values, and selection sequences (Hofmann and Theus
 1998).
 
 We propose an extension of \textbf{ggplot2}'s layered Grammar of
-Graphics API to create interactive web graphics that do not require
-server-side technologies. The core idea lies in attaching metadata to
+Graphics API to create interactive web graphics that do not require a
+callback to server-side R. The core idea lies in attaching metadata to
 graphical marks that can be used to hide/show subsets of data. The
 resulting framework is quite similar to what D. Cook, Buja, and Swayne
 (2007) describe as brushing in multiple linked views as a database
 query. The assignment of data to graphical marks is done through
-\emph{aesthetic mappings}, which is a term the Grammar of Graphics uses
-for mapping data to visual attributes (e.g., color, shape, x, y, etc).
-Typically aesthetic mappings are visual, meaning they can be easily seen
-in a static graphic, but our proposed variable mappings are more
-conceptual, meaning that they can't easily be seen, but can be used to
-control certain interactive properties. To give a small example, Figure
-\ref{fig:tips} depicts a graphical query made by assigning sensible
-metadata to graphical marks via the \texttt{clickSelects} and
-\texttt{showSelected} aesthetics.
+\emph{aesthetic mappings}, which is a term the Grammar of Graphics
+Wilkinson et al. (2006) uses for mapping data to visual attributes
+(e.g., color, shape, x, y, etc). Typically aesthetic mappings are
+visual, meaning they can be easily seen in a static graphic, but our
+proposed aesthetic mappings control interactive properties, so they are
+not necessarily easily seen, but visual cues may be added to guide the
+user interaction. To give a small example, Figure \ref{fig:tips} depicts
+a graphical query made by assigning metadata to graphical marks via the
+\texttt{clickSelects} and \texttt{showSelected} aesthetics. These
+aesthetics are essentially used to create a primary key between two
+tables of data, and as the name \texttt{clickSelects} suggests, queries
+are made by clicking directly on graphical marks, but other aesthetics
+could be used to support other direct manipulation events (e.g.,
+\texttt{hoverSelects}, \texttt{brushSelects}, etc).
 
 In addition to graphical queries, our extension supports a number of
 other interactive features, including animation, tooltips, and
@@ -316,6 +321,12 @@ Feature & Type & Description \\
 
 \hypertarget{related-work}{%
 \section{Related work}\label{related-work}}
+
+In the last section, we motivated the need for \texttt{R} packages that
+create linked interactive graphics using client-side web technologies.
+We also proposed an extension to \textbf{ggplot2}'s API that supports a
+class of graphical queries. To help further explain where our work makes
+contributions to the field, this section further explores related work.
 
 It is important to acknowledge that \textbf{ggplot2} is built on top of
 the \texttt{R} package \textbf{grid}, a low-level graphics system, which
@@ -488,11 +499,12 @@ defined in such a way that they are not solely restricted to any
 particular direct manipulation event (e.g.~mouse click), but for sake of
 demonstration, we restrict focus to our \textbf{animint} implementation,
 which has \texttt{clickSelects} and \texttt{showSelected} aesthetics.
+
 Consider the \texttt{R} code below which uses these aesthetics to
 describe the interactive graphic shown in
 Figure\textasciitilde{}\ref{fig:tips}.\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
-\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
+\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -506,16 +518,16 @@ of all of the figures mentioned in this paper can be found at
 \end{Shaded}
 
 The \texttt{clickSelects} aesthetic is used to declare a geom which can
-be clicked to set selection value(s). For the example in
-Figure\textasciitilde{}\ref{fig:tips}, we declare a bar with
-\texttt{clickSelects=sex} and refer to the current set of selection
-value(s) as \texttt{selected\_sex}. The value of \texttt{selected\_sex}
-can take on any subset of the unique values of \texttt{sex}, and in this
-case, the unique values are \texttt{Male} and \texttt{Female}. The
-selection set, \texttt{selected\_sex}, is then used to select subsets of
-data for geoms with the \texttt{showSelected=sex} aesthetic. In this
-case there is a geom point with \texttt{showSelected=sex}, so clicking
-on a bar results in an update to the displayed subset of points.
+be clicked to set selection value(s). For the example in Figure
+\ref{fig:tips}, we declare a bar with \texttt{clickSelects=sex} and
+refer to the current set of selection value(s) as
+\texttt{selected\_sex}. The value of \texttt{selected\_sex} can take on
+any subset of the unique values of \texttt{sex}, and in this case, the
+unique values are \texttt{Male} and \texttt{Female}. The selection set,
+\texttt{selected\_sex}, is then used to select subsets of data for geoms
+with the \texttt{showSelected=sex} aesthetic. In this case there is a
+geom point with \texttt{showSelected=sex}, so clicking on a bar results
+in an update to the displayed subset of points.
 
 \begin{figure}
 \centering
@@ -547,7 +559,7 @@ SQL query of the form:
 
 In this example, \texttt{selected\_sex} is either \texttt{Male} or
 \texttt{Female} (a single selected value), but as we show in later
-examples, a selection set can also can multiple values. Although the
+examples, a selection set can also be multiple values. Although the
 \texttt{clickSelects} aesthetic is tied to a mouse click event, other
 aesthetics could easily be created to support other selection events,
 such as hover or click+drag. Statistically speaking, this type of
@@ -566,23 +578,22 @@ This section uses the linking framework introduced in the previous
 section to visualize a more complex data set provided by the World Bank.
 The interactive version of Figure \ref{fig:worldbank} fosters
 exploration of the relationship between life expectancy and fertility
-over time for 205 countries. The year 1979 and the countries United
+rate over time for 205 countries. The year 1979 and the countries United
 States and Vietnam are selected in the static version of Figure
 \ref{fig:worldbank}, but readers are encouraged to change the selection
 by clicking on the interactive version, which is provided in the
 supplementary materials. The interactive version also makes use of
-additional animation options (explained later in
-Section\textasciitilde{}\ref{animation}), allowing us to visualize the
-evolution of the relationship between life expectancy and fertility
-rate.
+additional animation options (explained later in Section
+\ref{animation}), allowing us to visualize the evolution of the
+relationship between life expectancy and fertility rate.
 
 \begin{figure}
 \centering
 \includegraphics{images/figure-1}
 \caption{\label{fig:worldbank}An interactive animation of World Bank
 demographic data of several countries, designed using
-\texttt{clickSelects} and \texttt{showSelected} keywords (top). Left: a
-multiple time series from 1960 to 2010 of life expectancy, with bold
+\texttt{clickSelects} and \texttt{showSelected} aesthetics (top). Left:
+a multiple time series from 1960 to 2010 of life expectancy, with bold
 lines showing the selected countries and a vertical grey tallrect
 showing the selected year. Right: a scatterplot of life expectancy
 versus fertility rate of all countries. The legend and text elements
@@ -594,11 +605,11 @@ We anticipate that some \textbf{ggplot2} users will be able to reverse
 engineer the code which creates Figure \ref{fig:worldbank}, simply by
 looking at it. In fact, this is a big reason why \textbf{ggplot2} is so
 widely used: it helps minimize the amount of time required to translate
-an idea for a figure into computer code. Note that, in the left hand
+an idea for a figure into computer code. Note that, in the left-hand
 plot of Figure \ref{fig:worldbank}, we have a time series of the life
 expectancy where each line is a country (i.e., we \texttt{group} by
 country) and lines are colored by region. By clicking on a line, we also
-want the country label to appear in the right hand plot, so we also need
+want the country label to appear in the right-hand plot, so we also need
 to set \texttt{clickSelects=country}. Lastly, by setting
 \texttt{showSelected=region} and \texttt{color=region}, we can hide/show
 lines by clicking on the color legend entries.
@@ -636,11 +647,11 @@ unique years in the entire data for this layer.
 \end{Highlighting}
 \end{Shaded}
 
-As for the right hand plot in Figure \ref{fig:worldbank}, there are
+As for the right-hand plot in Figure \ref{fig:worldbank}, there are
 three layers: a point layer for countries, a text layer for countries,
 and a text layer to display the selected year. By clicking on a point,
 we want to display the country text label and highlight the
-corresponding time series on the left hand plot, so we set
+corresponding time series on the left-hand plot, so we set
 \texttt{clickSelects=country} in this layer. Furthermore, we only want
 to show the points for the selected year and region, so we also need
 \texttt{showSelected=year} and \texttt{showSelected2=region}.
@@ -668,8 +679,8 @@ as in the following SQL query,
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{SELECT}\NormalTok{ * }\KeywordTok{FROM}\NormalTok{ WorldBank}
-  \KeywordTok{WHERE} \DataTypeTok{year}   \KeywordTok{IN}\NormalTok{ year_selection}
-  \KeywordTok{AND}\NormalTok{   region }\KeywordTok{IN}\NormalTok{ region_selection}
+  \KeywordTok{WHERE} \DataTypeTok{year}   \KeywordTok{IN}\NormalTok{ selected_year}
+  \KeywordTok{AND}\NormalTok{   region }\KeywordTok{IN}\NormalTok{ selected_region}
 \end{Highlighting}
 \end{Shaded}
 
@@ -790,8 +801,8 @@ the subset of matching countries.}
 \subsection{Animation and smooth transitions}\label{animation}}
 
 Animation is declared using the \texttt{time} option, which specifies a
-selection variable which will be automatically updated over time, as
-well as a time delay in milliseconds. The code below declares the
+selection variable that will be automatically updated over time, as well
+as a time delay in milliseconds. The code below declares the
 \texttt{year} variable to be animated every 3 seconds.
 
 \begin{Shaded}
@@ -886,7 +897,7 @@ One of the strong points of the system we propose is display of
 multi-layer plots such as maps with time-varying data. For example,
 Figure \ref{fig:tornado} shows a visualization of US tornado data from
 1950 to 2012. This data visualization consists of two multi-layer plots
-with two interaction variables, \texttt{year}, and \texttt{state}.
+with two interaction variables, \texttt{year} and \texttt{state}.
 
 The left plot is a map which shows state borders using a polygon with
 \texttt{clickSelects=state}. The currently selected state is shown using
@@ -913,8 +924,8 @@ and for suggesting models that can describe or predict tornado paths.
 \centering
 \includegraphics{images/figure-tornado}
 \caption{\label{fig:tornado}Interactive animation of US tornadoes from 1950
-to 2012. This diagram depicts a scenario where the user queried Texas
-(by clicking the map), and the year 1982 (by clicking the bar chart). In
+to 2012. This figure depicts a scenario where the user queried Texas (by
+clicking the map), and the year 1982 (by clicking the bar chart). In
 addition to the graphical elements being highlighted as a visual clue of
 what query is being made, this visualization includes dynamic text
 labels reflecting the query.}
@@ -945,7 +956,7 @@ A more complex map data visualization example is shown in Figure
 Central America. There are two interaction variables, \texttt{time} and
 \texttt{region}.
 
-Two maps in the upper right display borders of the countries in and near
+Two maps in the upper left display borders of the countries in and near
 Central America. Unlike the previous example with US states, the country
 borders are static (clicking has no effect). For the currently selected
 time, rect geoms with \texttt{showSelected=time} show the spatial
@@ -954,7 +965,7 @@ the monthly norm. Since \texttt{clickSelects=region} is specified,
 clicking a rect changes the currently selected region, which is
 emphasized with a black border. These plots facilitate visualization of
 the spatial distribution of the climate variables, and how they change
-over time.n
+over time.
 
 The plots below the maps use lines to show time series of the climate
 variables. Since \texttt{clickSelects=region} is specified, clicking a
@@ -1034,21 +1045,21 @@ manipulation: selecting graphical elements via mouse click
 \ref{extension} is not restricted to a particular event type, so
 \texttt{hoverSelects} and \texttt{brushSelects} aesthetics could be
 added, for instance. There are other types of interaction that could be
-added, that wouldn't require additional extensions to the grammar of
-graphics, such as: zooming, panning, and plot resizing.
+added, that wouldn't require additional extensions to the Grammar of
+Graphics, such as: zooming, panning, and plot resizing.
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
 
 We have proposed several extensions to \textbf{ggplot2}'s layered
 grammar of graphics in order to support a declarative approach to
-producing interactive and dynamic web graphics. By adding clickSelects
-and showSelected aesthetics to specify selection source(s) and
-target(s), \textbf{ggplot2} users can quickly and easily create
-animations with smooth transitions and perform dynamic queries via
-direct manipulation of linked views. As a result, \textbf{animint} is a
-useful tool not only for EDA, but also for the presentation and
-distribution of interactive statistical graphics.
+producing interactive and dynamic web graphics. By adding
+\texttt{clickSelects} and \texttt{showSelected} aesthetics to specify
+selection source(s) and target(s), \textbf{ggplot2} users can quickly
+and easily create animations with smooth transitions and perform dynamic
+queries via direct manipulation of linked views. As a result,
+\textbf{animint} is a useful tool not only for EDA, but also for the
+presentation and distribution of interactive statistical graphics.
 
 \section*{Interactive figures and reproducible research statement}
 
@@ -1115,12 +1126,12 @@ and Graphical Statistics}, December, 1--23.
 
 \leavevmode\hypertarget{ref-ggobi:2007}{}%
 Cook, Dianne, and Deborah F. Swayne. 2007. \emph{Interactive and Dynamic
-Graphics for Data Analysis : With R and Ggobi}. Use R ! New York:
+Graphics for Data Analysis : With R and GGobi}. Use R ! New York:
 Springer. \url{http://www.ggobi.org/book/}.
 
 \leavevmode\hypertarget{ref-rggobi}{}%
 Duncan Temple Lang, Hadley Wickham, Debby Swayne. 2016. \emph{Interface
-Between R and 'Ggobi'}.
+Between R and GGobi}.
 
 \leavevmode\hypertarget{ref-PRIM9}{}%
 Fisherkeller, Friedman, M. A., and J. W. Tukey. 1988. ``PRIM-9, an
@@ -1141,8 +1152,8 @@ User Interface Toolkit for R.'' \emph{Journal of Statistical Software}
 37 (8):1--52. \url{http://www.jstatsoft.org/v37/i08/}.
 
 \leavevmode\hypertarget{ref-gridSVG}{}%
-Murrell, Paul, and Simon Potter. 2015. \emph{GridSVG: Export 'Grid'
-Graphics as Svg}. \url{https://CRAN.R-project.org/package=gridSVG}.
+Murrell, Paul, and Simon Potter. 2015. \emph{gridSVG: Export 'grid'
+Graphics as SVG}. \url{https://CRAN.R-project.org/package=gridSVG}.
 
 \leavevmode\hypertarget{ref-SVGAnnotation}{}%
 Nolan, Deborah, and Duncan Temple Lang. 2012. ``Interactive and Animated
@@ -1203,16 +1214,16 @@ Graphics Design and Implementation of Modern Interactive Graphics.''
 \url{https://doi.org/10.1007/s00180-011-0240-x}.
 
 \leavevmode\hypertarget{ref-rJava}{}%
----------. 2016. \emph{RJava: Low-Level R to Java Interface}.
+---------. 2016. \emph{rJava: Low-level R to Java Interface}.
 \url{https://CRAN.R-project.org/package=rJava}.
 
 \leavevmode\hypertarget{ref-htmlwidgets}{}%
 Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton
-Russell. 2018. \emph{Htmlwidgets: HTML Widgets for R}.
+Russell. 2018. \emph{htmlwidgets: HTML Widgets for R}.
 \url{https://github.com/ramnathv/htmlwidgets}.
 
 \leavevmode\hypertarget{ref-loon}{}%
-Waddell, Adrian, and R. Wayne Oldford. 2018. \emph{Loon: Interactive
+Waddell, Adrian, and R. Wayne Oldford. 2018. \emph{loon: Interactive
 Statistical Data Visualization}.
 \url{https://CRAN.R-project.org/package=loon}.
 
@@ -1225,6 +1236,10 @@ Francis:3--28.
 Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike
 Hofmann, and Deborah F Swayne. 2010. ``The Plumbing of Interactive
 Graphics.'' \emph{Computational Statistics}, April, 1--7.
+
+\leavevmode\hypertarget{ref-wilkinson}{}%
+Wilkinson, Leland, D Wills, D Rope, A Norton, and R Dubbs. 2006.
+\emph{The Grammar of Graphics}. Springer.
 
 \leavevmode\hypertarget{ref-animation}{}%
 Xie, Yihui. 2013. ``animation: An R Package for Creating Animations and
