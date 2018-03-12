@@ -160,9 +160,9 @@ data analysts quickly gather insight from data, discover the unexpected,
 and develop better model diagnostics. Web technologies, however, are not
 designed to fit inside an exploratory data analysis workflow where rapid
 iteration between data manipulation, modeling, and visualization must
-occur. We propose the R package \textbf{animint} for rapid creation of
-linked and animated web graphics through a simple extension of
-\textbf{ggplot2}'s implementation of the Grammar of Graphics. The
+occur. We propose the \texttt{R} package \textbf{animint} for rapid
+creation of linked and animated web graphics through a simple extension
+of \textbf{ggplot2}'s implementation of the Grammar of Graphics. The
 extension uses the existing \textbf{ggplot2} code, and leverages a
 simple API for describing animations and graphical queries between
 multiple linked views in a standalone web page.
@@ -211,8 +211,8 @@ precise, repeatable, fast, and extensible) with the strengths of a
 graphical interface (e.g., intuitive, forgiving, and easy-to-use). Web
 technologies can certainly be used to build a similar class of system,
 but in order to capitalize on the key strength of web technologies
-(e.g., accessible, portable, and composable), we must be mindful if
-which technologies we're requiring in such a system, and minimize those
+(e.g., accessible, portable, and composable), we must be mindful of
+which technologies we are requiring in such a system, and minimize those
 requirements whenever possible.
 
 Generally speaking, web graphics that use purely client-side
@@ -220,39 +220,52 @@ technologies (i.e., \texttt{HTML}, \texttt{SVG}, \texttt{CSS}, and
 \texttt{JavaScript}) are desired over client-server web applications
 because of their relative ease of distribution and maintenance. This is
 why many web-based graphing libraries work entirely with client-side
-technologies, like Vega (Trifacta 2014) and plotly.js (Plotly 2015).\\
+technologies, like \texttt{Vega} (Trifacta 2014) and \texttt{plotly.js}
+(Plotly 2015).\\
 Unfortunately, client-side technologies are not particularly well-suited
 for statistical computation, which we often want to leverage via dynamic
 controls in an interactive statistical graphics system. In this
 scenario, it often makes sense to introduce a client-server
 infrastructure to leverage functionality that is not natively supported
-by web browsers (e.g., R, python, etc).
+by web browsers (e.g., \texttt{R}, \texttt{python}, etc).
 
-Focusing just on the R language, there are now numerous ways to develop
-web applications, including the R package \textbf{shiny} (RStudio 2013),
-which makes it easy for R users to take their existing scripting
-workflow and wrap a web interface around it. \textbf{Shiny} is great for
-quickly prototyping interactive webpages that re-execute R code
-on-demand, but that flexibility comes at the cost of requiring a complex
-web server framework, which can be hard to scale, maintain, and secure
-sensitive information. Unfortunately, all too often, a web application
-framework is used to implement linked and animated graphics that could
-more easily be described with an idiomatic R interface which produces a
-purely client-side result.
+Focusing solely on the \texttt{R} language, there are now numerous ways
+to develop web applications, including the \texttt{R} package
+\textbf{shiny} (RStudio 2013), which makes it easy for \texttt{R} users
+to take their existing scripting workflow and wrap a web interface
+around it. \textbf{Shiny} is great for quickly prototyping interactive
+webpages that re-execute R code on-demand, but that flexibility comes at
+the cost of requiring a complex web server framework, which can be hard
+to scale, maintain, and secure sensitive information. Unfortunately, all
+too often, a web application framework is used to implement linked and
+animated graphics that could more easily be described with an idiomatic
+\texttt{R} interface which produces a purely client-side result.
 
-There are now a large number of R packages that interface with purely
+There are now many \texttt{R} packages that interface with purely
 client-side graphing libraries and give users the option of embedding
-these graphics in a larger web application. In fact, this is a large
-enough use case that the R package \textbf{htmlwidgets} (Vaidyanathan et
-al. 2018) was created to make it easier to get these interfaces to work
-seamlessly in any context (e.g., \textbf{shiny}, \textbf{rmarkdown},
-RStudio, R prompt, Jupyter notebook, etc). In our experience, these R
-packages rarely provide a way to describe linked views in R and produce
-a purely client-side result, which we view as a powerful workflow for
-exploratory web graphics.
+these graphics in a larger web application. This movement has made
+interactive graphics a lot more accessible to newcomers and also allows
+power-users to combine the strengths of web technologies and statistical
+computing. In fact, this is a large enough use case that the \texttt{R}
+package \textbf{htmlwidgets} (Vaidyanathan et al. 2018) was created to
+make it easier to get these interfaces to work seamlessly in any context
+(e.g., \textbf{shiny}, \textbf{rmarkdown}, RStudio, terminal, Jupyter
+notebook, etc). In most cases, these \texttt{R} packages do not have
+great support for linking views, meaning a callback to server-side
+\texttt{R} (e.g., \textbf{shiny}) is typically required for such a task.
+Very recently, some \textbf{htmlwidgets} packages have gained
+\textbf{crosstalk} (Cheng 2016) support for linking views with purely
+client-side technologies, but the type of linking is purposefully
+restricted (e.g., 1-to-1 transient linking) since it's very difficult to
+standardize an API for linking arbitrary libraries. We think this is a
+great direction for `production-ready' exploratory graphics, but also
+hope to see more opinionated approaches to this idea, like
+\textbf{plotly} (Plotly 2015), that focus more on statistical
+aggregations, missing values, and selection sequences (Hofmann and Theus
+1998).
 
 We propose an extension of \textbf{ggplot2}'s layered Grammar of
-Graphics API to create interactive web graphics that don't require
+Graphics API to create interactive web graphics that do not require
 server-side technologies. The core idea lies in attaching metadata to
 graphical marks that can be used to hide/show subsets of data. The
 resulting framework is quite similar to what D. Cook, Buja, and Swayne
@@ -273,8 +286,8 @@ other interactive features, including animation, tooltips, and
 hyperlinks. A summary of these extensions and relevant additional
 options are provided in Table \ref{tab:overview}. There are a number of
 other options that can be used to control things specific to our
-implementation in the R package \textbf{animint} which are included with
-the supplemental materials.
+implementation in the \texttt{R} package \textbf{animint} which are
+included with the supplemental materials.
 
 \begin{table}
 
@@ -305,33 +318,33 @@ Feature & Type & Description \\
 \section{Related work}\label{related-work}}
 
 It is important to acknowledge that \textbf{ggplot2} is built on top of
-the R package \textbf{grid}, a low-level graphics system, which is now
-bundled with R itself (R Core Team 2017). Neither \textbf{grid}, nor
-\textbf{base} R graphics, have strong support for handling user
-interaction, which creates a need for add-on packages. There are a
-number of approaches these packages take to rendering, each with their
-own benefits and drawbacks. Traditionally, they build on low-level R
-interfaces to graphical systems such as GTK+ (Lawrence and Temple Lang
-2010), Qt (Lawrence and Sarkar 2016), or Java GUI frameworks (Urbanek
-2016). In general, the resulting system can be very fast and flexible,
-but sharing and reproducing output is usually a problem due to the heavy
-software requirements. Although there may be sacrifices in performance,
-using the modern web browser as a canvas is more portable, accessible,
-and composable (graphics can be embedded within larger
-frameworks/documents).
+the \texttt{R} package \textbf{grid}, a low-level graphics system, which
+is now bundled with \texttt{R} itself (R Core Team 2017). Neither
+\textbf{grid}, nor \textbf{base} \texttt{R} graphics, have strong
+support for handling user interaction, which creates a need for add-on
+packages. There are a number of approaches these packages take to
+rendering, each with their own benefits and drawbacks. Traditionally,
+they build on low-level \texttt{R} interfaces to graphical systems such
+as GTK+ (Lawrence and Temple Lang 2010), Qt (Lawrence and Sarkar 2016),
+or Java GUI frameworks (Urbanek 2016). In general, the resulting system
+can be very fast and flexible, but sharing and reproducing output is
+usually a problem due to the heavy software requirements. Although there
+may be sacrifices in performance, using the modern web browser as a
+canvas is more portable, accessible, and composable (graphics can be
+embedded within larger frameworks/documents).
 
-Base R does provide a Scalable Vector Graphics (SVG) device,
-\texttt{svg()}, via the Cairo graphics API (Cairo 2016). The R package
-\textbf{SVGAnnotation} provides functionality to post-process
+Base \texttt{R} does provide a Scalable Vector Graphics (SVG) device,
+\texttt{svg()}, via the Cairo graphics API (Cairo 2016). The \texttt{R}
+package \textbf{SVGAnnotation} provides functionality to post-process
 \texttt{svg()} output in order to add interactive and dynamic features
 (Nolan and Lang 2012). This is a powerful approach, since in theory it
-can work with any R graphic, but the package is self-described as a
-proof-of-concept which reverse-engineers poorly-structured
+can work with any \texttt{R} graphic, but the package is self-described
+as a proof-of-concept which reverse-engineers poorly-structured
 \texttt{svg()} output. As a result, it is not straightforward to extend
 this system for linked data visualizations with advanced functionality
 (multiple layers, multiple plots, multiple selection variables).
 
-The lack of well-structured SVG for R graphics motivated the
+The lack of well-structured SVG for \texttt{R} graphics motivated the
 \textbf{gridSVG} package which provides sensible structuring of SVG
 output for grid graphics (Murrell and Potter 2015). This package also
 provides some low-level tools for animating or adding interactive
@@ -344,8 +357,8 @@ of the graphics system, would be preferable since the former interface
 is decoupled from the implementation and does not require knowledge of
 grid.
 
-In terms of the animation API, the R package \textbf{gganimate} is very
-similar to our system (Robinson 2016). It directly extends
+In terms of the animation API, the \texttt{R} package \textbf{gganimate}
+is very similar to our system (Robinson 2016). It directly extends
 \textbf{ggplot2} by adding a new aesthetic, named \texttt{frame}, which
 splits the data into subsets (one for each unique value of the frame
 variable), produces a static plot for each subset, and uses the
@@ -359,39 +372,43 @@ the transition between frames via the \texttt{d3.transition()} API
 animation viewer track positions between frames, which is useful in many
 scenarios, such as the touring example discussed in Section \ref{tour}.
 The \textbf{tweenr} package provides similar smooth transitions, by
-computing data values in R that interpolate between animation frames (in
-\textbf{animint}, these calculations are performed in the web browser).
+computing data values in \texttt{R} that interpolate between animation
+frames (in \textbf{animint}, these calculations are performed in the web
+browser).
 
 The \textbf{ggvis} package is similar to our system in that is also
 inspired by the Grammar of Graphics (Chang and Wickham 2015). It does
 not directly extend \textbf{ggplot2}, but instead provides a brand new
 purely functional interface which is designed with interactive graphics
 in mind. It currently relies on Vega to render the SVG graphics from
-JSON (Trifacta 2014), and the R package \textbf{shiny} to enable many of
-its interactive capabilities (RStudio 2013). The interface gives
-tremendous power to R users, as it allows one to write R functions to
-handle user events. This power does come with a cost, though, as sharing
-and hosting \textbf{ggvis} graphics typically require special web server
-softwares, even when the interaction logic could be handled entirely
-client-side.
+JSON (Trifacta 2014), and the \texttt{R} package \textbf{shiny} to
+enable many of its interactive capabilities (RStudio 2013). The
+interface gives tremendous power to \texttt{R} users, as it allows one
+to write \texttt{R} functions to handle user events. This power does
+come with a cost, though, as sharing and hosting \textbf{ggvis} graphics
+typically require special web server softwares, even when the
+interaction logic could be handled entirely client-side. As we outline
+in Section \ref{implementation}, our system does not require a web
+server, but can also be used inside \textbf{shiny} web applications,
+when desired.
 
 The tour is a useful visualization technique for exploring
 high-dimensional data which requires interactive and dynamic graphics.
 The open-source software ggobi is currently the most fully-featured
 toolkit for touring data and has support for interactive techniques such
 as linking, zooming, panning, and identifying (D. Cook and Swayne 2007).
-The R package \textbf{rggobi} (Duncan Temple Lang 2016) provides an R
-interface to ggobi's graphical interface, but it unfortunately has many
-software requirements. Furthermore, sharing the interactive versions of
-these graphics are not possible. The R package \textbf{cranvas} aims to
-be the successor to ggobi, with support for similar interactive
-techniques, but with a more flexible interface for describing plots
-inspired by the Grammar of Graphics (Xie et al. 2013). \textbf{Cranvas}
-also has many software requirements which limits its portability and
-accessibility.
+The \texttt{R} package \textbf{rggobi} (Duncan Temple Lang 2016)
+provides an \texttt{R} interface to ggobi's graphical interface, but it
+unfortunately has many software requirements. Furthermore, sharing the
+interactive versions of these graphics are not possible. The \texttt{R}
+package \textbf{cranvas} aims to be the successor to ggobi, with support
+for similar interactive techniques, but with a more flexible interface
+for describing plots inspired by the Grammar of Graphics (Xie et al.
+2013). \textbf{Cranvas} also has many software requirements which limits
+its portability and accessibility.
 
-Another R package for interactive graphics is \textbf{iplots} (Urbanek
-2011), which has several important differences compared to
+Another \texttt{R} package for interactive graphics is \textbf{iplots}
+(Urbanek 2011), which has several important differences compared to
 \textbf{animint}. Brushing/highlighting of linked iplots is supported
 for single-layer plots such as scatterplots or barplots, but it is not
 easy to define new multi-layer interactive plots. Furthermore since
@@ -471,8 +488,8 @@ defined in such a way that they are not solely restricted to any
 particular direct manipulation event (e.g.~mouse click), but for sake of
 demonstration, we restrict focus to our \textbf{animint} implementation,
 which has \texttt{clickSelects} and \texttt{showSelected} aesthetics.
-Consider the R code below which uses these aesthetics to describe the
-interactive graphic shown in
+Consider the \texttt{R} code below which uses these aesthetics to
+describe the interactive graphic shown in
 Figure\textasciitilde{}\ref{fig:tips}.\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
@@ -510,15 +527,16 @@ designates a geom point that responds by showing only the data which
 corresponds to the current selection.}
 \end{figure}
 
-In the R code above, the \texttt{geom\_bar()} layer in the left-hand
-plot is linked to the 2nd \texttt{geom\_point()} layer in the right-hand
-plot since the \texttt{clickSelects} and \texttt{showSelected}
-aesthetics are mapped to a common variable, \texttt{sex}. Note how the
-first \texttt{geom\_point()} layer does not have a \texttt{showSelected}
-mapping, but has a bit of alpha transparency, so all the data is shown
-in light gray, and the current selection is portrayed in black. In other
-words, when a bar is clicked, in order to update the second layer of
-points, our system performs an SQL query of the form:
+In the \texttt{R} code above, the \texttt{geom\_bar()} layer in the
+left-hand plot is linked to the 2nd \texttt{geom\_point()} layer in the
+right-hand plot since the \texttt{clickSelects} and
+\texttt{showSelected} aesthetics are mapped to a common variable,
+\texttt{sex}. Note how the first \texttt{geom\_point()} layer does not
+have a \texttt{showSelected} mapping, but has a bit of alpha
+transparency, so all the data is shown in light gray, and the current
+selection is portrayed in black. In other words, when a bar is clicked,
+in order to update the second layer of points, our system performs an
+SQL query of the form:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -699,7 +717,7 @@ updates.
 \hypertarget{linking}{%
 \subsection{Linking and multiple selection}\label{linking}}
 
-Linking is declared in R code by putting ggplots with common
+Linking is declared in \texttt{R} code by putting ggplots with common
 \texttt{clickSelects} and \texttt{showSelected} aesthetics together in a
 list. For example, we can link the ggplots from the previous section by
 including them together in the following list:
@@ -746,6 +764,9 @@ are declared as multiple selection variables, which can have multiple
 selected values at a time (clicking a geom with
 \texttt{clickSelects=country} will add/remove that country to/from the
 selection set).
+
+\hypertarget{direction}{%
+\subsection{Direct versus indirect manipulation}\label{direction}}
 
 When viewing the interactive version of Figure \ref{fig:worldbank},
 suppose we wish to select Thailand. Direct manipulation is not very
@@ -835,13 +856,14 @@ rendering the visualization:
 \end{Shaded}
 
 As shown in Supplementary Figure 1, the \textbf{animint} system consists
-of 2 parts: the compiler and the renderer. The compiler is R code that
-converts a list of ggplots and options to a JSON plot meta-data file and
-a tab-separated values (TSV) file database. The renderer consists of
-HTML and JavaScript files, which can be easily hosted along with the TSV
-and JSON files on any web server. The interactive plots can be viewed by
-opening the \texttt{index.html} page in any modern web browser. Note
-that \textbf{animint} currently depends on a fork of
+of 2 parts: the compiler and the renderer. The compiler is \texttt{R}
+code that converts a list of ggplots and options to a JSON plot
+meta-data file and a tab-separated values (TSV) file database. The
+renderer consists of HTML and JavaScript files, which can be easily
+hosted along with the TSV and JSON files on any web server. The
+interactive plots can be viewed by opening the \texttt{index.html} page
+in any modern web browser. Note that \textbf{animint} currently depends
+on a fork of
 \textbf{ggplot2}\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages. Additional implementation details
@@ -1082,6 +1104,10 @@ Cairo. 2016. ``Cairo: A Vector Graphics Library.''
 Chang, Winston, and Hadley Wickham. 2015. \emph{ggvis: Interactive
 Grammar of Graphics}. \url{https://CRAN.R-project.org/package=ggvis}.
 
+\leavevmode\hypertarget{ref-crosstalk}{}%
+Cheng, Joe. 2016. \emph{Crosstalk: Inter-Widget Interactivity for Html
+Widgets}. \url{https://CRAN.R-project.org/package=crosstalk}.
+
 \leavevmode\hypertarget{ref-Cook:2007uk}{}%
 Cook, Dianne, Andreas Buja, and Deborah F Swayne. 2007. ``Interactive
 High-Dimensional Data Visualization.'' \emph{Journal of Computational
@@ -1100,6 +1126,10 @@ Between R and 'Ggobi'}.
 Fisherkeller, Friedman, M. A., and J. W. Tukey. 1988. ``PRIM-9, an
 Interactive Multidimensional Data Display and Analysis System.'' In
 \emph{Dynamic Graphics for Statistics}, 91--109.
+
+\leavevmode\hypertarget{ref-sequences}{}%
+Hofmann, Heike, and Martin Theus. 1998. ``Selection sequences in
+MANET.'' \emph{Computational Statistics}, January, 1--12.
 
 \leavevmode\hypertarget{ref-qtbase}{}%
 Lawrence, Michael, and Deepayan Sarkar. 2016. \emph{Interface Between R

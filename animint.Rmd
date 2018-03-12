@@ -72,20 +72,20 @@ power users to combine the strengths of a programming interface
 strengths of a graphical interface (e.g., intuitive, forgiving, and easy-to-use). 
 Web technologies can certainly be used to build a similar class 
 of system, but in order to capitalize on the key strength of web technologies 
-(e.g., accessible, portable, and composable), we must be mindful if which
-technologies we're requiring in such a system, and minimize those requirements 
+(e.g., accessible, portable, and composable), we must be mindful of which
+technologies we are requiring in such a system, and minimize those requirements 
 whenever possible.
 
 Generally speaking, web graphics that use purely client-side
 technologies (i.e., `HTML`, `SVG`, `CSS`, and `JavaScript`) are desired over 
 client-server web applications because of their relative ease of distribution
 and maintenance. This is why many web-based graphing libraries work entirely 
-with client-side technologies, like Vega [@vega] and plotly.js [@plotly].  
+with client-side technologies, like `Vega` [@vega] and `plotly.js` [@plotly].  
 Unfortunately, client-side technologies are not particularly well-suited for 
 statistical computation, which we often want to leverage via dynamic controls 
 in an interactive statistical graphics system. In this scenario, it often makes
 sense to introduce a client-server infrastructure to leverage functionality that 
-is not natively supported by web browsers (e.g., R, python, etc).
+is not natively supported by web browsers (e.g., `R`, `python`, etc).
 
 <!--
 Table X gives a high-level depiction of the different infrastructure required 
@@ -93,55 +93,67 @@ for a purely client-side (i.e. standalone) webpage versus a client-server web
 application. 
 -->
 
-Focusing just on the R language, there are now numerous ways
-to develop web applications, including the R package **shiny** [@shiny], 
-which makes it easy for R users to take their existing scripting workflow 
+Focusing solely on the `R` language, there are now numerous ways
+to develop web applications, including the `R` package **shiny** [@shiny], 
+which makes it easy for `R` users to take their existing scripting workflow 
 and wrap a web interface around it. 
 **Shiny** is great for quickly prototyping interactive webpages
 that re-execute R code on-demand, but that flexibility comes at the cost
 of requiring a complex web server framework, which can be hard to scale, 
 maintain, and secure sensitive information. Unfortunately, all too often,
 a web application framework is used to implement linked and animated graphics 
-that could more easily be described with an idiomatic R interface which produces 
-a purely client-side result. 
+that could more easily be described with an idiomatic `R` interface which 
+produces a purely client-side result. 
 
-There are now a large number of R packages that interface with purely client-side
+There are now many `R` packages that interface with purely client-side
 graphing libraries and give users the option of embedding these graphics in a 
-larger web application. In fact, this is a large enough use case
-that the R package **htmlwidgets** [@htmlwidgets] was created to make it easier 
-to get these interfaces to work seamlessly in any context 
-(e.g., **shiny**, **rmarkdown**, RStudio, R prompt, Jupyter notebook, etc). 
-In our experience, these R packages rarely provide a way to describe linked 
-views in R and produce a purely client-side result, which we view as a powerful 
-workflow for exploratory web graphics. 
+larger web application. This movement has made interactive graphics a lot more
+accessible to newcomers and also allows power-users to combine the strengths
+of web technologies and statistical computing. In fact, this is a large enough 
+use case that the `R` package **htmlwidgets** [@htmlwidgets] was created to make 
+it easier to get these interfaces to work seamlessly in any context 
+(e.g., **shiny**, **rmarkdown**, RStudio, terminal, Jupyter notebook, etc). 
+In most cases, these `R` packages do not have great support for linking views,
+meaning a callback to server-side `R` (e.g., **shiny**) is typically required 
+for such a task. Very recently, some **htmlwidgets** packages have gained
+**crosstalk** [@crosstalk] support for linking views with purely client-side 
+technologies, but the type of linking is purposefully restricted 
+(e.g., 1-to-1 transient linking) since it's very difficult to standardize an API
+for linking arbitrary libraries. We think this is a great direction for 
+'production-ready' exploratory graphics, but also hope to see more opinionated
+approaches to this idea, like **plotly** [@plotly], that focus more on 
+statistical aggregations, missing values, and selection sequences [@sequences].
 
 <!-- 
-The R package 
-**crosstalk** is a nice step in this direction
 TODO: could try to make the argument that projects like Vega-Lite, that try to
 define a JSON specification for linked view are too seperated from the semantics 
 of the data. 
 -->
 
 We propose an extension of **ggplot2**'s layered Grammar of Graphics API to 
-create interactive web graphics that don't require server-side technologies. The 
-core idea lies in attaching metadata to graphical marks that can be used to 
+create interactive web graphics that do not require a callback to server-side R. 
+The core idea lies in attaching metadata to graphical marks that can be used to 
 hide/show subsets of data. The resulting framework is quite similar to what @Cook:2007uk
 describe as brushing in multiple linked views as a database query. The assignment
 of data to graphical marks is done through *aesthetic mappings*, which is a term
-the Grammar of Graphics uses for mapping data to visual attributes (e.g., color, 
-shape, x, y, etc). Typically aesthetic mappings are visual, meaning they can be
-easily seen in a static graphic, but our proposed variable mappings are more 
-conceptual, meaning that they can't easily be seen, but can be used to control 
-certain interactive properties. To give a small example, Figure \@ref(fig:tips) 
-depicts a graphical query made by assigning sensible metadata to graphical marks 
-via the `clickSelects` and `showSelected` aesthetics.
+the Grammar of Graphics @wilkinson uses for mapping data to visual attributes 
+(e.g., color, shape, x, y, etc). Typically aesthetic mappings are visual, meaning 
+they can be easily seen in a static graphic, but our proposed aesthetic mappings 
+control interactive properties, so they are not necessarily easily seen, but 
+visual cues may be added to guide the user interaction. To give a small 
+example, Figure \@ref(fig:tips) depicts a graphical query made by assigning 
+metadata to graphical marks via the `clickSelects` and `showSelected` 
+aesthetics. These aesthetics are essentially used to create a
+primary key between two tables of data, and as the name `clickSelects` suggests, 
+queries are made by clicking directly on graphical marks, but other aesthetics
+could be used to support other direct manipulation events (e.g., `hoverSelects`,
+`brushSelects`, etc).
 
 In addition to graphical queries, our extension supports a number of other
 interactive features, including animation, tooltips, and hyperlinks.
 A summary of these extensions and relevant additional options are provided 
 in Table \@ref(tab:overview). There are a number of other options that can 
-be used to control things specific to our implementation in the R package
+be used to control things specific to our implementation in the `R` package
 **animint** which are included with the supplemental materials.
 
 \begin{table}
@@ -170,54 +182,6 @@ Feature & Type & Description \\
 \end{table}
 
 
-
-
-<!--
-Interactive graphics are an important part of applied statistical
-practice, because they can lead to a better understanding of
-high-dimensional data sets and models. Interactive graphics are useful
-in the context of EDA, model selection/validation, and presenting
-results of an analysis. Interactive graphics toolkits in R have been
-available for decades, but these approaches are often not easy to
-reproduce or distribute to a larger audience. It is true that most
-graphics generated during EDA are ultimately not useful, but
-sometimes, understanding gained during this phase is most easily
-shared via the interactive graphics themselves. Thus, there is value
-in being able to easily share and embed interactive graphics inside a
-larger report. Unfortunately, this is typically hard, if not
-impossible, using traditional interactive graphics toolkits. As a
-result, there is a large disconnect between the visualization tools
-that we use for exploration versus presentation.
-
-One of the most widely used R packages is **ggplot2** [@ggplot2-book], a data
-visualization package inspired by the grammar of graphics [@wilkinson]. 
-In fact, @Donoho:2015tu writes: "This effort may have more impact on 
-today’s practice of data analysis than many highly-regarded theoretical 
-statistics papers". In our experience, **ggplot2** has made an impact thanks to its
-foundation in the grammar of graphics, carefully chosen defaults, and overall
-usability. This helps data analysts rapidly iterate and discover informative
-visualizations -- an essential task in exploratory data analysis (EDA). When 
-dealing with high-dimensional data, however, it is often useful to produce 
-interactive and/or dynamic graphics, which **ggplot2** does not inherently support. 
-
-We aim to narrow this gap in visualization tools by extending **ggplot2**'s grammar 
-of graphics implementation for interactive and dynamic web graphics. Our 
-extension allows one to create animated transitions
-and perform dynamic queries via direct manipulation of linked views like those
-described in @Ahlberg:1991 and @Buja:1991vh. 
-A conceptual model for our extension is provided in
-Section \@ref(extension) and Section \@ref(animation). In 
-Section \@ref(worldbank), we demonstrate our extension with an example. 
-In Section \@ref(implementation), we outline design decisions made in our
-implementation in the R package **animint**. In Section \@ref(performance), we
-provide a sense of the scope of our system and its performance limitations through a
-handful of examples. In Section \@ref(compare), we conduct a comparison
-study by replicating examples with other leading systems. Finally, in 
-Section \@ref(limitations), we discuss future work and limitations of
-our current system.
-
--->
-
 # Related work
 
 <!--
@@ -229,12 +193,18 @@ intentionally focus on R interfaces since the surrounding statistical
 computing environment is crucial for enabling an efficient EDA workflow.
 -->
 
-It is important to acknowledge that **ggplot2** is built on top of the R package 
-**grid**, a low-level graphics system, which is now bundled with R itself 
-[@RCore]. Neither **grid**, nor **base** R graphics, have strong support for 
+In the last section, we motivated the need for `R` packages that create
+linked interactive graphics using client-side web technologies. We also proposed
+an extension to **ggplot2**'s API that supports a class of graphical queries.
+To help further explain where our work makes contributions to the field, this 
+section further explores related work.
+
+It is important to acknowledge that **ggplot2** is built on top of the `R` package 
+**grid**, a low-level graphics system, which is now bundled with `R` itself 
+[@RCore]. Neither **grid**, nor **base** `R` graphics, have strong support for 
 handling user interaction, which creates a need for add-on packages. There are a 
 number of approaches these packages take to rendering, each with their own 
-benefits and drawbacks. Traditionally, they build on low-level R interfaces 
+benefits and drawbacks. Traditionally, they build on low-level `R` interfaces 
 to graphical systems such as GTK+ [@RGtk2], Qt [@qtbase], or Java GUI frameworks 
 [@rJava]. In general, the resulting system can be 
 very fast and flexible, but sharing and reproducing output is usually a problem 
@@ -243,18 +213,18 @@ performance, using the modern web browser as a canvas is more portable,
 accessible, and composable (graphics can be embedded within larger 
 frameworks/documents).
 
-Base R does provide a Scalable Vector Graphics (SVG) device, `svg()`,
-via the Cairo graphics API [@cairo]. The R package **SVGAnnotation**
+Base `R` does provide a Scalable Vector Graphics (SVG) device, `svg()`,
+via the Cairo graphics API [@cairo]. The `R` package **SVGAnnotation**
 provides functionality to post-process `svg()` output in order to add
 interactive and dynamic features [@SVGAnnotation]. This is a powerful
-approach, since in theory it can work with any R graphic, but the
+approach, since in theory it can work with any `R` graphic, but the
 package is self-described as a proof-of-concept which
 reverse-engineers poorly-structured `svg()` output. As a result, it is
 not straightforward to extend this system for linked data
 visualizations with advanced functionality (multiple layers, multiple
 plots, multiple selection variables).
 
-The lack of well-structured SVG for R graphics motivated the **gridSVG** package 
+The lack of well-structured SVG for `R` graphics motivated the **gridSVG** package 
 which provides sensible structuring of SVG output for grid graphics 
 [@gridSVG]. This package also provides some low-level tools for animating 
 or adding interactive features, where grid objects must be referenced by name.
@@ -266,7 +236,7 @@ rather than the building blocks of the graphics system, would be preferable
 since the former interface is decoupled from the implementation and does not 
 require knowledge of grid.
 
-In terms of the animation API, the R package **gganimate** is very similar to our
+In terms of the animation API, the `R` package **gganimate** is very similar to our
 system [@gganimate]. It directly extends **ggplot2** by adding a new aesthetic,
 named `frame`, which splits the data into subsets (one for each unique 
 value of the frame variable), produces a static plot for each subset, and uses
@@ -279,35 +249,38 @@ the `d3.transition()` API [@d3]. Smooth transitions help the animation viewer tr
 positions between frames, which is useful in many scenarios, such as the 
 touring example discussed in Section \@ref(tour). 
 The **tweenr** package provides similar smooth transitions, 
-by computing data values in R that interpolate between 
+by computing data values in `R` that interpolate between 
 animation frames (in **animint**, these calculations are performed in the web browser).
 
 The **ggvis** package is similar to our system in that is also inspired
 by the Grammar of Graphics [@ggvis]. It does not directly extend
 **ggplot2**, but instead provides a brand new purely functional interface
 which is designed with interactive graphics in mind. It currently
-relies on Vega to render the SVG graphics from JSON [@vega], and the R
+relies on Vega to render the SVG graphics from JSON [@vega], and the `R`
 package **shiny** to enable many of its interactive capabilities
-[@shiny]. The interface gives tremendous power to R users, as it
-allows one to write R functions to handle user events. This power does
+[@shiny]. The interface gives tremendous power to `R` users, as it
+allows one to write `R` functions to handle user events. This power does
 come with a cost, though, as sharing and hosting **ggvis** graphics
 typically require special web server softwares, even when the
-interaction logic could be handled entirely client-side. 
+interaction logic could be handled entirely client-side. As we outline
+in Section \@ref(implementation), our system does not require a web
+server, but can also be used inside **shiny** web applications, when
+desired.
 
 The tour is a useful visualization technique for exploring high-dimensional data
 which requires interactive and dynamic graphics. The open-source software ggobi 
 is currently the most fully-featured toolkit for touring data and has support
 for interactive techniques such as linking, zooming, panning, and identifying 
-[@ggobi:2007]. The R package **rggobi** [@rggobi] provides an R interface 
+[@ggobi:2007]. The `R` package **rggobi** [@rggobi] provides an `R` interface 
 to ggobi's graphical interface, but it unfortunately has many software requirements. Furthermore,
-sharing the interactive versions of these graphics are not possible. The R 
+sharing the interactive versions of these graphics are not possible. The `R` 
 package **cranvas** aims to be the successor to ggobi, with support for similar
 interactive techniques, but with a more flexible interface for describing 
 plots inspired by the Grammar of Graphics [@cranvas]. **Cranvas** also has 
 many software requirements which limits its portability and
 accessibility. 
 
-Another R package for interactive graphics is **iplots** [@Urbanek2011],
+Another `R` package for interactive graphics is **iplots** [@Urbanek2011],
 which has several important differences compared to  **animint**. 
 Brushing/highlighting of linked iplots is supported for
 single-layer plots such as scatterplots or barplots, but it is not
@@ -391,7 +364,7 @@ aesthetics could be defined in such a way that they are not solely restricted
 to any particular direct manipulation event (e.g. mouse click), but for sake of demonstration,
 we restrict focus to our **animint** implementation, which has `clickSelects` 
 and `showSelected` aesthetics. 
-Consider the R code below which uses these aesthetics to describe the interactive graphic shown in Figure~\@ref(fig:tips).\footnote{Interactive versions
+Consider the `R` code below which uses these aesthetics to describe the interactive graphic shown in Figure~\@ref(fig:tips).\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}} 
 
@@ -403,12 +376,6 @@ scatter <- ggplot(tips) +
   geom_point(aes(x = total_bill, y = tip), alpha = 0.3) +
   geom_point(aes(x = total_bill, y = tip, showSelected = sex))
 ```
-
-<!-- 
-Probably should not put this int eh code unless we discusss it here -- I would recommend postponing discussion until later section 3.5
-library(animint)
-animint::animint2dir(list(bar = bar, scatter = scatter))
--->
 
 The 
 `clickSelects` aesthetic is used to declare a geom which can be clicked to set selection value(s).
@@ -422,7 +389,7 @@ to select subsets of data for geoms with the `showSelected=sex` aesthetic. In th
 knitr::include_graphics("images/tips")
 ```
 
-In the R code above, the `geom_bar()` layer in the left-hand plot is linked to 
+In the `R` code above, the `geom_bar()` layer in the left-hand plot is linked to 
 the 2nd `geom_point()` layer in the right-hand plot since the `clickSelects` and
 `showSelected` aesthetics are mapped to a common variable, `sex`. Note how the 
 first `geom_point()` layer does not have a `showSelected` mapping, but has
@@ -613,7 +580,7 @@ update selections indirectly, and automate selection updates.
 
 ## Linking and multiple selection {#linking}
 
-Linking is declared in R code by putting ggplots with common `clickSelects` and
+Linking is declared in `R` code by putting ggplots with common `clickSelects` and
 `showSelected` aesthetics together in a list. For example, we can link
 the ggplots from the previous section by including them together in the following list:
 
@@ -655,12 +622,7 @@ multiple selected values at a time (clicking a geom with
 `clickSelects=country` will add/remove that country to/from the
 selection set). 
 
-
-<!---
-I would recommend moving discussion of direct/indirect manipulation to supplementary materials, in order to focus the scope of the main paper. (focusing the scope was one of the main reviewer concerns)
-
 ## Direct versus indirect manipulation {#direction}
--->
 
 When viewing the interactive version of Figure \@ref(fig:worldbank), suppose
 we wish to select Thailand. Direct manipulation is not very useful in 
@@ -732,7 +694,7 @@ animint::animint2dir(viz)
 ```
 
 As shown in Supplementary Figure 1, the **animint** system consists of 
-2 parts: the compiler and the renderer. The compiler is R code that 
+2 parts: the compiler and the renderer. The compiler is `R` code that 
 converts a list of ggplots and options to a JSON plot meta-data file 
 and a tab-separated values (TSV) file database. The renderer consists 
 of HTML and JavaScript files, which
