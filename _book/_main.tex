@@ -202,21 +202,21 @@ the web browser had rich graphics support.
 
 All of these systems, as well as some more modern systems, such as
 \textbf{rggobi} (Duncan Temple Lang 2016), \textbf{iplots} (Urbanek
-2011), \textbf{loon} (Waddell and Oldford 2018), etc, require a heavy
-set of computational dependencies in order to view or interact with
-graphics. These requirements grant the freedom to leverage libraries
-with sophisticated statistical functionality on-demand, but it limits
-the ability to share or embed such graphics in a larger document. Some
-of these systems allow users to create the graphics from the
-command-line, which as Unwin and Hofmann (2009) points out, allows power
-users to combine the strengths of a programming interface (e.g.,
-precise, repeatable, fast, and extensible) with the strengths of a
-graphical interface (e.g., intuitive, forgiving, and easy-to-use). Web
-technologies can certainly be used to build a similar class of system,
-but in order to capitalize on the key strength of web technologies
-(e.g., accessible, portable, and composable), we must be mindful of
-which technologies we are requiring in such a system, and minimize those
-requirements whenever possible.
+2011), \textbf{cranvas} (Xie et al. 2013), \textbf{loon} (Waddell and
+Oldford 2018), etc, require a heavy set of computational dependencies in
+order to view or interact with graphics. These requirements grant the
+freedom to leverage libraries with sophisticated statistical
+functionality on-demand, but it limits the ability to share or embed
+such graphics in a larger document. Some of these systems allow users to
+create the graphics from the command-line, which as Unwin and Hofmann
+(2009) points out, allows power users to combine the strengths of a
+programming interface (e.g., precise, repeatable, fast, and extensible)
+with the strengths of a graphical interface (e.g., intuitive, forgiving,
+and easy-to-use). Web technologies can certainly be used to build a
+similar class of system, but in order to capitalize on the key strength
+of web technologies (e.g., accessible, portable, and composable), we
+must be mindful of which technologies we are requiring in such a system,
+and minimize those requirements whenever possible.
 
 Generally speaking, web graphics that use purely client-side
 technologies (i.e., \texttt{HTML}, \texttt{SVG}, \texttt{CSS}, and
@@ -269,15 +269,15 @@ aggregations, missing values, and selection sequences (Hofmann and Theus
 
 We propose an extension of \textbf{ggplot2}'s layered Grammar of
 Graphics API to create interactive web graphics that do not require a
-callback to server-side R. The core idea lies in attaching metadata to
-graphical marks that can be used to hide/show subsets of data. The
-resulting framework is quite similar to what D. Cook, Buja, and Swayne
-(2007) describe as brushing in multiple linked views as a database
-query. The assignment of data to graphical marks is done through
-\emph{aesthetic mappings}, which is a term the Grammar of Graphics
-Wilkinson et al. (2006) uses for mapping data to visual attributes
-(e.g., color, shape, x, y, etc). Typically aesthetic mappings are
-visual, meaning they can be easily seen in a static graphic, but our
+callback to server-side \texttt{R}. The core idea lies in attaching
+metadata to graphical marks that can be used to hide/show subsets of
+data. The resulting framework is quite similar to what D. Cook, Buja,
+and Swayne (2007) describe as brushing in multiple linked views as a
+database query. The assignment of data to graphical marks is done
+through \emph{aesthetic mappings}, which is a term the Grammar of
+Graphics Wilkinson et al. (2006) uses for mapping data to visual
+attributes (e.g., color, shape, x, y, etc). Typically aesthetic mappings
+are visual, meaning they can be easily seen in a static graphic, but our
 proposed aesthetic mappings control interactive properties, so they are
 not necessarily easily seen, but visual cues may be added to guide the
 user interaction. To give a small example, Figure \ref{fig:tips} depicts
@@ -347,29 +347,30 @@ may be some sacrifices in performance, using the modern web browser as a
 rendering platform is more portable, accessible, and composable (i.e.,
 graphics can be embedded within larger frameworks/documents).
 
-Base \texttt{R} does provide a Scalable Vector Graphics (SVG) device,
-\texttt{svg()}, via the Cairo graphics API (Cairo 2016). The \texttt{R}
-package \textbf{SVGAnnotation} provides functionality to post-process
-\texttt{svg()} output in order to add interactive and dynamic features
-(Nolan and Lang 2012). This is a powerful approach, since in theory it
-can work with any \texttt{R} graphic, but the package is self-described
-as a proof-of-concept which reverse-engineers poorly-structured
-\texttt{svg()} output. As a result, it is not straightforward to extend
-this system for linked data visualizations with advanced functionality
-(multiple layers, multiple plots, multiple selection variables).
+Base \texttt{R} does provide a Scalable Vector Graphics (\texttt{SVG})
+device, \texttt{svg()}, via the Cairo graphics API (Cairo 2016). The
+\texttt{R} package \textbf{SVGAnnotation} provides functionality to
+post-process \texttt{svg()} output in order to add interactive and
+dynamic features (Nolan and Lang 2012). This is a powerful approach,
+since in theory it can work with any \texttt{R} graphic, but the package
+is self-described as a proof-of-concept which reverse-engineers
+poorly-structured \texttt{svg()} output. As a result, it is not
+straightforward to extend this system for linked data visualizations
+with advanced functionality (multiple layers, multiple plots, multiple
+selection variables).
 
-The lack of well-structured SVG for \texttt{R} graphics motivated the
-\textbf{gridSVG} package which provides sensible structuring of SVG
-output for grid graphics (Murrell and Potter 2015). This package also
-provides some low-level tools for animating or adding interactive
-features, where grid objects must be referenced by name. As a result,
-use of this interface to add interactivity to a \textbf{ggplot2} plot
-requires understanding of the grid naming scheme \textbf{ggplot2} uses
-internally. An interface where interactivity can be expressed by
-referencing the data to be visualized, rather than the building blocks
-of the graphics system, would be preferable since the former interface
-is decoupled from the implementation and does not require knowledge of
-\textbf{grid}.
+The lack of well-structured \texttt{SVG} for \texttt{R} graphics
+motivated the \textbf{gridSVG} package which provides sensible
+structuring of \texttt{SVG} output for \textbf{grid} graphics (Murrell
+and Potter 2015). This package also provides some low-level tools for
+animating or adding interactive features, where grid objects must be
+referenced by name. As a result, use of this interface to add
+interactivity to a \textbf{ggplot2} plot requires understanding of the
+grid naming scheme \textbf{ggplot2} uses internally. An interface where
+interactivity can be expressed by referencing the data to be visualized,
+rather than the building blocks of the graphics system, would be
+preferable since the former interface is decoupled from the
+implementation and does not require knowledge of \textbf{grid}.
 
 In terms of the animation API, the \texttt{R} package \textbf{gganimate}
 is very similar to our system (Robinson 2016). It directly extends
@@ -386,51 +387,56 @@ the transition between frames via the \texttt{d3.transition()} API
 animation viewer track positions between frames, which is useful in many
 scenarios, such as the World Bank example in Section \ref{worldbank}.
 The \textbf{tweenr} package is similar in scope to
-\texttt{d3.transition()}, but operates on data frames instead of SVG
-elements (Pedersen 2016). One could actually use \textbf{tweenr} to
-implement smooth transitions in \textbf{animint}, but it would require
-precomputing, storing, and loading an unnecessarily large amount of
-data.
+\texttt{d3.transition()}, but operates on data frames instead of
+\texttt{SVG} elements (Pedersen 2016). One could actually use
+\textbf{tweenr} to implement smooth transitions in \textbf{animint}, but
+it would require pre-computing, storing, and loading an unnecessarily
+large amount of data.
 
-The \textbf{ggvis} package is similar to our system in that is also
-inspired by the Grammar of Graphics (Chang and Wickham 2015). It does
-not directly extend \textbf{ggplot2}, but instead provides a brand new
-purely functional interface which is designed with interactive graphics
-in mind. It currently relies on \texttt{Vega} to render the SVG graphics
-from JSON, and the \texttt{R} package \textbf{shiny} to enable many of
-its interactive capabilities (RStudio 2013). The interface gives
-tremendous power to \texttt{R} users, as it allows one to write
-\texttt{R} functions to handle user events. This power often comes with
-a cost, though, as \textbf{ggvis} uses callbacks to \texttt{R} via
-\textbf{shiny} to accomplish interactivity such as linked brushing. As
-we outline in our supplemental materials, our system does not require
-server-side \texttt{R}, but it can also be used inside \textbf{shiny}
-web applications.
-
-The tour is a useful visualization technique for exploring
-high-dimensional data which requires interactive and dynamic graphics.
-The open-source software ggobi is currently the most fully-featured
-toolkit for touring data and has support for interactive techniques such
-as linking, zooming, panning, and identifying (D. Cook and Swayne 2007).
-The \texttt{R} package \textbf{rggobi} (Duncan Temple Lang 2016)
-provides an \texttt{R} interface to ggobi's graphical interface, but it
+Smooth transitions are also useful for touring data -- a suite of
+statistical techniques for visualization of high-dimensional data. The
+supplementary materials show how to implement a tour in a standalone web
+page via \textbf{animint} and \textbf{tourr} (Wickham et al. 2011), but
+it's worth noting that projections (i.e., animation frames) must be
+pre-computed, so the functionality is limited compared to other
+solutions. The open-source software \texttt{GGobi} is currently the most
+fully-featured toolkit for touring data and has support for interactive
+techniques such as linking, zooming, panning, and identifying (D. Cook
+and Swayne 2007). The \texttt{R} package \textbf{rggobi} provides an
+\texttt{R} interface to \texttt{GGobi}'s graphical interface, but it
 unfortunately has many software requirements. Furthermore, sharing the
 interactive versions of these graphics are not possible. The \texttt{R}
-package \textbf{cranvas} aims to be the successor to ggobi, with support
-for similar interactive techniques, but with a more flexible interface
-for describing plots inspired by the Grammar of Graphics (Xie et al.
-2013). \textbf{Cranvas} also has many software requirements which limits
-its portability and accessibility.
+package \textbf{cranvas} aims to be the successor to \texttt{GGobi},
+with support for similar interactive techniques, but with a more
+flexible interface for describing plots inspired by the Grammar of
+Graphics. \textbf{Cranvas} also has many software requirements which
+limits its portability and accessibility.
+
+The \texttt{R} package \textbf{ggvis} is another interactive web
+graphics interface inspired by the Grammar of Graphics (Chang and
+Wickham 2015). It does not directly extend \textbf{ggplot2}, but instead
+provides a brand new purely functional interface which is designed with
+interactive graphics in mind. It currently relies on \texttt{Vega} to
+render the \texttt{SVG} graphics from \texttt{JSON}, and the \texttt{R}
+package \textbf{shiny} to enable many of its interactive capabilities
+(RStudio 2013). The interface gives tremendous power to \texttt{R}
+users, as it allows one to write \texttt{R} functions to handle user
+events. This power often comes with a cost, though, as \textbf{ggvis}
+uses callbacks to \texttt{R} via \textbf{shiny} to accomplish
+interactivity such as linked brushing. As we outline in our supplemental
+materials, our system does not require server-side \texttt{R}, but it
+can also be used inside \textbf{shiny} web applications.
 
 Another \texttt{R} package for interactive graphics is \textbf{iplots}
 (Urbanek 2011), which has several important differences compared to
 \textbf{animint}. Brushing of linked iplots is supported for
 single-layer plots such as scatterplots or barplots, but it is not easy
-to define new multi-layer interactive plots. Furthermore since iplots
-does not use the Grammar of Graphics, it is difficult to create legends
-and multi-panel plots. Finally since iplots requires compiled C++ code
-for rendering on the local machine, its graphics are not as easy to
-share as \textbf{animint} graphics which can be viewed in a web browser.
+to define new multi-layer interactive plots. Furthermore since
+\textbf{iplots} does not use the Grammar of Graphics, it is difficult to
+create legends and multi-panel plots. Finally since \textbf{iplots}
+requires compiled C++ code for rendering on the local machine, its
+graphics are not as easy to share as \textbf{animint} graphics which can
+be viewed in a web browser.
 
 \hypertarget{extending-the-layered-grammar-of-graphics}{%
 \section{Extending the layered grammar of
@@ -1006,7 +1012,7 @@ statistical aggregated specified via a \textbf{ggplot2} layer, but it
 would be an immense amount of work to translate so many \texttt{R}
 functions to \texttt{JavaScript}. In this scenario, it may be worthwhile
 to try compile \texttt{R} functions so that the web browser can run them
-using a technlogy like \texttt{WebAssembly}
+using a technology like \texttt{WebAssembly}
 
 Our current implementation provides a visual indication of the current
 selection via semi-transparency of \texttt{clickSelects} geoms. In
@@ -1037,11 +1043,11 @@ computations from the compiler to the renderer.
 
 Another set of limitations derive from our current restriction that all
 subsets (corresponding to each possible selection) must be precomputed
-before render time. As elucidated in Section \ref{tour}, if there is a
-large space of possible selections, it is impractical to precompute
-every subset before viewing. Therefore, for future work it would be
-useful if the renderer could dynamically compute subsets when new
-selections are made.
+before render time. As elucidated in our supplementary materials, if
+there is a large space of possible selections, it is impractical to
+precompute every subset before viewing. Therefore, for future work it
+would be useful if the renderer could dynamically compute subsets when
+new selections are made.
 
 Our implementation is also limited to two specific types of direct
 manipulation: selecting graphical elements via mouse click
@@ -1051,7 +1057,7 @@ manipulation: selecting graphical elements via mouse click
 \texttt{hoverSelects} and \texttt{brushSelects} aesthetics could be
 added, for instance. There are other types of interaction that could be
 added, that wouldn't require additional extensions to the Grammar of
-Graphics, such as: zooming, panning, and plot resizing.
+Graphics, such as: zooming, panning, and plot re-sizing.
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
@@ -1240,6 +1246,11 @@ Statistical Data Visualization}.
 Wickham, Hadley. 2010. ``A Layered Grammar of Graphics.'' \emph{Journal
 of Computational and Graphical Statistics} 19 (1). Taylor \&
 Francis:3--28.
+
+\leavevmode\hypertarget{ref-tourr}{}%
+Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2011.
+``tourr: An R Package for Exploring Multivariate Data with
+Projections,'' April, 1--18.
 
 \leavevmode\hypertarget{ref-plumbing}{}%
 Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike

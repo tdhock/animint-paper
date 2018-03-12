@@ -60,7 +60,8 @@ accomplishing a wide variety of statistical analysis tasks, and most were
 developed before the web browser had rich graphics support.
 
 All of these systems, as well as some more modern systems, such as
-**rggobi** [@rggobi], **iplots** [@Urbanek2011], **loon** [@loon], etc, require 
+**rggobi** [@rggobi], **iplots** [@Urbanek2011], **cranvas** [@cranvas], 
+**loon** [@loon], etc, require 
 a heavy set of computational dependencies in order to view or interact with 
 graphics. These requirements grant the freedom to leverage libraries with 
 sophisticated statistical functionality on-demand, but it limits the 
@@ -131,7 +132,7 @@ of the data.
 -->
 
 We propose an extension of **ggplot2**'s layered Grammar of Graphics API to 
-create interactive web graphics that do not require a callback to server-side R. 
+create interactive web graphics that do not require a callback to server-side `R`. 
 The core idea lies in attaching metadata to graphical marks that can be used to 
 hide/show subsets of data. The resulting framework is quite similar to what @Cook:2007uk
 describe as brushing in multiple linked views as a database query. The assignment
@@ -213,7 +214,7 @@ performance, using the modern web browser as a rendering platform is more portab
 accessible, and composable (i.e., graphics can be embedded within larger 
 frameworks/documents).
 
-Base `R` does provide a Scalable Vector Graphics (SVG) device, `svg()`,
+Base `R` does provide a Scalable Vector Graphics (`SVG`) device, `svg()`,
 via the Cairo graphics API [@cairo]. The `R` package **SVGAnnotation**
 provides functionality to post-process `svg()` output in order to add
 interactive and dynamic features [@SVGAnnotation]. This is a powerful
@@ -224,8 +225,8 @@ not straightforward to extend this system for linked data
 visualizations with advanced functionality (multiple layers, multiple
 plots, multiple selection variables).
 
-The lack of well-structured SVG for `R` graphics motivated the **gridSVG** package 
-which provides sensible structuring of SVG output for grid graphics 
+The lack of well-structured `SVG` for `R` graphics motivated the **gridSVG** package 
+which provides sensible structuring of `SVG` output for **grid** graphics 
 [@gridSVG]. This package also provides some low-level tools for animating 
 or adding interactive features, where grid objects must be referenced by name.
 As a result, use of this interface to add interactivity to a 
@@ -248,15 +249,32 @@ the `d3.transition()` API [@d3]. Smooth transitions help the animation viewer tr
 positions between frames, which is useful in many scenarios, such as the 
 World Bank example in Section \@ref(worldbank). 
 The **tweenr** package is similar in scope to `d3.transition()`, 
-but operates on data frames instead of SVG elements [@tweenr]. One could actually use
+but operates on data frames instead of `SVG` elements [@tweenr]. One could actually use
 **tweenr** to implement smooth transitions in **animint**, but it would require
-precomputing, storing, and loading an unnecessarily large amount of data.
+pre-computing, storing, and loading an unnecessarily large amount of data.
 
-The **ggvis** package is similar to our system in that is also inspired
+Smooth transitions are also useful for touring data -- a suite of statistical techniques for
+visualization of high-dimensional data. The supplementary materials show how to
+implement a tour in a standalone web page via **animint** and **tourr** [@tourr],
+but it's worth noting that projections (i.e., animation frames) must be pre-computed,
+so the functionality is limited compared to other solutions.
+The open-source software `GGobi` is currently the most fully-featured toolkit 
+for touring data and has support
+for interactive techniques such as linking, zooming, panning, and identifying 
+[@ggobi:2007]. The `R` package **rggobi** provides an `R` interface 
+to `GGobi`'s graphical interface, but it unfortunately has many software requirements. 
+Furthermore, sharing the interactive versions of these graphics are not possible. 
+The `R` package **cranvas** aims to be the successor to `GGobi`, with support for 
+similar interactive techniques, but with a more flexible interface for describing 
+plots inspired by the Grammar of Graphics. **Cranvas** also has 
+many software requirements which limits its portability and
+accessibility. 
+
+The `R` package **ggvis** is another interactive web graphics interface inspired
 by the Grammar of Graphics [@ggvis]. It does not directly extend
 **ggplot2**, but instead provides a brand new purely functional interface
 which is designed with interactive graphics in mind. It currently
-relies on `Vega` to render the SVG graphics from JSON, and the `R`
+relies on `Vega` to render the `SVG` graphics from `JSON`, and the `R`
 package **shiny** to enable many of its interactive capabilities
 [@shiny]. The interface gives tremendous power to `R` users, as it
 allows one to write `R` functions to handle user events. This power often
@@ -265,26 +283,13 @@ to accomplish interactivity such as linked brushing. As we outline
 in our supplemental materials, our system does not require server-side `R`, 
 but it can also be used inside **shiny** web applications.
 
-The tour is a useful visualization technique for exploring high-dimensional data
-which requires interactive and dynamic graphics. The open-source software ggobi 
-is currently the most fully-featured toolkit for touring data and has support
-for interactive techniques such as linking, zooming, panning, and identifying 
-[@ggobi:2007]. The `R` package **rggobi** [@rggobi] provides an `R` interface 
-to ggobi's graphical interface, but it unfortunately has many software requirements. Furthermore,
-sharing the interactive versions of these graphics are not possible. The `R` 
-package **cranvas** aims to be the successor to ggobi, with support for similar
-interactive techniques, but with a more flexible interface for describing 
-plots inspired by the Grammar of Graphics [@cranvas]. **Cranvas** also has 
-many software requirements which limits its portability and
-accessibility. 
-
 Another `R` package for interactive graphics is **iplots** [@Urbanek2011],
 which has several important differences compared to  **animint**. 
 Brushing of linked iplots is supported for
 single-layer plots such as scatterplots or barplots, but it is not
 easy to define new multi-layer interactive plots. Furthermore since
-iplots does not use the Grammar of Graphics, it is difficult to create
-legends and multi-panel plots. Finally since iplots requires compiled
+**iplots** does not use the Grammar of Graphics, it is difficult to create
+legends and multi-panel plots. Finally since **iplots** requires compiled
 C++ code for rendering on the local machine, its graphics are not as
 easy to share as **animint** graphics which can be viewed in a web
 browser.
@@ -802,7 +807,7 @@ It's possible that future implementations could dynamically recompute
 statistical aggregated specified via a **ggplot2** layer, but it would be an 
 immense amount of work to translate so many `R` functions to `JavaScript`. 
 In this scenario, it may be worthwhile to try compile `R` functions so that
-the web browser can run them using a technlogy like `WebAssembly`
+the web browser can run them using a technology like `WebAssembly`
 
 
 Our current implementation provides a visual indication of the current selection
@@ -832,7 +837,7 @@ computations from the compiler to the renderer.
 
 Another set of limitations derive from our current restriction that all 
 subsets (corresponding to each possible selection) must be precomputed
-before render time. As elucidated in Section \@ref(tour),
+before render time. As elucidated in our supplementary materials,
 if there is a large space of possible selections,
 it is impractical to precompute every subset before viewing.
 Therefore, for future work it would be useful if the renderer could
@@ -846,7 +851,7 @@ Section \@ref(extension) is not restricted to a particular event type,
 so `hoverSelects` and `brushSelects` aesthetics could be 
 added, for instance. There are other types of interaction that could be
 added, that wouldn't require additional extensions to the Grammar of Graphics,
-such as: zooming, panning, and plot resizing.
+such as: zooming, panning, and plot re-sizing.
 
 # Conclusion
 
