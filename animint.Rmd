@@ -154,7 +154,7 @@ interactive features, including animation, tooltips, and hyperlinks.
 A summary of these extensions and relevant additional options are provided 
 in Table \@ref(tab:overview). There are a number of other options that can 
 be used to control things specific to our implementation in the `R` package
-**animint** which are included with the supplemental materials.
+**animint** which are included with the supplementary materials.
 
 \begin{table}
 
@@ -280,7 +280,7 @@ package **shiny** to enable many of its interactive capabilities
 allows one to write `R` functions to handle user events. This power often
 comes with a cost, though, as **ggvis** uses callbacks to `R` via **shiny** 
 to accomplish interactivity such as linked brushing. As we outline
-in our supplemental materials, our system does not require server-side `R`, 
+in our supplementary materials, our system does not require server-side `R`, 
 but it can also be used inside **shiny** web applications.
 
 Another `R` package for interactive graphics is **iplots** [@Urbanek2011],
@@ -815,7 +815,7 @@ not able to dynamically alter variable mappings, transformations, or axis scalin
 Most of these limitations can be resolved by adding
 interactive widgets to recompile plot(s) via a callback to `R`. 
 For this reason, **animint** makes it easy to embed
-visualizations inside of **shiny** web applications -- refer to the supplemental
+visualizations inside of **shiny** web applications -- refer to the supplementary
 materials for an example.
 
 Other limitations could also be addressed by adding a few other aesthetics or 
