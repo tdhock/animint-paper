@@ -79,11 +79,6 @@ in 2 parts: the compiler and the renderer. The compiler is implemented in about
 2000 lines of R code that converts a list of ggplots and options to a JSON 
 plot meta-data file and a tab-separated values (TSV) file database.
 
-```{r design2, echo = FALSE, eval = TRUE, fig.cap = "A schematic explanation of compilation and rendering in the World Bank visualization. Top: the interactive animation is a list of 4 R objects: 2 ggplots and 2 option lists. Center: **animint** R code compiles data in ggplot geoms to a database of TSV files (\\textcolor{red}{$\\rightarrowtriangle$}). It also compiles plot meta-data including ggplot aesthetics, animation time options, and transition duration options to a JSON meta-data file ($\\rightarrowtriangle$). Bottom: those data-dependent compiled files are combined with data-independent JavaScript and HTML files which render the interactive animation in a web browser (\\textcolor{blue}{$\\rightarrowtriangle$})."}
-knitr::include_graphics("../images/figure-design")
-```
-
-
 The compiler scans the aesthetics in the ggplots to determine
 how many selection variables are present, and which geoms to update
 after a selection variable is updated. It uses **ggplot2** to
