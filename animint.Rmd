@@ -636,7 +636,7 @@ Figure \@ref(fig:widgets) shows what the user sees after typing ''th'' in
 the search box. Note that these dropdowns support selection of multiple
 values and are coordinated with selections made via direct manipulation.
 
-```{r widgets, echo = FALSE, eval = TRUE, fig.cap = "Animint provides a menu to update each selection variable. In this example, after typing \"th\" the country menu shows the subset of matching countries."}
+```{r widgets, echo = FALSE, eval = TRUE, fig.cap = "Using dropdown widget(s) to execute graphical queries via indirect manipulation. This example shows how one could search for and highlight Thailand in Figure \\@ref(fig:worldbank)."}
 knitr::include_graphics("images/dropdown")
 ```
 
@@ -714,10 +714,11 @@ are available in the supplementary materials.
 # Exploring scope with examples {#performance}
 
 This section attempts to demonstrate the range of visualizations that
-are supported by the system we propose. In particular because of its
+are possible with **animint**. In particular because of its
 support for interaction and animation, it excels at display of
 interactive maps with time-varying data. We give two such examples
-below.
+below. A handful of other examples are provided with the supplementary 
+materials.
 
 ## Tornadoes in the United States 
 

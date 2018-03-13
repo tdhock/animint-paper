@@ -1,5 +1,3 @@
-
-
 ## Supplementary Table 1: additional examples
 
 Summary statistics describing complexity and performance of a variety of
