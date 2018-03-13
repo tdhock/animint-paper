@@ -213,7 +213,7 @@ create the graphics from the command-line, which as Unwin and Hofmann
 programming interface (e.g., precise, repeatable, fast, and extensible)
 with the strengths of a graphical interface (e.g., intuitive, forgiving,
 and easy-to-use). Web technologies can certainly be used to build a
-similar class of system, but in order to capitalize on the key strength
+similar class of system, but in order to capitalize on the key strengths
 of web technologies (e.g., accessible, portable, and composable), we
 must be mindful of which technologies we are requiring in such a system,
 and minimize those requirements whenever possible.
@@ -223,13 +223,13 @@ technologies (i.e., \texttt{HTML}, \texttt{SVG}, \texttt{CSS}, and
 \texttt{JavaScript}) are desired over client-server web applications
 because of their relative ease of distribution and maintenance. This is
 why many web-based graphing libraries like \texttt{Vega} (Trifacta 2014)
-work entirely with client-side technologies.\\
-Unfortunately, client-side technologies are not particularly well-suited
-for statistical computation, which we often want to leverage via dynamic
-controls in an interactive statistical graphics system. In this
-scenario, it often makes sense to introduce a client-server
-infrastructure to leverage functionality that is not natively supported
-by web browsers (e.g., \texttt{R}, \texttt{python}, etc).
+work entirely with client-side technologies. Unfortunately, client-side
+technologies are not particularly well-suited for statistical
+computation, which we often want to leverage via dynamic controls in an
+interactive statistical graphics system. In this scenario, it often
+makes sense to introduce a client-server infrastructure to leverage
+functionality that is not natively supported by web browsers (e.g.,
+\texttt{R}, \texttt{python}, etc).
 
 Focusing solely on the \texttt{R} language, there are now numerous ways
 to develop web applications, including the \texttt{R} package
@@ -247,7 +247,7 @@ There are now many \texttt{R} packages that interface with purely
 client-side graphing libraries and give users the option of embedding
 these graphics in a larger web application. This movement has made
 interactive graphics a lot more accessible to newcomers and also allows
-power-users to combine the strengths of web technologies and statistical
+power users to combine the strengths of web technologies and statistical
 computing. In fact, this is a large enough use case that the \texttt{R}
 package \textbf{htmlwidgets} (Vaidyanathan et al. 2018) was created to
 make it easier to get these interfaces to work seamlessly in any context
@@ -299,7 +299,7 @@ included with the supplemental materials.
 \begin{table}
 
 \caption{
-New features that animint adds to the grammar of graphics.
+New features that \textbf{animint} adds to the grammar of graphics.
 }\label{tab:overview}
 \small
 \begin{tabularx}{\textwidth}{|l|l|l|}
@@ -311,9 +311,9 @@ Feature & Type & Description \\
 \texttt{key} & aesthetic & value(s) attached to mark(s) for smooth transitions. \\
 \texttt{tooltip} & aesthetic & information to display on hover \\
 \texttt{href} & aesthetic & URL link to open on click \\
-\texttt{first} & option & what value(s) should be selected by default?  \\
 \texttt{time} & option & delay between animation frames.  \\
 \texttt{duration} & option & to specify smooth transitions.  \\
+\texttt{first} & option & what value(s) should be selected by default?  \\
 \texttt{selector.types} & option & should selections accumulate?  \\
 \texttt{selectize} & option & include a dropdown widget to set selection value(s) indirectly? \\
 \hline
@@ -351,8 +351,8 @@ device, \texttt{svg()}, via the Cairo graphics API (Cairo 2016). The
 \texttt{R} package \textbf{SVGAnnotation} provides functionality to
 post-process \texttt{svg()} output in order to add interactive and
 dynamic features (Nolan and Lang 2012). This is a powerful approach,
-since in theory it can work with any \texttt{R} graphic, but the package
-is self-described as a proof-of-concept which reverse-engineers
+since in theory it can work with any \texttt{R} graphics, but the
+package is self-described as a proof-of-concept which reverse-engineers
 poorly-structured \texttt{svg()} output. As a result, it is not
 straightforward to extend this system for linked data visualizations
 with advanced functionality (multiple layers, multiple plots, multiple
@@ -411,9 +411,9 @@ flexible interface for describing plots inspired by the Grammar of
 Graphics. \textbf{Cranvas} also has many software requirements which
 limits its portability and accessibility.
 
-The \texttt{R} package \textbf{ggvis} is another interactive web
-graphics interface inspired by the Grammar of Graphics (Chang and
-Wickham 2015). It does not directly extend \textbf{ggplot2}, but instead
+The \texttt{R} package \textbf{ggvis} (Chang and Wickham 2015) is
+another interactive web graphics interface inspired by the Grammar of
+Graphics. It does not directly extend \textbf{ggplot2}, but instead
 provides a brand new purely functional interface which is designed with
 interactive graphics in mind. It currently relies on \texttt{Vega} to
 render the \texttt{SVG} graphics from \texttt{JSON}, and the \texttt{R}
@@ -513,7 +513,7 @@ Consider the \texttt{R} code below which uses these aesthetics to create
 the interactive graphic depicted in Figure
 \ref{fig:tips}.\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
-\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}.
+\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
 The \texttt{geom\_bar()} layer in the left-hand panel is linked to the
 2nd \texttt{geom\_point()} layer in the right-hand panel since the
 \texttt{clickSelects} and \texttt{showSelected} aesthetics are mapped to
@@ -547,8 +547,8 @@ corresponds to the current selection.}
 
 In Figure \ref{fig:tips}, there is only one selection variable which we
 refer to as \texttt{selected\_sex}. This variable is updated whenever a
-bar is clicked which triggers our system to perform an SQL query of the
-form:
+bar is clicked which triggers our system to perform an \texttt{SQL}
+query of the form:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -674,7 +674,7 @@ Note that any aesthetics containing the substring \texttt{showSelected}
 \texttt{showSelected} variables, and combined together using the
 intersection operation. In the example above, that means that a point
 will be drawn for the currently selected combination of year and region,
-as in the following SQL query,
+as in the following \texttt{SQL} query,
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -721,9 +721,9 @@ which can potentially display a different data set. In each case we use
 \texttt{clickSelects} to declare a geom that when clicked updates the
 current selection, and we use \texttt{showSelected} to declare a geom
 which responds to such changes by updating the set of displayed data. In
-the next sections, we further options that allow us to accumulate
-selections, update selections indirectly, and automate selection
-updates.
+the next sections, we further explore options that allow us to
+accumulate selections, update selections indirectly, and automate
+selection updates.
 
 \hypertarget{linking}{%
 \subsection{Linking and multiple selection}\label{linking}}
@@ -786,8 +786,8 @@ find value(s) of interest in the graphical space. For this reason,
 queries via indirect manipulation. For example, when viewing the
 interactive version of Figure \ref{fig:worldbank}, suppose our goal is
 to compare the United States to Thailand. Direct manipulation is not
-very useful in this case since it is not necessaily easy to identify and
-select these countries based solely on the graphics. Figure
+very useful in this case since it is not necessarily easy to identify
+and select these countries based solely on the graphics. Figure
 \ref{fig:widgets} shows what the user sees after typing `'th'' in the
 search box. Note that these dropdowns support selection of multiple
 values and are coordinated with selections made via direct manipulation.
@@ -871,13 +871,13 @@ rendering the visualization:
 
 As shown in Supplementary Figure 1, the \textbf{animint} system consists
 of 2 parts: the compiler and the renderer. The compiler is \texttt{R}
-code that converts a list of ggplots and options to a JSON plot
+code that converts a list of ggplots and options to a \texttt{JSON} plot
 meta-data file and a tab-separated values (TSV) file database. The
-renderer consists of HTML and JavaScript files, which can be easily
-hosted along with the TSV and JSON files on any web server. The
-interactive plots can be viewed by opening the \texttt{index.html} page
-in any modern web browser. Note that \textbf{animint} currently depends
-on a fork of
+renderer consists of \texttt{HTML} and \texttt{JavaScript} files, which
+can be easily hosted along with the TSV and \texttt{JSON} files on any
+web server. The interactive plots can be viewed by opening the
+\texttt{index.html} page in any modern web browser. Note that
+\textbf{animint} currently depends on a fork of
 \textbf{ggplot2}\footnote{\url{https://github.com/faizan-khan-iit/ggplot2/tree/validate-params}}
 that contains some minor modifications which are needed to support
 interactive rendering on web pages. Additional implementation details
@@ -1012,8 +1012,8 @@ fact that some plot features are computed once during the compilation
 step, and remain static on a rendered plot. For example, users are not
 able to dynamically alter variable mappings, transformations, or axis
 scaling. Most of these limitations can be resolved by adding interactive
-widgets to recompile plot(s) via a callback to R. For this reason,
-\textbf{animint} makes it easy to embed visualizations inside of
+widgets to recompile plot(s) via a callback to \texttt{R}. For this
+reason, \textbf{animint} makes it easy to embed visualizations inside of
 \textbf{shiny} web applications, and we've provided some examples on
 \href{http://members.cbio.ensmp.fr/~thocking/animint-paper-figures/}{our
 site} that hosts all the interactive figures for this paper.
@@ -1101,7 +1101,7 @@ Chang, Winston, and Hadley Wickham. 2015. \emph{ggvis: Interactive
 Grammar of Graphics}. \url{https://CRAN.R-project.org/package=ggvis}.
 
 \leavevmode\hypertarget{ref-crosstalk}{}%
-Cheng, Joe. 2016. \emph{Crosstalk: Inter-Widget Interactivity for Html
+Cheng, Joe. 2016. \emph{Crosstalk: Inter-Widget Interactivity for HTML
 Widgets}. \url{https://CRAN.R-project.org/package=crosstalk}.
 
 \leavevmode\hypertarget{ref-Cook:2007uk}{}%
@@ -1147,7 +1147,7 @@ Statistical Software} 46 (1):1--88.
 \url{http://www.jstatsoft.org/v46/i01/}.
 
 \leavevmode\hypertarget{ref-tweenr}{}%
-Pedersen, Thomas Lin. 2016. \emph{Tweenr: Interpolate Data for Smooth
+Pedersen, Thomas Lin. 2016. \emph{tweenr: Interpolate Data for Smooth
 Animations}. \url{https://CRAN.R-project.org/package=tweenr}.
 
 \leavevmode\hypertarget{ref-RCore}{}%

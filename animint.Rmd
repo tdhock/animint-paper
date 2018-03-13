@@ -72,7 +72,7 @@ power users to combine the strengths of a programming interface
 (e.g., precise, repeatable, fast, and extensible) with the 
 strengths of a graphical interface (e.g., intuitive, forgiving, and easy-to-use). 
 Web technologies can certainly be used to build a similar class 
-of system, but in order to capitalize on the key strength of web technologies 
+of system, but in order to capitalize on the key strengths of web technologies 
 (e.g., accessible, portable, and composable), we must be mindful of which
 technologies we are requiring in such a system, and minimize those requirements 
 whenever possible.
@@ -81,8 +81,7 @@ Generally speaking, web graphics that use purely client-side
 technologies (i.e., `HTML`, `SVG`, `CSS`, and `JavaScript`) are desired over 
 client-server web applications because of their relative ease of distribution
 and maintenance. This is why many web-based graphing libraries like `Vega` [@vega] 
-work entirely with client-side technologies.  
-Unfortunately, client-side technologies are not particularly well-suited for 
+work entirely with client-side technologies. Unfortunately, client-side technologies are not particularly well-suited for 
 statistical computation, which we often want to leverage via dynamic controls 
 in an interactive statistical graphics system. In this scenario, it often makes
 sense to introduce a client-server infrastructure to leverage functionality that 
@@ -109,7 +108,7 @@ produces a purely client-side result.
 There are now many `R` packages that interface with purely client-side
 graphing libraries and give users the option of embedding these graphics in a 
 larger web application. This movement has made interactive graphics a lot more
-accessible to newcomers and also allows power-users to combine the strengths
+accessible to newcomers and also allows power users to combine the strengths
 of web technologies and statistical computing. In fact, this is a large enough 
 use case that the `R` package **htmlwidgets** [@htmlwidgets] was created to make 
 it easier to get these interfaces to work seamlessly in any context 
@@ -160,7 +159,7 @@ be used to control things specific to our implementation in the `R` package
 \begin{table}
 
 \caption{
-New features that animint adds to the grammar of graphics.
+New features that \textbf{animint} adds to the grammar of graphics.
 }\label{tab:overview}
 \small
 \begin{tabularx}{\textwidth}{|l|l|l|}
@@ -172,9 +171,9 @@ Feature & Type & Description \\
 \texttt{key} & aesthetic & value(s) attached to mark(s) for smooth transitions. \\
 \texttt{tooltip} & aesthetic & information to display on hover \\
 \texttt{href} & aesthetic & URL link to open on click \\
-\texttt{first} & option & what value(s) should be selected by default?  \\
 \texttt{time} & option & delay between animation frames.  \\
 \texttt{duration} & option & to specify smooth transitions.  \\
+\texttt{first} & option & what value(s) should be selected by default?  \\
 \texttt{selector.types} & option & should selections accumulate?  \\
 \texttt{selectize} & option & include a dropdown widget to set selection value(s) indirectly? \\
 \hline
@@ -218,7 +217,7 @@ Base `R` does provide a Scalable Vector Graphics (`SVG`) device, `svg()`,
 via the Cairo graphics API [@cairo]. The `R` package **SVGAnnotation**
 provides functionality to post-process `svg()` output in order to add
 interactive and dynamic features [@SVGAnnotation]. This is a powerful
-approach, since in theory it can work with any `R` graphic, but the
+approach, since in theory it can work with any `R` graphics, but the
 package is self-described as a proof-of-concept which
 reverse-engineers poorly-structured `svg()` output. As a result, it is
 not straightforward to extend this system for linked data
@@ -270,8 +269,8 @@ plots inspired by the Grammar of Graphics. **Cranvas** also has
 many software requirements which limits its portability and
 accessibility. 
 
-The `R` package **ggvis** is another interactive web graphics interface inspired
-by the Grammar of Graphics [@ggvis]. It does not directly extend
+The `R` package **ggvis** [@ggvis] is another interactive web graphics interface inspired
+by the Grammar of Graphics. It does not directly extend
 **ggplot2**, but instead provides a brand new purely functional interface
 which is designed with interactive graphics in mind. It currently
 relies on `Vega` to render the `SVG` graphics from `JSON`, and the `R`
@@ -371,7 +370,7 @@ we restrict focus to our current **animint** implementation, which has
 Consider the `R` code below which uses these aesthetics to create the interactive 
 graphic depicted in Figure \@ref(fig:tips).\footnote{Interactive versions
 of all of the figures mentioned in this paper can be found at
-\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}.
+\url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
 The `geom_bar()` layer in the left-hand panel is linked to 
 the 2nd `geom_point()` layer in the right-hand panel since the `clickSelects` and
 `showSelected` aesthetics are mapped to a common variable, `sex`. This effectively
@@ -395,7 +394,7 @@ knitr::include_graphics("images/tips")
 
 In Figure \@ref(fig:tips), there is only one selection variable which we refer to as
 `selected_sex`. This variable is updated whenever a bar is clicked which triggers
-our system to perform an SQL query of the form:
+our system to perform an `SQL` query of the form:
 
 ```sql
 SELECT * FROM tips
@@ -533,7 +532,7 @@ Note that any aesthetics containing the substring `showSelected`
 (including `showSelected2`) are interpreted as `showSelected`
 variables, and combined together using the intersection operation. In
 the example above, that means that a point will be drawn for the
-currently selected combination of year and region, as in the following SQL query,
+currently selected combination of year and region, as in the following `SQL` query,
 
 ```sql
 SELECT * FROM WorldBank
@@ -574,7 +573,7 @@ display a different data set. In each case we use `clickSelects` to
 declare a geom that when clicked updates the current selection, 
 and we use `showSelected` to declare a geom which responds
 to such changes by updating the set of displayed data. In the next
-sections, we further options that allow us to accumulate selections,
+sections, we further explore options that allow us to accumulate selections,
 update selections indirectly, and automate selection updates.
 
 ## Linking and multiple selection {#linking}
@@ -630,7 +629,7 @@ value(s) of interest in the graphical space. For this reason, **animint** also
 provides dropdown widgets for executing graphical queries via indirect manipulation.
 For example, when viewing the interactive version of Figure \@ref(fig:worldbank), 
 suppose our goal is to compare the United States to Thailand. Direct manipulation 
-is not very useful in this case since it is not necessaily easy to identify and 
+is not very useful in this case since it is not necessarily easy to identify and 
 select these countries based solely on the graphics.
 Figure \@ref(fig:widgets) shows what the user sees after typing ''th'' in 
 the search box. Note that these dropdowns support selection of multiple
@@ -699,10 +698,10 @@ animint::animint2dir(viz)
 
 As shown in Supplementary Figure 1, the **animint** system consists of 
 2 parts: the compiler and the renderer. The compiler is `R` code that 
-converts a list of ggplots and options to a JSON plot meta-data file 
+converts a list of ggplots and options to a `JSON` plot meta-data file 
 and a tab-separated values (TSV) file database. The renderer consists 
-of HTML and JavaScript files, which
-can be easily hosted along with the TSV and JSON files on any web
+of `HTML` and `JavaScript` files, which
+can be easily hosted along with the TSV and `JSON` files on any web
 server. The interactive plots can be viewed by opening the
 `index.html` page in any modern web browser. Note that **animint** 
 currently depends on a fork of
@@ -812,7 +811,7 @@ fact that some plot features are computed once during the compilation
 step, and remain static on a rendered plot. For example, users are
 not able to dynamically alter variable mappings, transformations, or axis scaling. 
 Most of these limitations can be resolved by adding
-interactive widgets to recompile plot(s) via a callback to R. 
+interactive widgets to recompile plot(s) via a callback to `R`. 
 For this reason, **animint** makes it easy to embed
 visualizations inside of **shiny** web applications, and we've provided some
 examples on [our site](http://members.cbio.ensmp.fr/~thocking/animint-paper-figures/) 
