@@ -161,14 +161,14 @@ and develop better model diagnostics. Although web technologies make
 interactive graphics more accessible, they are not designed to fit
 inside an exploratory data analysis (EDA) workflow where rapid iteration
 between data manipulation, modeling, and visualization must occur. To
-better facilitate `production-ready' exploratory web graphics, we need
-better interfaces between statistical computing environments (e.g.~the
-\texttt{R} language) and client-side web technologies. We propose the
-\texttt{R} package \textbf{animint} for rapid creation of linked and
-animated web graphics through a simple extension of \textbf{ggplot2}'s
-implementation of the Grammar of Graphics. The extension allows one to
-write \textbf{ggplot2} code and produce a standalone web page with
-multiple linked views.
+better facilitate exploratory web graphics that are easily distributed,
+we need better interfaces between statistical computing environments
+(e.g.~the \texttt{R} language) and client-side web technologies. We
+propose the \texttt{R} package \textbf{animint} for rapid creation of
+linked and animated web graphics through a simple extension of
+\textbf{ggplot2}'s implementation of the Grammar of Graphics. The
+extension allows one to write \textbf{ggplot2} code and produce a
+standalone web page with multiple linked views.
 \end{abstract}
 
 \noindent
@@ -260,8 +260,8 @@ Very recently, some \textbf{htmlwidgets} packages have gained
 client-side technologies, but the type of linking is purposefully
 restricted (e.g., 1-to-1 transient linking) since it's very difficult to
 standardize an API for linking arbitrary libraries. We think this is a
-great direction for `production-ready' exploratory graphics, but also
-hope to see more opinionated approaches to this idea, like
+great direction for exploratory graphics that are easily distributed,
+but also hope to see more opinionated approaches to this idea, like
 \textbf{plotly} (Sievert et al. 2018), that focus more on statistical
 aggregations, missing values, and selection sequences (Hofmann and Theus
 1998).
@@ -299,18 +299,19 @@ included with the supplemental materials.
 \begin{table}
 
 \caption{
-New features that \textbf{animint} adds to the grammar of graphics.
+New features that \textbf{animint} adds to the grammar of graphics. These features are explained
+in detail in starting Section \ref{extension}.
 }\label{tab:overview}
 \small
 \begin{tabularx}{\textwidth}{|l|l|l|}
 \hline
 Feature & Type & Description \\
 \hline
-\texttt{clickSelects} & aesthetic & value(s) to select on click \\
-\texttt{showSelected} & aesthetic & value(s) attached to mark(s) that determine when they are shown  \\
+\texttt{clickSelects} & aesthetic & value(s) to select on click. \\
+\texttt{showSelected} & aesthetic & value(s) attached to mark(s) that determine when they are shown.  \\
 \texttt{key} & aesthetic & value(s) attached to mark(s) for smooth transitions. \\
-\texttt{tooltip} & aesthetic & information to display on hover \\
-\texttt{href} & aesthetic & URL link to open on click \\
+\texttt{tooltip} & aesthetic & information to display on hover. \\
+\texttt{href} & aesthetic & URL link to open on click. \\
 \texttt{time} & option & delay between animation frames.  \\
 \texttt{duration} & option & to specify smooth transitions.  \\
 \texttt{first} & option & what value(s) should be selected by default?  \\
@@ -512,7 +513,8 @@ implementation, which has \texttt{clickSelects} and
 Consider the \texttt{R} code below which uses these aesthetics to create
 the interactive graphic depicted in Figure
 \ref{fig:tips}.\footnote{Interactive versions
-of all of the figures mentioned in this paper can be found at
+of all of the figures mentioned in this paper are available with the supplementary
+materials, and may be viewed at 
 \url{http://members.cbio.mines-paristech.fr/~thocking/animint-paper-figures/}}
 The \texttt{geom\_bar()} layer in the left-hand panel is linked to the
 2nd \texttt{geom\_point()} layer in the right-hand panel since the
@@ -1014,9 +1016,8 @@ able to dynamically alter variable mappings, transformations, or axis
 scaling. Most of these limitations can be resolved by adding interactive
 widgets to recompile plot(s) via a callback to \texttt{R}. For this
 reason, \textbf{animint} makes it easy to embed visualizations inside of
-\textbf{shiny} web applications, and we've provided some examples on
-\href{http://members.cbio.ensmp.fr/~thocking/animint-paper-figures/}{our
-site} that hosts all the interactive figures for this paper.
+\textbf{shiny} web applications -- refer to the supplemental materials
+for an example.
 
 Other limitations could also be addressed by adding a few other
 aesthetics or options to the list provided in Table \ref{tab:overview}.
@@ -1027,7 +1028,7 @@ aesthetics, option(s) for more control over the selection styling
 for graphical objects that trigger graphical queries (currently,
 hovering on such objects will change their transparency). There are
 other types of interaction that could be added without adding to the
-extention at all (e.g., zooming, panning, and plot re-sizing).
+extension at all (e.g., zooming, panning, and plot re-sizing).
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
