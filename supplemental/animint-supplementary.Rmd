@@ -55,7 +55,7 @@ This example helps point out a few other important differences in using
 **animint** versus **ggvis**+**shiny** to implement "multiple linked and dynamic views"
 as described in @Ahlberg:1991 and @Buja:1991vh. 
 Maintaining state of the linked brush in Figure \@ref(fig:tourbrush)
-requires both knowledge and clever use of some sophicated programming 
+requires both knowledge and clever use of some sophisticated programming 
 techniques such as closures and reactivity. 
 It also requires knowledge of the **shiny** web application framework and 
 a new approach to the grammar of graphics. 
