@@ -1,0 +1,5 @@
+library(Acinonyx)
+data(WorldBank, package="animint")
+with(WorldBank, iplot(year, fertility.rate))
+with(WorldBank, ilines(year, fertility.rate))
+with(WorldBank, iplot(fertility.rate, life.expectancy))

@@ -1,0 +1,335 @@
+---
+title: "Animint paper interactive figures"
+output:
+  html_document:
+    css: animint-figures-style.css
+---
+
+In the paper we described the `animint2dir(viz)` function which
+compiles and renders and animint viz list. In the code chunks below we
+use `structure(viz, class="animint")` in order to render the animint
+inside of this Rmd document (`animint2dir` is used internally).
+
+Each section below contains 
+
+* Source code for each interactive figure.
+* A rendering of the interactive figure.
+* Instructions about how to interpret and interact with the figure.
+
+```{r, include = FALSE}
+options(width = 200)
+knitr::opts_chunk$set(
+  message = FALSE,
+  comment = "#>",
+  collapse = TRUE
+)
+```
+
+## Tips figure
+
+```{r tips}
+library(animint)
+data(tips, package = "reshape2")
+bar <- ggplot(tips) + 
+  geom_bar(aes(x = sex, clickSelects = sex))
+scatter <- ggplot(tips) +
+  geom_point(aes(x = total_bill, y = tip), alpha = 0.3) +
+  geom_point(aes(x = total_bill, y = tip, showSelected = sex))
+structure(list(bar = bar, scatter = scatter), class = "animint")
+```
+
+* Click the bars in the left plot to change the selection.
+* The plot on the right shows the subset of data corresponding to the
+  currently selected smoker status.
+
+## World Bank figure
+
+
+```{r wb-viz}
+data(WorldBank)
+WorldBank$region <-
+  sub(" (all income levels)", "", WorldBank$region, fixed=TRUE)
+years <- data.frame(year=unique(WorldBank$year))
+wb.viz <- list(
+  timeSeries=ggplot()+
+    geom_tallrect(aes(
+      xmin=year-0.5, xmax=year+0.5, clickSelects=year),
+                  alpha=0.5,
+                  data=years)+
+    guides(color="none")+
+    geom_line(aes(year, life.expectancy, group=country, colour=region,
+                  showSelected=region,
+                  clickSelects=country),
+              data=WorldBank, size=4, alpha=3/5),
+  scatterPlot=ggplot()+
+    geom_point(aes(fertility.rate, life.expectancy, clickSelects=country,
+                   showSelected=year, colour=region, size=population,
+                   tooltip=paste(country, "population", population),
+                   key=country), # key aesthetic for animated transitions!
+               data=WorldBank)+
+    geom_text(aes(fertility.rate, life.expectancy, label=country,
+                  clickSelects=country,
+                  showSelected=country, showSelected2=year,
+                  showSelected3=region,
+                  key=country), #also use key here!
+              data=WorldBank)+
+    scale_size_animint(breaks=10^(9:5))+
+    geom_text(aes(
+      5, 80, label=paste("year =", year), key=year, showSelected=year),
+              data=years),
+  time=list(variable="year",ms=3000),
+  duration=list(year=1000),
+  selector.types=list(country="multiple", region="multiple"),
+  first=list(
+    year=1979,
+    country=c("United States", "Vietnam"),
+    region=c("East Asia & Pacific", "North America")
+    ))
+structure(wb.viz, class="animint")
+```
+
+* The plot on the left above shows a time series of life expectancy
+  for each country, with bold lines for selected countries. Clicking
+  each line adds/removes the corresponding country to/from the set of
+  currently selected countries.
+* The plot on the left shows a vertical grey bar centered on the
+  currently selected year. Click the background elsewhere in the left
+  plot to change the currently selected year.
+* The plot on the right shows a scatterplot of life expectancy and
+  fertility rate for the selected year. Clicking each point
+  adds/removes the corresponding country to/from the set of currently
+  selected countries. Clicking a country name removes the
+  corresponding country from the set of currently selected countries.
+* The region legend shows the current set of selected regions. Click
+  an entry to show/hide the corresponding countries.
+* Click "Show animation controls" and edit the entries to change the
+  speed of animation and smooth transitions.
+* Stand-alone animint figure: http://bl.ocks.org/tdhock/raw/8ce47eebb3039263878f/
+* Shiny+ggvis figure for comparison: https://cpsievert.shinyapps.io/worldBank-ggvis/
+* Tableau figure for comparison: https://public.tableau.com/profile/sievert#!/vizhome/worldbank_5/page-both
+
+## Tornado figure
+
+```{r tornado-viz}
+library(maps)
+library(plyr)
+data(UStornadoes)
+ord <- order(unique(UStornadoes$TornadoesSqMile), decreasing=T)
+stateOrder <- data.frame(state = unique(UStornadoes$state)[ord], rank = 1:49)
+UStornadoes$state <-
+  factor(UStornadoes$state, levels=stateOrder$state, ordered=TRUE)
+UStornadoes$weight <- 1/UStornadoes$LandArea
+USpolygons <- map_data("state")
+USpolygons$state = state.abb[match(USpolygons$region, tolower(state.name))]
+UStornadoCounts <-
+  ddply(UStornadoes, .(state, year), summarize, count=length(state))
+seg.color <- "#55B1F7"
+years <- data.frame(year=unique(UStornadoes$year))
+states <- data.frame(state=unique(UStornadoes$state))
+tornado.viz <- list(
+  map=ggplot()+
+    theme_bw()+
+    theme_animint(width=750, height=500)+
+    geom_text(aes(
+      -100, 50, label=paste(
+                  "Tornado paths and endpoints in ", year),
+      showSelected=year),
+              data=years)+
+    geom_segment(aes(x=startLong, y=startLat, xend=endLong, yend=endLat,
+                     showSelected=year),
+                 colour=seg.color, data=UStornadoes)+
+    geom_point(aes(endLong, endLat, showSelected=year),
+               colour=seg.color,
+               fill=NA,
+               data=UStornadoes)+
+    geom_polygon(aes(x=long, y=lat, group=group, clickSelects=state),
+                 data=USpolygons, fill="grey", colour="black", alpha=3/4)+
+    theme(axis.line=element_blank(), axis.text=element_blank(),
+          panel.background=element_rect(color=NA),
+          panel.border=element_rect(color=NA),
+          axis.ticks=element_blank(), axis.title=element_blank()),
+  ts=ggplot()+
+    theme_bw()+
+    theme_animint(width=300, height=400)+
+    xlab("year")+
+    ylab("Number of tornadoes")+
+    geom_bar(aes(year, count, clickSelects=year, showSelected=state),
+             data=UStornadoCounts, stat="identity", position="identity")+
+    geom_text(aes(
+      1980, 200, label=paste("state =", state), showSelected=state),
+              data=states)+
+    geom_text(aes(year, count + 5, label=count,
+                  showSelected2=year, showSelected=state),
+              data=UStornadoCounts, size=20))
+structure(tornado.viz, class="animint")
+```
+
+* The map on the left shows the distribution of tornadoes for the
+  currently selected year. Click a state polygon to change the
+  currently selected state.
+* The barplot on the right shows a time series of tornadoes for the
+  currently selected state. Click a bar to change the currently
+  selected year.
+  
+  
+## Climate data example
+
+```{r viz-climate}
+library(lubridate)
+data(climate)
+climate$time2 <- decimal_date(ymd(as.character(climate$date)))
+countries <- map_data("world")
+# Map coordinate limits chosen so that the polygons displayed are at
+# least reasonably complete.
+countries <- subset(countries, (lat < 38)&(lat>-24))
+countries <- subset(countries, ((-long)>54)&((-long)<118))
+# Create variable showing temp-avg.monthly.temp at that location
+climate <- ddply(climate, .(id, month), transform,
+                 tempdev = temperature - mean(temperature),
+                 surfdev = surftemp - mean(surftemp))
+climate <- climate[order(climate$date, climate$id), ]
+# data frame with formatted labels
+dates <- ddply(climate, .(date), summarise, month=month[1], year = year[1],
+               time2 = time2[1], textdate = paste(month.name[month], year))
+dates <- dates[order(dates$date),]
+climate <- climate[order(climate$time2),]
+long.names <- c(surftemp="Surface temperature",
+                temperature="Temperature",
+                surfdev="Deviation from monthly norm")
+lims <- list(surftemp=c(-10, 40),
+             surfdev=c(-8, 8))
+var.names <- c("surftemp", "surfdev")
+dot.alpha <- 6/10
+viz <- list(duration=list(time2=3000),
+            time=list(variable="time2", ms=5000))
+getlab <- function(var.name){
+  sprintf("%s (degrees Celsius)", long.names[[var.name]])
+}
+for(var.name in var.names){
+  long.name <- long.names[[var.name]]
+  viz[[sprintf("%sMap", var.name)]] <- ggplot() +
+    ggtitle(long.name)+
+    theme_bw()+
+    geom_tile(aes_string(x="long", y="lat", fill=var.name,
+                         key="id",
+                  clickSelects="id", showSelected="time2"),
+              data=climate)+ 
+    scale_fill_gradient2("deg. C", low="blue", mid="white", high="red",
+                         midpoint=0, limits=lims[[var.name]]) + 
+    geom_path(aes(long, lat, group=group), col="grey",
+              data=countries) + 
+    geom_text(aes(-86, 39, label=textdate, key=time2, showSelected=time2),
+              data=dates)+ 
+    theme(axis.line=element_blank(), axis.text=element_blank(), 
+          panel.background=element_rect(color=NA),
+          panel.border=element_rect(color=NA),
+          axis.ticks=element_blank(), axis.title=element_blank())
+}
+selected.color <- "violet"
+viz$scatterNow <- ggplot()+
+  theme_bw()+
+  geom_text(aes(20, -7, label=sprintf("all regions in %s", textdate),
+                key=time2,
+                showSelected=time2),
+            data=dates)+
+  geom_hline(yintercept=0, color="grey")+
+  geom_vline(xintercept=0, color="grey")+
+  xlim(-10, 40)+
+  ylim(-8, 8)+
+  xlab(getlab(var.names[[1]]))+
+  ylab(getlab(var.names[[2]]))+
+  geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
+                        key="id",
+                        clickSelects="id", showSelected="time2"),
+             data=climate, alpha=dot.alpha)
+times <- data.frame(time2=sort(unique(climate$time2)))
+time.diff <- mean(diff(times$time2))/2
+for(var.name in var.names){
+  long.name <- long.names[[var.name]]
+  viz[[sprintf("%sTimeSeries", var.name)]] <- ggplot()+
+    theme_bw()+
+    theme_animint(width=463)+
+    geom_hline(yintercept=0, color="grey")+
+    geom_tallrect(aes(
+      xmin=time2-time.diff, xmax=time2+time.diff, clickSelects=time2),
+                  data=times,
+                  alpha=0.5)+
+    xlab("Year of measurement")+
+    ylab(getlab(var.name))+
+    geom_line(aes_string(x="time2", y=var.name,
+                         group="id", clickSelects="id"),
+              data=climate, alpha=53/100)
+}
+ids <- data.frame(id=unique(climate$id))
+viz$scatterHere <- ggplot()+
+  theme_bw()+
+  geom_text(aes(
+    20, -7, label=paste("all times for region", id), showSelected=id),
+            data=ids)+
+  xlab(getlab(var.names[[1]]))+
+  ylab(getlab(var.names[[2]]))+
+  geom_hline(yintercept=0, color="grey")+
+  geom_vline(xintercept=0, color="grey")+
+  xlim(-10, 40)+
+  ylim(-8, 8)+
+  geom_point(aes_string(x=var.names[[1]], y=var.names[[2]],
+                        clickSelects="time2", showSelected="id"),
+             data=climate, alpha=dot.alpha)
+structure(viz, class="animint")
+```
+
+* Maps in the upper left show two temperature variables for the
+  currently selected month. Click a shaded tile on either map in order
+  to change the selected region.
+* Scatterplots on the right show all data for the currently selected
+  region and month. Clicking a point changes the currently selected
+  region (top) or month (bottom).
+* Time series plots on the bottom left show two termperature
+  variables, with the currently selected month shown as a grey
+  vertical bar. Clicking the background changes the currently selected
+  month, and clicking a line changes the currently selected region.
+* Stand-alone figure with purple used to show the selected region: http://members.cbio.mines-paristech.fr/~thocking/climate-anim/
+
+## Tour example
+
+```{r viz-tour}
+library(tourr)
+mat <- rescale(as.matrix(flea[1:6]))
+tour <- new_tour(mat, grand_tour(), NULL)
+tour_dat <- function(step_size) {
+  step <- tour(step_size)
+  proj <- center(mat %*% step$proj)
+  data.frame(x = proj[,1], y = proj[,2], 
+             species = flea$species)
+}
+steps <- c(0, rep(1/15, 200))
+stepz <- cumsum(steps)
+dats <- lapply(steps, tour_dat)
+datz <- Map(function(x, y) cbind(x, step = y), dats, stepz)
+dat <- do.call("rbind", datz)
+viz.tour <- list(
+  plot = ggplot() + 
+  geom_point(data = dat, 
+             aes(x = x, y = y, colour = species, showSelected = step)),
+  time = list(variable = "step", ms = 100),
+  duration = list(step = 200)
+  )
+structure(viz.tour, class="animint")
+```
+
+* https://gist.github.com/cpsievert/f154e4cd807b99789417 original standalone source code.
+* http://bl.ocks.org/cpsievert/raw/c10492a88cce72365a17/ original standalone data viz.
+
+## Additional interactive figures 
+
+* A demonstration of using animint inside a shiny app is mentioned in
+  the limitations and future work section:
+  https://cpsievert.shinyapps.io/animintShiny/
+* The figures described in Supplemetary Table 1 (but not shown in the paper) can be
+  found at http://members.cbio.ensmp.fr/~thocking/animint/
+
+## Session info
+
+```{r sinfo}
+devtools::session_info()
+```
