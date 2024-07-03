@@ -1,3 +1,15 @@
 .Rproj.user
 .Rhistory
 .RData
+*.DS_Store
+animint.pdf
+animint.tex
+movies/
+jcgs-template/
+rsconnect/
+*~
+*.aux
+*.bbl
+*.out
+*.blg
+*.log
