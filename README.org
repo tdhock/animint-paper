@@ -1,3 +1,13 @@
 This repo contains code to reproduce the paper [[https://amstat.tandfonline.com/doi/abs/10.1080/10618600.2018.1513367?journalCode=ucgs20#.XYzffGZlCUk][Extending ggplot2 for Linked and Animated Web Graphics]]
 
 The interactive figures described in the paper are shown in [[https://rcdata.nau.edu/genomic-ml/public_html/animint-paper-figures/][this rendered Rmd]].
+
+For talks:
+
+Title: animint2 R package for animated, interactive ggplots
+
+Abstract: Interactive web graphics are great for communication and knowledge sharing, but are difficult to leverage during the exploratory phase of a data science workflow. We propose the R package animint2 for rapid creation of linked and animated web graphics through a simple extension (fork) of ggplot2’s implementation of the Grammar of Graphics. It has been collaboratively developed since 2013, is available on CRAN, and has extensive documentation and testing. In this talk I will give a brief tutorial on how animint2 can be used to create and publish animated, interactive web graphics.
+Research paper: https://amstat.tandfonline.com/doi/full/10.1080/10618600.2018.1513367
+Github: https://github.com/animint/animint2
+Online manual: https://rcdata.nau.edu/genomic-ml/animint2-manual/Ch02-ggplot2.html
+Gallery of examples: https://animint.github.io/gallery/
